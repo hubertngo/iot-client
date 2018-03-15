@@ -39,7 +39,7 @@
     "settings": {
         "import/resolver": {
             "node": {
-                "extensions": [".js", ".android.js", ".ios.js", "jsx"]
+                "extensions": [".js", ".android.js", ".ios.js", ".jsx"]
 			},
 			"babel-module": {}
 		},
