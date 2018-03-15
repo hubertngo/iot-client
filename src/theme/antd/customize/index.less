@@ -1,0 +1,42 @@
+@import "./button.less";
+@import "./input.less";
+@import "./select.less";
+body {
+  background: #F0F1F2;
+  color: #35383F;
+}
+
+@media (max-width: 599px) {
+  body {
+    overflow-x: hidden;
+  }
+}
+
+.progress-custom {
+  .ant-progress-bg {
+    height: 4px !important;
+    border-radius: 0 !important;
+  }
+}
+
+.ant-btn-icon-only {
+  border: 0;
+}
+
+.ant-breadcrumb {
+  text-transform: capitalize;
+}
+
+.ant-notification>span {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.ant-form-item-control.has-error {
+  .ant-form-explain {
+    font-size: 12px;
+    font-style: italic;
+    margin-bottom: 5px;
+    margin-top: 3px;
+  }
+}
