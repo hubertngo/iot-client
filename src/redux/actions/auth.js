@@ -67,10 +67,9 @@ export function logoutRequest(next) {
 	};
 }
 
-export const getUserAuth = (payload, next) => {
-	const filter = {
-		counts: ['questions', 'friendsSent', 'friendsReceived'],
-	};
+export const getUserAuth = (payload = {}, next) => {
+	const { filter = {} } = payload;
+
 	return {
 		type: SINGLE_API,
 		payload: {
