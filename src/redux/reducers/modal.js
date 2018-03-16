@@ -6,7 +6,9 @@
 * Created: 2018-02-13 10:56:54
 *------------------------------------------------------- */
 
-export const initialState = {
+import { fromJS, Map } from 'immutable';
+
+export const initialState = fromJS({
 	login: {
 		open: false,
 		closable: false,
@@ -15,27 +17,25 @@ export const initialState = {
 		open: false,
 		closable: false,
 	},
-};
+});
 
 export default (state = initialState, action) => {
 	switch (action.type) {
 		case 'TOGGLE_LOGIN_MODAL':
-			return {
-				...state,
-				login: {
+			return state.update('login', () => {
+				return {
 					open: !!action.payload.open,
 					closable: !!action.payload.closable,
-				},
-			};
+				};
+			});
 
 		case 'TOGGLE_SIGNUP_MODAL':
-			return {
-				...state,
-				signUp: {
+			return state.update('signUp', () => {
+				return {
 					open: !!action.payload.open,
 					closable: !!action.payload.closable,
-				},
-			};
+				};
+			});
 
 		default:
 			return state;

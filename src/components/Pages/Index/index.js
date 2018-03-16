@@ -26,7 +26,7 @@ const styleSheet = (/* theme */) => ({
 function mapStateToProps(state) {
 	return {
 		store: {
-			// modal: state.modal,
+			// modal: state.get('modal').toJS(),
 		},
 	};
 }
