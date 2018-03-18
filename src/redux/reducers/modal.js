@@ -15,6 +15,11 @@ export const initialState = {
 		open: false,
 		closable: false,
 	},
+	flight: {
+		open: false,
+		closable: false,
+		data: {},
+	},
 };
 
 export default (state = initialState, action) => {
@@ -34,6 +39,17 @@ export default (state = initialState, action) => {
 				signUp: {
 					open: !!action.payload.open,
 					closable: !!action.payload.closable,
+				},
+			};
+
+		case 'TOGGLE_FLIGHT_MODAL':
+			console.log('asdasdasdsadadasd', action);
+			return {
+				...state,
+				flight: {
+					open: !!action.payload.open,
+					closable: !!action.payload.closable,
+					data: action.payload.open ? action.payload.data : {},
 				},
 			};
 

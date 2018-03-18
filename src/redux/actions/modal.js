@@ -19,3 +19,10 @@ export function toggleSignUpModal(payload) {
 		payload,
 	};
 }
+
+export function toggleFlightModal(payload) {
+	return {
+		type: 'TOGGLE_FLIGHT_MODAL',
+		payload,
+	};
+}
