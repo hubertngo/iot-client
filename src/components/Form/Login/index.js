@@ -23,6 +23,8 @@ import AuthStorage from 'src/utils/AuthStorage';
 
 import withStyles from 'src/theme/jss/withStyles';
 
+import { validEmail } from 'src/utils';
+
 import { loginRequest } from 'src/redux/actions/auth';
 import { toggleSignUpModal, toggleLoginModal } from 'src/redux/actions/modal';
 
@@ -84,8 +86,8 @@ const styleSheet = (theme) => ({
 function mapStateToProps(state) {
 	return {
 		store: {
-			auth: state.auth,
-			modal: state.modal,
+			auth: state.get('auth').toJS(),
+			modal: state.get('modal').toJS(),
 		},
 	};
 }
@@ -144,7 +146,17 @@ export default class LoginForm extends Component {
 				this.setState({
 					loading: true,
 				});
-				this.props.action.loginRequest(values, () => {
+				const { email, password } = values;
+
+				const auth = { password };
+
+				if (validEmail(email)) {
+					auth.email = email;
+				} else {
+					auth.username = email;
+				}
+
+				this.props.action.loginRequest(auth, () => {
 					if (AuthStorage.loggedIn && this.props.store.auth.id) {
 						if (this.props.isLoginPage) {
 							Router.push('/');
@@ -178,19 +190,11 @@ export default class LoginForm extends Component {
 					<img src="/static/assets/images/logo/1x.png" alt="chove.vn" />
 				</div>
 				<Form onSubmit={this.handleSubmit} className={classes.form}>
-
-					{/* <Form.Item>
+					<Form.Item label="Tên đăng nhập hoặc email" style={{ marginBottom: 0 }}>
 						{getFieldDecorator('email', {
-							rules: [{ required: true, message: 'Làm ơn nhập email của bạn!' }, { pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, message: 'Email không hợp lệ!' }],
+							rules: [{ required: true, message: 'Làm ơn nhập tài khoản hoặc email của bạn!' }],
 						})(
-							<Input size="large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Email" />,
-						)}
-					</Form.Item> */}
-					<Form.Item label="Tên đăng nhập" style={{ marginBottom: 0 }}>
-						{getFieldDecorator('username', {
-							rules: [{ required: true, message: 'Làm ơn nhập tài khoản của bạn!' }],
-						})(
-							<Input className="radius-large" size="large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Tên đăng nhập" />,
+							<Input className="radius-large" size="large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Tên đăng nhập hoặc email" />,
 						)}
 					</Form.Item>
 					<Form.Item label="Mật khẩu">

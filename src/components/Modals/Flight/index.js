@@ -32,10 +32,9 @@ const styleSheet = (/* theme */) => ({
 });
 
 function mapStateToProps(state) {
-	console.log('hasdasdasd');
 	return {
 		store: {
-			modal: state.modal,
+			modal: state.get('modal').toJS(),
 		},
 	};
 }
@@ -50,7 +49,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const FlightModal = (props) => {
 	const { classes, store: { modal: { flight } } } = props;
-	console.log('data', flight);
+
 	return (
 		<Modal
 			// title="Basic Modal"

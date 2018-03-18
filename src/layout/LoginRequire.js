@@ -18,7 +18,7 @@ import { toggleLoginModal } from 'src/redux/actions/modal';
 function mapStateToProps(state) {
 	return {
 		store: {
-			auth: state.auth,
+			auth: state.get('auth').toJS(),
 		},
 	};
 }

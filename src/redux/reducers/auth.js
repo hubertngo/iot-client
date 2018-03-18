@@ -7,27 +7,27 @@
  *-------------------------------------------------------*/
 import AuthStorage from 'src/utils/AuthStorage';
 
-export const initialState = {
+import { fromJS, Map } from 'immutable';
 
-};
+export const initialState = fromJS({});
 
 export default (state = initialState, action) => {
 	switch (action.type) {
 		case 'LOGIN_SUCCESS':
-			return action.payload;
+			return fromJS(action.payload);
 
 		case 'LOGIN_FAILED':
-			return { error: action.payload.message || action.payload };
+			return Map({ error: action.payload.message || action.payload });
 
 		case 'LOGOUT_SUCCESS':
 			AuthStorage.destroy();
-			return {};
+			return fromJS({});
 
 		case 'GET_USER_AUTH_SUCCESS':
-			return action.payload;
+			return fromJS(action.payload);
 
 		case 'EDIT_PROFILE_SUCCESS':
-			return action.payload;
+			return fromJS(action.payload);
 
 		default:
 			return state;

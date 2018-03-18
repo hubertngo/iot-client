@@ -6,17 +6,30 @@
 * Created: 2018-01-10 22:17:54
 *------------------------------------------------------- */
 
-import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
+import { fromJS, Iterable } from 'immutable';
+import { createStore, applyMiddleware, compose } from 'redux';
+import { combineReducers } from 'redux-immutablejs';
 import withRedux from 'next-redux-wrapper';
 import nextReduxSaga from 'next-redux-saga';
 import createSagaMiddleware from 'redux-saga';
-import logger from 'redux-logger';
+import { createLogger } from 'redux-logger';
 
 import ENV from 'src/constants/env';
 import rootReducer, { initialState } from 'src/redux/reducers';
 import rootSaga from 'src/redux/sagas';
 
 const sagaMiddleware = createSagaMiddleware();
+
+const stateTransformer = (state) => {
+	if (Iterable.isIterable(state)) return state.toJS();
+	return state;
+};
+
+const logger = createLogger({
+	stateTransformer,
+	collapsed: (getState, action, logEntry) => !logEntry.error,
+	predicate: (getState, action) => !['@@redux-form/CHANGE', '@@redux-form/REGISTER_FIELD'].includes(action.type),
+});
 
 export const configureStore = (state = initialState) => {
 	const composeMiddleware = ENV === 'production' || !process.browser ?
@@ -28,7 +41,7 @@ export const configureStore = (state = initialState) => {
 
 	const store = createStore(
 		combineReducers(rootReducer),
-		state,
+		fromJS(state),
 		composeMiddleware,
 	);
 

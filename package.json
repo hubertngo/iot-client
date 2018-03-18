@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "PORT=3004 node server.js",
     "build": "next build",
-    "start": "PORT=3004 NODE_ENV=staging node server.js",
+    "start": "PORT=3004 NODE_ENV=production node server.js",
     "start:pm2": "PORT=3004 NODE_ENV=staging pm2 start server.js --name chove-web",
     "prod:pm2": "PORT=3004 NODE_ENV=production pm2 start server.js --name chove-web"
   },
@@ -19,6 +19,7 @@
     "classnames": "^2.2.5",
     "deepmerge": "^2.0.1",
     "hoist-non-react-statics": "^2.3.1",
+    "immutable": "^3.8.2",
     "initials": "^2.1.5",
     "isomorphic-fetch": "^2.2.1",
     "jss": "^9.8.0",
@@ -53,6 +54,7 @@
     "react-sizes": "^1.0.3",
     "recompose": "^0.26.0",
     "redux": "^3.7.2",
+    "redux-immutablejs": "0.0.8",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",
     "warning": "^3.0.0"

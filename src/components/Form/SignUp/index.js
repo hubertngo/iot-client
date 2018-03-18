@@ -54,8 +54,8 @@ const styleSheet = (theme) => ({
 function mapStateToProps(state) {
 	return {
 		store: {
-			auth: state.auth,
-			modal: state.modal,
+			auth: state.get('auth').toJS(),
+			modal: state.get('modal').toJS(),
 		},
 	};
 }
@@ -112,9 +112,9 @@ export default class LoginForm extends Component {
 				this.setState({
 					loading: true,
 				});
-				const { fullName, email, password } = values;
+				const { fullName, email, username, password } = values;
 
-				this.props.action.signUpRequest({ fullName, email, password }, () => {
+				this.props.action.signUpRequest({ fullName, email, password, username }, () => {
 					if (AuthStorage.loggedIn && this.props.store.auth.id) {
 						if (this.props.isSingUpPage) {
 							Router.push('/');
