@@ -58,7 +58,7 @@ const styleSheet = (theme) => ({
 		fontSize: 22,
 		fontWeight: 500,
 		color: '#FFF',
-
+		fontFamily: 'Lato',
 	},
 
 	tabs: {

@@ -30,9 +30,10 @@ const styleSheet = (theme) => ({
 		padding: '0 15px',
 		background: '#FFF',
 		borderRadius: 8,
-		boxShadow: '0px 0px 20px 0px rgba(0, 0, 0, 0.15)',
+		boxShadow: '0px 0px 16px 0px rgba(0, 0, 0, 0.15)',
 		marginBottom: 8,
 		position: 'relative',
+		transition: 'all .5s',
 
 		'&:hover': {
 			boxShadow: '0px 0px 20px 0px rgba(0, 0, 0, 0.35)',
@@ -128,7 +129,7 @@ const mapDispatchToProps = (dispatch) => {
 
 @connect(mapStateToProps, mapDispatchToProps)
 @withStyles(styleSheet)
-export default class SearchBar extends Component {
+export default class FlightCard extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
 		flight: PropTypes.object,
