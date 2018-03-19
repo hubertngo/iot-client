@@ -36,13 +36,12 @@ const styleSheet = (theme) => ({
 			margin: 0,
 			'& li': {
 				'& a': {
-					color: theme.palette.primary[900],
+					color: 'black',
 					padding: '0 15px',
 					display: 'block',
 					textDecoration: 'none',
-					textTransform: 'uppercase',
 					fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-					fontWeight: '500',
+					// fontWeight: '500',
 					fontSize: '0.85rem',
 					height: '45px',
 					lineHeight: '48px',
@@ -60,6 +59,13 @@ const styleSheet = (theme) => ({
 		textTransform: 'uppercase',
 		fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
 		fontWeight: '500',
+	},
+	loginBtn: {
+		'& a': {
+			color: 'white !important',
+		},
+		background: '#FF8100',
+		padding: '0',
 	},
 });
 
@@ -106,14 +112,24 @@ export default class Menu extends Component {
 			<div className={classes.root}>
 				<nav className={classes.menu}>
 					<ul>
-						{/* <li>
-							<Link href="/">
-								<a>Home</a>
-							</Link>
-						</li> */}
+						<li>
+							<a href="/">
+								Tìm kiếm vé
+							</a>
+						</li>
+						<li>
+							<a href="/">
+								Về chúng tôi
+							</a>
+						</li>
+						<li>
+							<a href="/">
+								Blog
+							</a>
+						</li>
 						{
 							!AuthStorage.loggedIn && !auth.id &&
-							<li>
+							<li className={classes.loginBtn}>
 								<a href="/login" onClick={this.handleOpenLogin}>Đăng nhập</a>
 							</li>
 						}

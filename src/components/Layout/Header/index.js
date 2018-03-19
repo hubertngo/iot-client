@@ -32,11 +32,9 @@ const styles = (theme) => ({
 		display: 'flex',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		padding: '0 15px',
+		padding: '0 0 0 15px',
 		height: '45px',
-		[theme.breakpoints.up.md]: {
-			padding: 0,
-		},
+		width: '100%',
 	},
 	left: {
 		display: 'flex',
