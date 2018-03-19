@@ -32,9 +32,15 @@ const styleSheet = (theme) => ({
 	},
 	dropdownInput: {
 		background: '#FFF',
+		height: '45px',
 		'& + span': {
 			background: '#FFF',
 			border: 0,
+		},
+		'&:focus': {
+			border: 0,
+			outline: 0,
+			boxShadow: 'none',
 		},
 	},
 	dropdownMenu: {
@@ -45,12 +51,28 @@ const styleSheet = (theme) => ({
 	datePicker: {
 		display: 'flex',
 		width: '100%',
+		'& .ant-calendar-picker-icon': {
+			width: '22px',
+			height: '22px',
+			right: '12px',
+			top: '50%',
+			marginTop: '-11px',
+			'&:after': {
+				fontSize: '22px',
+			},
+		},
 		'& input': {
+			height: 45,
 			backgroundColor: '#FFF',
+			'&:focus': {
+				border: 0,
+				outline: 0,
+				boxShadow: 'none',
+			},
 		},
 	},
 	btnSearch: {
-		backgroundColor: theme.palette.secondary[500],
+		height: '45px',
 		borderRadius: '0px 30px 30px 0px',
 		width: '100%',
 	},
@@ -58,6 +80,7 @@ const styleSheet = (theme) => ({
 		borderRight: '1px solid #E1E7F0',
 	},
 	firstChild: {
+		paddingLeft: 20,
 		borderRadius: '30px 0 0 30px !important',
 	},
 	icon: {
@@ -72,9 +95,17 @@ const styleSheet = (theme) => ({
 	},
 	select: {
 		backgroundColor: '#FFF',
-
 		'& .ant-select-selection': {
 			backgroundColor: '#FFF',
+			height: 45,
+			'&:focus': {
+				border: 0,
+				outline: 0,
+				boxShadow: 'none',
+			},
+		},
+		'& .ant-select-selection__rendered': {
+			lineHeight: '45px',
 		},
 	},
 });
@@ -138,7 +169,7 @@ export default class SearchBar extends Component {
 
 		return (
 			<Form onSubmit={this.handleSubmit}>
-				<Row className={classes.root}>
+				<Row className={classes.root} type="flex">
 					<Col span={5} className={classes.borderRight}>
 						<Dropdown overlay={menuDeparture} trigger={['click']}>
 							<div>
@@ -206,7 +237,7 @@ export default class SearchBar extends Component {
 						</Form.Item>
 					</Col>
 					<Col span={3}>
-						<Button className={classes.btnSearch} htmlType="submit" size="large">Search</Button>
+						<Button type="secondary" className={classes.btnSearch} htmlType="submit" size="large">Search</Button>
 					</Col>
 				</Row>
 			</Form>

@@ -18,7 +18,7 @@ import Container from 'src/components/Layout/Container';
 const styles = (/* theme */) => ({
 	root: {
 		padding: '40px 0 50px !important',
-		marginTop: '24px',
+		// marginTop: '24px',
 		background: '#ededed',
 		borderTop: '1px solid #e4e1e1',
 	},

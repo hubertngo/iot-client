@@ -27,6 +27,7 @@ const styles = (theme) => ({
 		height: '45px',
 		zIndex: '9',
 		background: '#fff',
+		boxShadow: '1px 0px 3px rgba(0, 0, 0, 0.3)',
 	},
 	content: {
 		display: 'flex',

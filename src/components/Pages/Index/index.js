@@ -22,7 +22,6 @@ import Container from 'src/components/Layout/Container';
 const styleSheet = (theme) => ({
 	root: {
 		position: 'relative',
-		width: 1180,
 		margin: 'auto',
 		background: '#FFF',
 		zIndex: 1,
@@ -30,24 +29,24 @@ const styleSheet = (theme) => ({
 	},
 
 	banner: {
-		position: 'absolute',
-		zIndex: -1,
+		left: '0',
 		width: '100%',
-		background: 'lightblue url("/static/assets/images/banner.jpeg") no-repeat fixed center',
-		height: 384,
-		left: 0,
-		backgroundSize: 1180,
-		backgroundPosition: '50% -139%',
-
+		height: '384px',
+		zIndex: '-1',
+		position: 'absolute',
+		background: 'lightblue url(/static/assets/images/banner.jpeg)',
+		backgroundSize: 'cover',
+		backgroundPosition: '55%',
 		'&:after': {
-			content: '""',
-			display: 'block',
-			background: 'linear-gradient(#4F3F91, #496BC4)',
-			opacity: 0.5,
+			top: '0',
 			width: '100%',
 			height: '100%',
+			content: '""',
+			display: 'block',
+			opacity: '0.5',
 			position: 'absolute',
-			top: 0,
+			background: 'linear-gradient(221.52deg, #4F3F91 28.2%, #496BC4 81.27%)',
+			boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
 		},
 	},
 
