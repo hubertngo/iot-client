@@ -15,9 +15,9 @@ import withStyles from 'src/theme/jss/withStyles';
 
 import { Modal } from 'antd';
 
-import LoginForm from 'src/components/Form/Login';
+import FlightDetail from 'src/components/Flight/Card/Detail';
 
-import { toggleLoginModal } from 'src/redux/actions/modal';
+import { toggleFlightModal } from 'src/redux/actions/modal';
 
 const styleSheet = (/* theme */) => ({
 	wrap: {
@@ -42,33 +42,33 @@ function mapStateToProps(state) {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		action: bindActionCreators({
-			toggleLoginModal,
+			toggleFlightModal,
 		}, dispatch),
 	};
 };
 
-const LoginModal = (props) => {
-	const { classes, store: { modal: { login } } } = props;
+const FlightModal = (props) => {
+	const { classes, store: { modal: { flight } } } = props;
 
 	return (
 		<Modal
 			// title="Basic Modal"
-			visible={login.open}
-			closable={login.closable}
+			visible={flight.open}
+			closable={flight.closable}
 			footer={null}
 			bodyStyle={{ padding: 0 }}
 			className={classes.root}
 			wrapClassName={classes.wrap}
 			width="auto"
 			destroyOnClose
-			onCancel={login.closable ? f => f : () => props.action.toggleLoginModal({ open: false })}
+			onCancel={flight.closable ? f => f : () => props.action.toggleFlightModal({ open: false })}
 		>
-			<LoginForm />
+			{ flight.open ? <FlightDetail flight={flight.data} /> : null }
 		</Modal>
 	);
 };
 
-LoginModal.propTypes = {
+FlightModal.propTypes = {
 	classes: PropTypes.object.isRequired,
 	// store
 	store: PropTypes.shape({
@@ -76,12 +76,12 @@ LoginModal.propTypes = {
 	}).isRequired,
 	// action
 	action: PropTypes.shape({
-		toggleLoginModal: PropTypes.func.isRequired,
+		toggleFlightModal: PropTypes.func.isRequired,
 	}).isRequired,
 };
 
-LoginModal.defaultProps = {
+FlightModal.defaultProps = {
 	// classes: {},
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(LoginModal));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(FlightModal));

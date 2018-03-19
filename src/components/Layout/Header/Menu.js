@@ -72,7 +72,7 @@ const styleSheet = (theme) => ({
 function mapStateToProps(state) {
 	return {
 		store: {
-			auth: state.auth,
+			auth: state.get('auth').toJS(),
 		},
 	};
 }

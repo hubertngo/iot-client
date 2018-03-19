@@ -54,8 +54,8 @@ const styleSheet = (theme) => ({
 function mapStateToProps(state) {
 	return {
 		store: {
-			auth: state.auth,
-			modal: state.modal,
+			auth: state.get('auth').toJS(),
+			modal: state.get('modal').toJS(),
 		},
 	};
 }
