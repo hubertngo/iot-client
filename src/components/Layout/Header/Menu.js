@@ -10,16 +10,14 @@ import React, { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
-// import { Button } from 'antd';
+import { withRouter } from 'next/router';
+import Link from 'next/link';
 
 import withStyles from 'src/theme/jss/withStyles';
 
 import AuthStorage from 'src/utils/AuthStorage';
 
 import { toggleLoginModal } from 'src/redux/actions/modal';
-
-// import BtnAddQuestion from 'src/components/Question/BtnAdd';
 
 import AvatarBtn from './AvatarBtn';
 
@@ -48,6 +46,10 @@ const styleSheet = (theme) => ({
 				},
 			},
 		},
+	},
+	chosenTab: {
+		borderBottom: '3px solid #FF8100',
+		fontWeight: 'bold',
 	},
 	button: {
 		fontSize: '1.4rem',
@@ -87,7 +89,7 @@ const mapDispatchToProps = (dispatch) => {
 
 @withStyles(styleSheet)
 @connect(mapStateToProps, mapDispatchToProps)
-export default class Menu extends Component {
+class Menu extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
 		// store
@@ -98,6 +100,7 @@ export default class Menu extends Component {
 		action: PropTypes.shape({
 			toggleLoginModal: PropTypes.func.isRequired,
 		}).isRequired,
+		router: PropTypes.object.isRequired,
 	}
 
 	handleOpenLogin = (e) => {
@@ -105,27 +108,31 @@ export default class Menu extends Component {
 		this.props.action.toggleLoginModal({ open: true });
 	}
 
-	render() {
-		const { classes, store: { auth } } = this.props;
+	isAtCurrentRoute = (checkingRoute, currentRoute) => {
+		return currentRoute.pathname.indexOf(checkingRoute) >= 0;
+	}
 
+	render() {
+		const { classes, store: { auth }, router } = this.props;
+		const { isAtCurrentRoute } = this;
 		return (
 			<div className={classes.root}>
 				<nav className={classes.menu}>
 					<ul>
-						<li>
-							<a href="/">
+						<li className={isAtCurrentRoute('/', router) && classes.chosenTab}>
+							<Link href="/">
 								Tìm kiếm vé
-							</a>
+							</Link>
 						</li>
-						<li>
-							<a href="/">
+						<li className={isAtCurrentRoute('/vechungtoi', router) && classes.chosenTab}>
+							<Link href="/vechungtoi">
 								Về chúng tôi
-							</a>
+							</Link>
 						</li>
-						<li>
-							<a href="/">
+						<li className={isAtCurrentRoute('/blog', router) && classes.chosenTab}>
+							<Link href="/blog">
 								Blog
-							</a>
+							</Link>
 						</li>
 						{
 							!AuthStorage.loggedIn && !auth.id &&
@@ -144,3 +151,5 @@ export default class Menu extends Component {
 		);
 	}
 }
+
+export default withRouter(Menu);
