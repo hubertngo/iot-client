@@ -13,13 +13,20 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
 
+// Styles
 import withStyles from 'src/theme/jss/withStyles';
 
-import AuthStorage from 'src/utils/AuthStorage';
-
+// Actions
 import { toggleLoginModal } from 'src/redux/actions/modal';
 
+// Store
+import AuthStorage from 'src/utils/AuthStorage';
+
+// Components
 import AvatarBtn from './AvatarBtn';
+import Avatar from 'src/components/Photo/Avatar';
+import UserDropdown from './UserDropdown';
+import { Icon, Dropdown } from 'antd';
 
 const styleSheet = (theme) => ({
 	root: {
@@ -48,7 +55,7 @@ const styleSheet = (theme) => ({
 		},
 	},
 	chosenTab: {
-		borderBottom: '3px solid #FF8100',
+		borderBottom: `3px solid ${theme.palette.secondary[500]}`,
 		fontWeight: 'bold',
 	},
 	button: {
@@ -66,8 +73,31 @@ const styleSheet = (theme) => ({
 		'& a': {
 			color: 'white !important',
 		},
-		background: '#FF8100',
+		background: theme.palette.secondary[500],
 		padding: '0',
+	},
+	postBtn: {
+		padding: '9px',
+		'& div': {
+			borderRadius: '3px',
+			color: 'white',
+			background: theme.palette.primary[500],
+			height: '30px',
+			lineHeight: '30px',
+			padding: '0 10px',
+		},
+	},
+	loggedUser: {
+		padding: '9px',
+		'& div': {
+			height: '30px',
+			lineHeight: '30px',
+			'& img': {
+				borderRadius: '50%',
+				width: '28px',
+				height: '28px',
+			},
+		},
 	},
 });
 
@@ -87,9 +117,10 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+@withRouter
 @withStyles(styleSheet)
 @connect(mapStateToProps, mapDispatchToProps)
-class Menu extends Component {
+export default class Menu extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
 		// store
@@ -121,25 +152,36 @@ class Menu extends Component {
 					<ul>
 						<li className={isAtCurrentRoute('/', router) && classes.chosenTab}>
 							<Link href="/">
-								Tìm kiếm vé
+								<a>Tìm kiếm vé</a>
 							</Link>
 						</li>
 						<li className={isAtCurrentRoute('/vechungtoi', router) && classes.chosenTab}>
 							<Link href="/vechungtoi">
-								Về chúng tôi
+								<a>Về chúng tôi</a>
 							</Link>
 						</li>
 						<li className={isAtCurrentRoute('/blog', router) && classes.chosenTab}>
 							<Link href="/blog">
-								Blog
+								<a>Blog</a>
 							</Link>
 						</li>
-						{
+						{/* {
 							!AuthStorage.loggedIn && !auth.id &&
 							<li className={classes.loginBtn}>
 								<a href="/login" onClick={this.handleOpenLogin}>Đăng nhập</a>
 							</li>
-						}
+						} */}
+						<li className={classes.postBtn}>
+							<div onClick={this.handleOpenLogin}>Đăng tin</div>
+						</li>
+						<li className={classes.loggedUser}>
+							<Dropdown overlay={<UserDropdown />} trigger={['click']}>
+								<div>
+									<span> <Avatar style={{ marginBottom: 5, cursor: 'pointer' }} size={30} /> </span>
+									<span> <Icon type="down" style={{ marginLeft: '5px', fontWeight: 'bold', cursor: 'pointer' }} /> </span>
+								</div>
+							</Dropdown>
+						</li>
 					</ul>
 				</nav>
 				{/* <BtnAddQuestion node={<Button className={classes.btnAdd} type="primary" ghost>Tạo câu hỏi</Button>} /> */}
@@ -152,4 +194,3 @@ class Menu extends Component {
 	}
 }
 
-export default withRouter(Menu);
