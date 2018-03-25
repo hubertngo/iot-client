@@ -26,3 +26,10 @@ export function toggleFlightModal(payload) {
 		payload,
 	};
 }
+
+export function toggleTicketPosterModal(payload) {
+	return {
+		type: 'TOGGLE_TICKET_POSTER_MODAL',
+		payload,
+	};
+}

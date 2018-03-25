@@ -95,7 +95,7 @@ export default class UserDropdown extends Component {
 		return (
 			<div className={classes.root}>
 				<div className={classes.arrow} />
-				<Icon type="close-circle" size={30} className={classes.closeBtn} />
+				<Icon type="close-circle" className={classes.closeBtn} />
 				<Row type="flex" className={`${classes.row} ${classes.rowHeader}`}>
 					<Col span={6}>
 						<Avatar style={{ marginBottom: 5 }} size={40} />

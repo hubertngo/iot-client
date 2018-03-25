@@ -22,6 +22,10 @@ export const initialState = fromJS({
 		closable: false,
 		data: {},
 	},
+	ticketPoster: {
+		open: false,
+		closable: false,
+	},
 });
 
 export default (state = initialState, action) => {
@@ -51,7 +55,15 @@ export default (state = initialState, action) => {
 				};
 			});
 
+		case 'TOGGLE_TICKET_POSTER_MODAL':
+			return state.update('ticketPoster', () => {
+				return {
+					open: !!action.payload.open,
+					closable: !!action.payload.closable,
+				};
+			});
+
 		default:
 			return state;
 	}
-}
+};

@@ -17,7 +17,7 @@ import Link from 'next/link';
 import withStyles from 'src/theme/jss/withStyles';
 
 // Actions
-import { toggleLoginModal } from 'src/redux/actions/modal';
+import { toggleLoginModal, toggleTicketPosterModal } from 'src/redux/actions/modal';
 
 // Store
 import AuthStorage from 'src/utils/AuthStorage';
@@ -78,6 +78,7 @@ const styleSheet = (theme) => ({
 	},
 	postBtn: {
 		padding: '9px',
+		cursor: 'pointer',
 		'& div': {
 			borderRadius: '3px',
 			color: 'white',
@@ -113,6 +114,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		action: bindActionCreators({
 			toggleLoginModal,
+			toggleTicketPosterModal,
 		}, dispatch),
 	};
 };
@@ -130,6 +132,7 @@ export default class Menu extends Component {
 		// action
 		action: PropTypes.shape({
 			toggleLoginModal: PropTypes.func.isRequired,
+			toggleTicketPosterModal: PropTypes.func.isRequired,
 		}).isRequired,
 		router: PropTypes.object.isRequired,
 	}
@@ -137,6 +140,11 @@ export default class Menu extends Component {
 	handleOpenLogin = (e) => {
 		e.preventDefault();
 		this.props.action.toggleLoginModal({ open: true });
+	}
+
+	handleOpenTicketPoster = (e) => {
+		e.preventDefault();
+		this.props.action.toggleTicketPosterModal({ open: true });
 	}
 
 	isAtCurrentRoute = (checkingRoute, currentRoute) => {
@@ -172,7 +180,7 @@ export default class Menu extends Component {
 							</li>
 						} */}
 						<li className={classes.postBtn}>
-							<div onClick={this.handleOpenLogin}>Đăng tin</div>
+							<div onClick={this.handleOpenTicketPoster}>Đăng tin</div>
 						</li>
 						<li className={classes.loggedUser}>
 							<Dropdown overlay={<UserDropdown />} trigger={['click']}>

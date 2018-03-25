@@ -122,7 +122,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		// action: bindActionCreators({
-			// toggleLoginModal,
+		// toggleLoginModal,
 		// }, dispatch),
 	};
 };
