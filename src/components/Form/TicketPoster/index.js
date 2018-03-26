@@ -15,9 +15,10 @@ import withStyles from 'src/theme/jss/withStyles';
 import { locationOptions } from 'src/constants/selectOption';
 import AuthStorage from 'src/utils/AuthStorage';
 
-import { Form, Icon, Input, Button, Radio, Select, Row, Col } from 'antd';
 import { createFlight } from 'src/redux/actions/flight';
 import { toggleTicketPosterModal } from 'src/redux/actions/modal';
+import { Form, Icon, Input, Button, Radio, Select, Row, Col, Menu, Dropdown } from 'antd';
+import IconDeparture from 'src/components/Photo/IconDeparture';
 import PosterDivider from './PosterDivider';
 
 const { TextArea } = Input;
@@ -48,6 +49,12 @@ const styleSheet = (theme) => ({
 
 	},
 	formLabel: {
+	},
+	action: {
+		textAlign: 'right',
+	},
+	actionGroup: {
+		marginBottom: 15,
 	},
 });
 
@@ -81,6 +88,7 @@ export default class TicketPosterForm extends Component {
 		}).isRequired,
 		action: PropTypes.shape({
 			createFlight: PropTypes.func,
+			toggleTicketPosterModal: PropTypes.func,
 		}).isRequired,
 	}
 
@@ -116,12 +124,27 @@ export default class TicketPosterForm extends Component {
 		});
 	}
 
-	render() {
-		const { form: { getFieldDecorator }, classes } = this.props;
+	// _handleDepartureChange = (value) => {
+	// }
 
+	// _handleDestinationChange = (value) => {
+	// }
+
+	render() {
+		const { form: { getFieldDecorator }, classes, action } = this.props;
+		// const menuDeparture = (
+		// 	<Menu className={classes.dropdownMenu} onClick={this._handleDepartureChange}>
+		// 		{locationOptions.map(location => <Menu.Item key={location.value}>{location.label}</Menu.Item>)}
+		// 	</Menu>
+		// );
+		// const menuDestination = (
+		// 	<Menu className={classes.dropdownMenu} onClick={this._handleDestinationChange}>
+		// 		{locationOptions.map(location => <Menu.Item key={location.value}>{location.label}</Menu.Item>)}
+		// 	</Menu>
+		// );
 		return (
 			<div className={classes.root}>
-				<Icon type="close-circle" className={classes.closeBtn} />
+				<Icon type="close-circle" className={classes.closeBtn} onClick={() => action.toggleTicketPosterModal({ open: false })} />
 				<div className={classes.header}>
 					Nhập thông tin bán vé
 				</div>
@@ -190,7 +213,7 @@ export default class TicketPosterForm extends Component {
 								</div>
 							</Form.Item>
 						</Col>
-						<Col span={4} />
+						<Col span={4} style={{ textAlign: 'center', paddingTop: 45 }}> <IconDeparture extended color="#4368C4" /> </Col>
 						<Col span={10}>
 							<Form.Item>
 								<div className={classes.formItem}>
@@ -206,11 +229,6 @@ export default class TicketPosterForm extends Component {
 								</div>
 							</Form.Item>
 						</Col>
-					</Row>
-					<Row className={classes.formItem} type="flex">
-						<Col span={10} />
-						<Col span={4} />
-						<Col span={10} />
 					</Row>
 					<PosterDivider title="Thông tin khác" titleWidth={23} />
 					<Form.Item>
@@ -255,9 +273,21 @@ export default class TicketPosterForm extends Component {
 						</span>
 					</Row>
 					<PosterDivider />
-					<Button type="primary" htmlType="submit" size="large" className="radius-large" style={{ width: '100%' }} loading={this.state.loading}>
-						Tạo
-					</Button>
+					<div className={classes.action}>
+						<div className={classes.actionGroup}>
+							<Button.Group>
+								<Button> Đấu thầu</Button>
+								<Button> Cố định </Button>
+							</Button.Group>
+						</div>
+						<div className={classes.actionGroup}>
+							<span> Giá khởi điểm </span>
+							<span> <Input size="default" className="radius-small" maxLength="25" style={{ width: 150 }} suffix="VNĐ" /> </span>
+						</div>
+						<div className={classes.actionGroup}>
+							<Button type="primary" htmlType="submit" loading={this.state.loading}> Đăng tin </Button>
+						</div>
+					</div>
 				</Form>
 			</div>
 		);
