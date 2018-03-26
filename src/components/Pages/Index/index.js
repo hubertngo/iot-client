@@ -14,6 +14,7 @@ import { bindActionCreators } from 'redux';
 import withStyles from 'src/theme/jss/withStyles';
 import { Button, Input, Select, DatePicker, Tabs, Row, Col } from 'antd';
 import FlightCard from 'src/components/Flight/Card';
+import FlightList from 'src/components/Flight/List';
 import FlightModal from 'src/components/Modals/Flight';
 import FlightDetail from 'src/components/Flight/Card/Detail';
 import SearchBar from 'src/components/Form/SearchBar';
@@ -158,24 +159,7 @@ export default class ClassName extends Component {
 						<Tabs.TabPane tab="Voucher" key="3" />
 					</Tabs>
 					<SearchBar />
-					<Row gutter={20} className={classes.wrapperContent}>
-						<div className={classes.border} />
-						<Col span={12}>
-							<Button type="primary" className={classes.btn}>Tìm mua</Button>
-							<FlightCard />
-							<FlightCard />
-							<FlightCard />
-							<FlightCard />
-							<FlightCard />
-							<FlightCard />
-							<FlightCard />
-							<FlightCard />
-						</Col>
-						<Col span={12}>
-							<Button type="primary" className={classes.btn}>Đăng bán</Button>
-							<FlightCard />
-						</Col>
-					</Row>
+					<FlightList />
 				</Container>
 
 				<FlightModal />

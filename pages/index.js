@@ -14,13 +14,21 @@ import withRoot from 'src/root';
 import MainLayout from 'src/layout/Main';
 import Index from 'src/components/Pages/Index';
 
+import { getFlightList } from 'src/redux/actions/flight';
+
 @withRoot
 export default class IndexPage extends PureComponent {
-	// static async getInitialProps({ isServer, store }) {
-	// 	if (isServer) {
-
-	// 	}
-	// }
+	static async getInitialProps({ isServer, store }) {
+		console.log('us', isServer);
+		if (isServer) {
+			await store.dispatch(getFlightList({
+				filter: {
+					limit: 4,
+					skip: 0,
+				},
+			}));
+		}
+	}
 
 	render() {
 		return (

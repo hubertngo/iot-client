@@ -23,8 +23,9 @@ import { toggleLoginModal, toggleTicketPosterModal } from 'src/redux/actions/mod
 import AuthStorage from 'src/utils/AuthStorage';
 
 // Components
-import AvatarBtn from './AvatarBtn';
 import Avatar from 'src/components/Photo/Avatar';
+import CheckLogin from 'src/components/Form/CheckLogin';
+import AvatarBtn from './AvatarBtn';
 import UserDropdown from './UserDropdown';
 import { Icon, Dropdown } from 'antd';
 
@@ -142,8 +143,8 @@ export default class Menu extends Component {
 		this.props.action.toggleLoginModal({ open: true });
 	}
 
-	handleOpenTicketPoster = (e) => {
-		e.preventDefault();
+	handleOpenTicketPoster = () => {
+		// e.preventDefault();
 		this.props.action.toggleTicketPosterModal({ open: true });
 	}
 
@@ -180,7 +181,9 @@ export default class Menu extends Component {
 							</li>
 						} */}
 						<li className={classes.postBtn}>
-							<div onClick={this.handleOpenTicketPoster}>Đăng tin</div>
+							<CheckLogin onClick={this.handleOpenTicketPoster}>
+								<div>Đăng tin</div>
+							</CheckLogin>
 						</li>
 						<li className={classes.loggedUser}>
 							<Dropdown overlay={<UserDropdown />} trigger={['click']}>

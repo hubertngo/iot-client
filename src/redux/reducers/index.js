@@ -10,12 +10,14 @@ import loading, { initialState as initialLoading } from './loading';
 import modal, { initialState as initialModal } from './modal';
 
 import user, { initialState as initialUser } from './user';
+import flight, { initialState as initialFlight } from './flight';
 
 export const initialState = {
 	auth: initialAuth,
 	loading: initialLoading,
 	modal: initialModal,
 	user: initialUser,
+	flight: initialFlight,
 };
 
 export default {
@@ -23,4 +25,5 @@ export default {
 	loading,
 	modal,
 	user,
+	flight,
 };
