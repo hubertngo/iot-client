@@ -13,8 +13,13 @@ import { bindActionCreators } from 'redux';
 
 import withStyles from 'src/theme/jss/withStyles';
 
-import { Form, Icon, Input, Button, Radio, Select, Row, Col } from 'antd';
+import { Form, Icon, Input, Button, Radio, Select, Row, Col, Menu, Dropdown } from 'antd';
 import PosterDivider from './PosterDivider';
+import IconDeparture from 'src/components/Photo/IconDeparture';
+
+import { toggleTicketPosterModal } from 'src/redux/actions/modal';
+
+import { locationOptions } from 'src/constants/selectOption';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -45,6 +50,12 @@ const styleSheet = (theme) => ({
 	},
 	formLabel: {
 	},
+	action: {
+		textAlign: 'right',
+	},
+	actionGroup: {
+		marginBottom: 15,
+	},
 });
 
 function mapStateToProps(state) {
@@ -58,7 +69,9 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-
+		action: bindActionCreators({
+			toggleTicketPosterModal,
+		}, dispatch),
 	};
 };
 
@@ -68,6 +81,9 @@ const mapDispatchToProps = (dispatch) => {
 export default class TicketPosterForm extends Component {
   static propTypes = {
   	classes: PropTypes.object.isRequired,
+  	action: PropTypes.shape({
+  		toggleTicketPosterModal: PropTypes.func.isRequired,
+  	}).isRequired,
   }
 
   static defaultProps = {
@@ -80,12 +96,27 @@ export default class TicketPosterForm extends Component {
 
 	}
 
-	render() {
-		const { form: { getFieldDecorator }, classes } = this.props;
+	_handleDepartureChange = (value) => {
+	}
 
+	_handleDestinationChange = (value) => {
+	}
+
+	render() {
+		const { form: { getFieldDecorator }, classes, action } = this.props;
+		const menuDeparture = (
+			<Menu className={classes.dropdownMenu} onClick={this._handleDepartureChange}>
+				{locationOptions.map(location => <Menu.Item key={location.value}>{location.label}</Menu.Item>)}
+			</Menu>
+		);
+		const menuDestination = (
+			<Menu className={classes.dropdownMenu} onClick={this._handleDestinationChange}>
+				{locationOptions.map(location => <Menu.Item key={location.value}>{location.label}</Menu.Item>)}
+			</Menu>
+		);
 		return (
 			<div className={classes.root}>
-				<Icon type="close-circle" className={classes.closeBtn} />
+				<Icon type="close-circle" className={classes.closeBtn} onClick={() => action.toggleTicketPosterModal({ open: false })} />
 				<div className={classes.header}>
 					Nhập thông tin bán vé
 				</div>
@@ -140,10 +171,37 @@ export default class TicketPosterForm extends Component {
 					<PosterDivider title="Chiều đi" titleWidth={13} />
 					<Row className={classes.formItem} type="flex">
 						<Col span={10}>
+							<Dropdown overlay={menuDeparture} trigger={['click']}>
+								<Form.Item>
+									{getFieldDecorator('content')(
+										<div className={classes.formItem}>
+											<div className={classes.formLabel}> Điểm xuất phát </div>
+											<Input size="default" className="radius-small" maxLength="25" style={{ width: '100%' }} />
+										</div>,
+									)}
+								</Form.Item>
+							</Dropdown>
+						</Col>
+						<Col span={4} style={{ textAlign: 'center', paddingTop: 45 }}> <IconDeparture extended color="#4368C4" /> </Col>
+						<Col span={10}>
+							<Dropdown overlay={menuDestination} trigger={['click']} >
+								<Form.Item>
+									{getFieldDecorator('content')(
+										<div className={classes.formItem}>
+											<div className={classes.formLabel}> Điểm đến </div>
+											<Input size="default" className="radius-small" maxLength="25" style={{ width: '100%' }} />
+										</div>,
+									)}
+								</Form.Item>
+							</Dropdown>
+						</Col>
+					</Row>
+					<Row className={classes.formItem} type="flex">
+						<Col span={10}>
 							<Form.Item>
 								{getFieldDecorator('content')(
 									<div className={classes.formItem}>
-										<div className={classes.formLabel}> Điểm xuất phát </div>
+										<div className={classes.formLabel}> Thời gian xuất phát </div>
 										<Input size="default" className="radius-small" maxLength="25" style={{ width: '100%' }} />
 									</div>,
 								)}
@@ -154,17 +212,12 @@ export default class TicketPosterForm extends Component {
 							<Form.Item>
 								{getFieldDecorator('content')(
 									<div className={classes.formItem}>
-										<div className={classes.formLabel}> Điểm đến </div>
+										<div className={classes.formLabel}> Thời gian hạ cánh </div>
 										<Input size="default" className="radius-small" maxLength="25" style={{ width: '100%' }} />
 									</div>,
 								)}
 							</Form.Item>
 						</Col>
-					</Row>
-					<Row className={classes.formItem} type="flex">
-						<Col span={10} />
-						<Col span={4} />
-						<Col span={10} />
 					</Row>
 					<PosterDivider title="Thông tin khác" titleWidth={23} />
 					<Form.Item>
@@ -209,6 +262,21 @@ export default class TicketPosterForm extends Component {
 						</span>
 					</Row>
 					<PosterDivider />
+					<div className={classes.action}>
+						<div className={classes.actionGroup}>
+							<Button.Group>
+								<Button> Đấu thầu</Button>
+								<Button> Cố định </Button>
+							</Button.Group>
+						</div>
+						<div className={classes.actionGroup}>
+							<span> Giá khởi điểm </span>
+							<span> <Input size="default" className="radius-small" maxLength="25" style={{ width: 150 }} suffix="VNĐ" /> </span>
+						</div>
+						<div className={classes.actionGroup}>
+							<Button type="primary"> Đăng tin </Button>
+						</div>
+					</div>
 				</Form>
 			</div>
 		);
