@@ -106,7 +106,7 @@ export default class UserDropdown extends Component {
 					</Col>
 				</Row>
 				<Row type="flex" className={classes.row}>
-					<span> <Icon /> </span>
+					<span> <Icon type="clock-circle-o" /> </span>
 					<span> Lịch sử giao dịch cá nhân </span>
 				</Row>
 				<Row type="flex" className={classes.row}>

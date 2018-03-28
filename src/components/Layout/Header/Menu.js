@@ -164,8 +164,8 @@ export default class Menu extends Component {
 								<a>Tìm kiếm vé</a>
 							</Link>
 						</li>
-						<li className={isAtCurrentRoute('/vechungtoi', router) && classes.chosenTab}>
-							<Link href="/vechungtoi">
+						<li className={isAtCurrentRoute('/about-us', router) && classes.chosenTab}>
+							<Link href="/about-us">
 								<a>Về chúng tôi</a>
 							</Link>
 						</li>
