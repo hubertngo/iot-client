@@ -23,7 +23,7 @@ import LoginModal from 'src/components/Modals/Login';
 import SignUpModal from 'src/components/Modals/SignUp';
 import TicketPosterModal from 'src/components/Modals/TicketPoster';
 import UserInfoModal from 'src/components/Modals/UserInfo';
-// import EditUserInfoModal from 'src/components/Modals/EditUserInfo';
+import EditUserInfoModal from 'src/components/Modals/EditUserInfo';
 
 Router.onRouteChangeStart = (/* url */) => {
 	NProgress.start();
@@ -63,7 +63,7 @@ const withRoot = (Child) => {
 					<SignUpModal />
 					<TicketPosterModal />
 					<UserInfoModal />
-					{/* <EditUserInfoModal /> */}
+					<EditUserInfoModal />
 				</Fragment>
 			);
 		}

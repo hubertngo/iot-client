@@ -98,7 +98,7 @@ const AvatarBtn = ({ store, action, classes }) => {
 	const content = (
 		<div className={classes.content}>
 			<div className={classes.itemWrapper}>
-				<div className={classes.item} onClick={logout}>
+				<div className={classes.item}>
 					<Icon type="clock-circle-o" />
 					<span> Lịch sử giao dịch cá nhân </span>
 				</div>

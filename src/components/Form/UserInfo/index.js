@@ -76,7 +76,6 @@ const styleSheet = (theme) => ({
 		maxWidth: 350,
 		overflow: 'hidden',
 		textOverflow: 'ellipsic',
-
 		'& > i': {
 			marginRight: 5,
 		},
@@ -104,7 +103,7 @@ const mapDispatchToProps = (dispatch) => {
 @withStyles(styleSheet)
 @connect(mapStateToProps, mapDispatchToProps)
 @Form.create()
-export default class LoginForm extends Component {
+export default class UserInfoForm extends Component {
 	static propTypes = {
 		form: PropTypes.object.isRequired,
 		classes: PropTypes.object.isRequired,
@@ -120,12 +119,18 @@ export default class LoginForm extends Component {
 		}).isRequired,
 	}
 
+	chooseToEditInfo() {
+		const { action } = this.props;
+		action.toggleUserInfoModal({ open: false });
+		action.toggleEditUserInfoModal({ open: true });
+	}
+
 	render() {
 		const { form: { getFieldDecorator }, classes, style, store, action } = this.props;
 		const content = 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018';
 		const	updatedTime = '12/02/2018 16:08';
 		const	link = 'https://dulichgiare.com.vn/vemaybay/147dqe';
-		console.log('store auth', store.auth);
+
 		return (
 			<div className={classes.root} style={style}>
 				<Icon type="close-circle" className={classes.closeBtn} onClick={() => action.toggleUserInfoModal({ open: false })} />
@@ -160,8 +165,8 @@ export default class LoginForm extends Component {
 					</Col>
 				</Row>
 				<div className={`${classes.rightCol} ${classes.link}`}>
-					<span> <Icon type="edit" /> </span>
-					<span> Chỉnh sửa </span>
+					<span onClick={() => this.chooseToEditInfo()}> <Icon type="edit" /> </span>
+					<span onClick={() => this.chooseToEditInfo()}> Chỉnh sửa </span>
 				</div>
 				<Divider className={classes.divider} />
 				<div className={classes.hisTitle}> Lịch sử giao dịch (2) </div>
