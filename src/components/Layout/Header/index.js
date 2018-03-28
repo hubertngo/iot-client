@@ -33,7 +33,6 @@ const styles = (theme) => ({
 		display: 'flex',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		padding: '0 0 0 15px',
 		height: '45px',
 	},
 	left: {

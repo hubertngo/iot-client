@@ -40,6 +40,7 @@ const styleSheet = (theme) => ({
 			listStyle: 'none',
 			margin: 0,
 			'& li': {
+				height: '46px',
 				'& a': {
 					color: 'black',
 					padding: '0 15px',
@@ -48,7 +49,6 @@ const styleSheet = (theme) => ({
 					fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
 					// fontWeight: '500',
 					fontSize: '0.85rem',
-					height: '45px',
 					lineHeight: '48px',
 				},
 			},
@@ -148,7 +148,7 @@ export default class Menu extends Component {
 	}
 
 	isAtCurrentRoute = (checkingRoute, currentRoute) => {
-		return currentRoute.pathname.indexOf(checkingRoute) >= 0;
+		return checkingRoute === '/' ? checkingRoute === currentRoute.pathname : currentRoute.pathname.indexOf(checkingRoute) >= 0;
 	}
 
 	render() {
