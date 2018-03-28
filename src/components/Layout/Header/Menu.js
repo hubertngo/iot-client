@@ -26,7 +26,6 @@ import AuthStorage from 'src/utils/AuthStorage';
 import Avatar from 'src/components/Photo/Avatar';
 import CheckLogin from 'src/components/Form/CheckLogin';
 import AvatarBtn from './AvatarBtn';
-import UserDropdown from './UserDropdown';
 import { Icon, Dropdown } from 'antd';
 
 const styleSheet = (theme) => ({
@@ -41,6 +40,7 @@ const styleSheet = (theme) => ({
 			listStyle: 'none',
 			margin: 0,
 			'& li': {
+				height: '46px',
 				'& a': {
 					color: 'black',
 					padding: '0 15px',
@@ -49,7 +49,6 @@ const styleSheet = (theme) => ({
 					fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
 					// fontWeight: '500',
 					fontSize: '0.85rem',
-					height: '45px',
 					lineHeight: '48px',
 				},
 			},
@@ -149,7 +148,7 @@ export default class Menu extends Component {
 	}
 
 	isAtCurrentRoute = (checkingRoute, currentRoute) => {
-		return currentRoute.pathname.indexOf(checkingRoute) >= 0;
+		return checkingRoute === '/' ? checkingRoute === currentRoute.pathname : currentRoute.pathname.indexOf(checkingRoute) >= 0;
 	}
 
 	render() {
@@ -164,8 +163,8 @@ export default class Menu extends Component {
 								<a>Tìm kiếm vé</a>
 							</Link>
 						</li>
-						<li className={isAtCurrentRoute('/vechungtoi', router) && classes.chosenTab}>
-							<Link href="/vechungtoi">
+						<li className={isAtCurrentRoute('/about-us', router) && classes.chosenTab}>
+							<Link href="/about-us">
 								<a>Về chúng tôi</a>
 							</Link>
 						</li>
@@ -174,25 +173,20 @@ export default class Menu extends Component {
 								<a>Blog</a>
 							</Link>
 						</li>
-						{/* {
+						{
 							!AuthStorage.loggedIn && !auth.id &&
 							<li className={classes.loginBtn}>
 								<a href="/login" onClick={this.handleOpenLogin}>Đăng nhập</a>
 							</li>
-						} */}
-						<li className={classes.postBtn}>
-							<CheckLogin onClick={this.handleOpenTicketPoster}>
-								<div>Đăng tin</div>
-							</CheckLogin>
-						</li>
-						<li className={classes.loggedUser}>
-							<Dropdown overlay={<UserDropdown />} trigger={['click']}>
-								<div>
-									<span> <Avatar style={{ marginBottom: 5, cursor: 'pointer' }} size={30} /> </span>
-									<span> <Icon type="down" style={{ marginLeft: '5px', fontWeight: 'bold', cursor: 'pointer' }} /> </span>
-								</div>
-							</Dropdown>
-						</li>
+						}
+						{
+							AuthStorage.loggedIn &&
+							<li className={classes.postBtn}>
+								<CheckLogin onClick={this.handleOpenTicketPoster}>
+									<div>Đăng tin</div>
+								</CheckLogin>
+							</li>
+						}
 					</ul>
 				</nav>
 				{/* <BtnAddQuestion node={<Button className={classes.btnAdd} type="primary" ghost>Tạo câu hỏi</Button>} /> */}

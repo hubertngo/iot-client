@@ -22,6 +22,8 @@ import { getUserAuth } from 'src/redux/actions/auth';
 import LoginModal from 'src/components/Modals/Login';
 import SignUpModal from 'src/components/Modals/SignUp';
 import TicketPosterModal from 'src/components/Modals/TicketPoster';
+import UserInfoModal from 'src/components/Modals/UserInfo';
+import EditUserInfoModal from 'src/components/Modals/EditUserInfo';
 
 Router.onRouteChangeStart = (/* url */) => {
 	NProgress.start();
@@ -60,6 +62,8 @@ const withRoot = (Child) => {
 					<LoginModal />
 					<SignUpModal />
 					<TicketPosterModal />
+					<UserInfoModal />
+					<EditUserInfoModal />
 				</Fragment>
 			);
 		}

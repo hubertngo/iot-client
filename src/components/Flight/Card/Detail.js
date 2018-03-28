@@ -20,7 +20,9 @@ import IconDeparture from 'src/components/Photo/IconDeparture';
 import IconMedal from 'src/components/Photo/IconMedal';
 import CheckLogin from 'src/components/Form/CheckLogin';
 
-import { toggleFlightModal } from 'src/redux/actions/modal';
+import { toggleFlightModal, toggleLoginModal } from 'src/redux/actions/modal';
+
+import AuthStorage from 'src/utils/AuthStorage';
 
 import GroupStar from './GroupStar';
 import BidBlock from './BidBlock';
@@ -128,6 +130,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		action: bindActionCreators({
 			toggleFlightModal,
+			toggleLoginModal,
 		}, dispatch),
 	};
 };
@@ -150,9 +153,18 @@ export default class SearchBar extends Component {
 	state = {
 	}
 
-	handleClickFlight = () => {
-		this.props.action.toggleFlightModal({ open: true });
-	}
+	// handleClickFlight = () => {
+	// 	const { store, action, flight } = this.props;
+
+	// 	console.log('AuthStorage', AuthStorage.loggedIn);
+
+	// 	if (!AuthStorage.loggedIn) {
+	// 		action.toggleLoginModal({ open: true });
+	// 		action.toggleFlightModal({ open: false });
+	// 	} else {
+	// 		action.toggleFlightModal({ open: true });
+	// 	}
+	// }
 
 	_renderAction() {
 		const { classes } = this.props;
@@ -218,7 +230,7 @@ export default class SearchBar extends Component {
 		const { author, updatedTime, content, link, seller, buyer, type, isHot } = flight;
 
 		return (
-			<div className={classes.root} onClick={this.handleClickFlight}>
+			<div className={classes.root}>
 				<div className={classes.header}>
 					<Avatar size={40} style={{ marginRight: 5 }} />
 					<span className={classes.author}>{type === 'Sell' ? seller.fullName : buyer.fullName}</span>

@@ -20,6 +20,17 @@ const styleSheet = () => ({
 
 const FlightBlock = ({ flight, style, classes, loading }) => {
 	const { departure, destination, startDate, airline } = flight;
+	const getAirlineLogo = (airlineName) => {
+		switch (airlineName) {
+			case 'vna':
+				return '/static/assets/images/logo/logo_vna.png';
+			case 'jetstar':
+				return '/static/assets/images/logo/logo_jetstar.png';
+			case 'vietjet':
+				return '/static/assets/images/logo/logo_vietjet.png';
+			default:
+		}
+	};
 
 	if (loading) {
 		return (
@@ -68,7 +79,7 @@ const FlightBlock = ({ flight, style, classes, loading }) => {
 								<span className={classes.note} style={{ marginLeft: 5 }}>Tất cả các hãng</span>
 							</Fragment>
 						) : (
-							<img src="/static/assets/images/logo/logo_vna.png" alt="" height={18} />
+							<img src={getAirlineLogo(airline)} alt="" height={18} />
 						)
 					}
 				</Col>
@@ -85,6 +96,7 @@ FlightBlock.propTypes = {
 	flight: PropTypes.object.isRequired,
 	classes: PropTypes.object.isRequired,
 	style: PropTypes.object,
+	loading: PropTypes.bool.isRequired,
 };
 
 FlightBlock.defaultProps = {
