@@ -26,7 +26,6 @@ import AuthStorage from 'src/utils/AuthStorage';
 import Avatar from 'src/components/Photo/Avatar';
 import CheckLogin from 'src/components/Form/CheckLogin';
 import AvatarBtn from './AvatarBtn';
-import UserDropdown from './UserDropdown';
 import { Icon, Dropdown } from 'antd';
 
 const styleSheet = (theme) => ({
@@ -174,25 +173,20 @@ export default class Menu extends Component {
 								<a>Blog</a>
 							</Link>
 						</li>
-						{/* {
+						{
 							!AuthStorage.loggedIn && !auth.id &&
 							<li className={classes.loginBtn}>
 								<a href="/login" onClick={this.handleOpenLogin}>Đăng nhập</a>
 							</li>
-						} */}
-						<li className={classes.postBtn}>
-							<CheckLogin onClick={this.handleOpenTicketPoster}>
-								<div>Đăng tin</div>
-							</CheckLogin>
-						</li>
-						<li className={classes.loggedUser}>
-							<Dropdown overlay={<UserDropdown />} trigger={['click']}>
-								<div>
-									<span> <Avatar style={{ marginBottom: 5, cursor: 'pointer' }} size={30} /> </span>
-									<span> <Icon type="down" style={{ marginLeft: '5px', fontWeight: 'bold', cursor: 'pointer' }} /> </span>
-								</div>
-							</Dropdown>
-						</li>
+						}
+						{
+							AuthStorage.loggedIn &&
+							<li className={classes.postBtn}>
+								<CheckLogin onClick={this.handleOpenTicketPoster}>
+									<div>Đăng tin</div>
+								</CheckLogin>
+							</li>
+						}
 					</ul>
 				</nav>
 				{/* <BtnAddQuestion node={<Button className={classes.btnAdd} type="primary" ghost>Tạo câu hỏi</Button>} /> */}

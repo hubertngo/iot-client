@@ -17,6 +17,7 @@ import { Popover, Icon, Divider } from 'antd';
 import { Router } from 'src/routes';
 
 import Avatar from 'src/components/Photo/Avatar';
+import GroupStar from 'src/components/Flight/Card/GroupStar';
 
 import { logoutRequest } from 'src/redux/actions/auth';
 
@@ -95,15 +96,25 @@ const AvatarBtn = ({ store, action, classes }) => {
 	const content = (
 		<div className={classes.content}>
 			<div className={classes.itemWrapper}>
+				<div className={classes.item} onClick={logout}>
+					<Icon type="clock-circle-o" />
+					<span> Lịch sử giao dịch cá nhân </span>
+				</div>
+			</div>
+			<Divider className={classes.divider} />
+			<div className={classes.itemWrapper}>
 				<div className={classes.item} onClick={() => Router.pushRoute('/profile/' + store.auth.id)}>
 					<Icon type="user" />
-					<span>Profile</span>
+					<span> Thông tin cá nhân </span>
 				</div>
+			</div>
+			<Divider className={classes.divider} />
+			<div className={classes.itemWrapper}>
 				{
 					store.auth && store.auth.loginType === 'email' &&
 						<div className={classes.item} onClick={() => Router.pushRoute('/change-password')}>
 							<Icon type="setting" />
-							<span>Change Password</span>
+							<span> Cài đặt </span>
 						</div>
 				}
 			</div>
@@ -111,7 +122,7 @@ const AvatarBtn = ({ store, action, classes }) => {
 			<div className={classes.itemWrapper}>
 				<div className={classes.item} onClick={logout}>
 					<Icon type="logout" />
-					<span>Logout</span>
+					<span> Đăng xuất </span>
 				</div>
 			</div>
 		</div>
@@ -123,6 +134,7 @@ const AvatarBtn = ({ store, action, classes }) => {
 			<div className={classes.info}>
 				<h4>{store.auth.fullName}</h4>
 				<i>{store.auth.email}</i>
+				<GroupStar rate={3} />
 			</div>
 		</div>
 	);
@@ -130,6 +142,7 @@ const AvatarBtn = ({ store, action, classes }) => {
 	return (
 		<Popover content={content} title={title} trigger="click" placement="bottomRight">
 			<Avatar className={classes.avatar} name={store.auth.fullName} src={store.auth.avatar} />
+			<Icon type="down" style={{ marginLeft: '5px', fontWeight: 'bold', cursor: 'pointer' }} />
 		</Popover>
 	);
 };
