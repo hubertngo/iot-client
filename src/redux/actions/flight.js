@@ -15,6 +15,22 @@ export const createFlight = (payload, next, nextError) => {
 	};
 };
 
+export const updateFlight = (payload, next, nextError) => {
+	const { id, ...flight } = payload;
+
+	return {
+		type: SINGLE_API,
+		payload: {
+			uri: 'flights/' + id + `?filter=${JSON.stringify({ include: ['seller', 'buyer'] })}`,
+			params: flight,
+			opt: { method: 'PATCH' },
+			successType: 'UPDATE_FLIGHT_SUCCESS',
+			afterSuccess: next,
+			afterError: nextError,
+		},
+	};
+};
+
 export const getFlightList = (payload = {}, next, nextError) => {
 	const { filter, firstLoad } = payload;
 

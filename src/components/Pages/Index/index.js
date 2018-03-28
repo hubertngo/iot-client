@@ -17,7 +17,6 @@ import FlightCard from 'src/components/Flight/Card';
 import FlightList from 'src/components/Flight/List';
 import FlightModal from 'src/components/Modals/Flight';
 import FlightDetail from 'src/components/Flight/Card/Detail';
-import SearchBar from 'src/components/Form/SearchBar';
 import Container from 'src/components/Layout/Container';
 
 const styleSheet = (theme) => ({
@@ -158,7 +157,6 @@ export default class ClassName extends Component {
 						<Tabs.TabPane tab="Phòng khách sạn" key="2" />
 						<Tabs.TabPane tab="Voucher" key="3" />
 					</Tabs>
-					<SearchBar />
 					<FlightList />
 				</Container>
 

@@ -18,9 +18,32 @@ const styleSheet = () => ({
 	},
 });
 
-const FlightBlock = ({ flight, style, classes }) => {
-	const { departure, destination, startDate, agency } = flight;
+const FlightBlock = ({ flight, style, classes, loading }) => {
+	const { departure, destination, startDate, airline } = flight;
 
+	if (loading) {
+		return (
+			<div style={style}>
+				<Row type="flex" justify="center" style={{ marginBottom: 10 }}>
+					<Col span={10}>
+						<div className="loading-block" />
+						<div className="loading-block" />
+					</Col>
+					<Col span={4} className="text-center">
+						<IconDeparture color="#4368C4" />
+					</Col>
+					<Col span={10} className="text-right">
+						<div className="loading-block" />
+					</Col>
+				</Row>
+				<Row type="flex">
+					<Col span={12} style={{ display: 'flex' }}>
+						<div className="loading-block" />
+					</Col>
+				</Row>
+			</div>
+		);
+	}
 	return (
 		<div style={style}>
 			<Row type="flex" justify="center" style={{ marginBottom: 10 }}>
@@ -39,7 +62,7 @@ const FlightBlock = ({ flight, style, classes }) => {
 			<Row type="flex">
 				<Col span={12} style={{ display: 'flex' }}>
 					{
-						!agency ? (
+						!airline ? (
 							<Fragment>
 								<IconDeparture size={18} extended />
 								<span className={classes.note} style={{ marginLeft: 5 }}>Tất cả các hãng</span>

@@ -18,6 +18,7 @@ import Avatar from 'src/components/Photo/Avatar';
 import Price from 'src/components/Stuff/Price';
 import IconDeparture from 'src/components/Photo/IconDeparture';
 import IconMedal from 'src/components/Photo/IconMedal';
+import CheckLogin from 'src/components/Form/CheckLogin';
 
 import { toggleFlightModal } from 'src/redux/actions/modal';
 
@@ -117,6 +118,9 @@ const styleSheet = (theme) => ({
 
 function mapStateToProps(state) {
 	return {
+		store: {
+			flightModal: state.getIn(['modal', 'flight']),
+		},
 	};
 }
 
@@ -151,7 +155,8 @@ export default class SearchBar extends Component {
 	}
 
 	_renderAction() {
-		const { classes, flight } = this.props.flight;
+		const { classes } = this.props;
+
 
 		return (
 			<div className={classes.actionWrapper}>
@@ -169,19 +174,23 @@ export default class SearchBar extends Component {
 		const { classes, flight } = this.props;
 		const { author, updatedTime, content, link, rate, type, isHot } = flight;
 
-		if (type === 'sell') {
+		if (type === 'Sell') {
 			return (
-				<Button type="primary">Liên hệ</Button>
+				<CheckLogin onClick={this.handleSell}>
+					<Button type="primary">Liên hệ</Button>
+				</CheckLogin>
 			);
-		} else if (type === 'buy') {
+		} else if (type === 'Buy') {
 			return (
 				<div className={classes.examine}>
 					<IconMedal />
 					<span style={{ marginRight: 10, marginLeft: 5 }}>Kiểm định bởi chove.vn</span>
-					<Button type="primary">Liên hệ</Button>
+					<CheckLogin onClick={this.handleSell}>
+						<Button type="primary">Liên hệ</Button>
+					</CheckLogin>
 				</div>
 			);
-		} else if (type === 'bid') {
+		} else if (type === 'Bid') {
 			return (
 				<Fragment>
 					<div className={classes.actionWrapper}>
@@ -204,14 +213,15 @@ export default class SearchBar extends Component {
 	}
 
 	render() {
-		const { classes, flight } = this.props;
-		const { author, updatedTime, content, link, rate, type, isHot } = flight;
+		const { classes } = this.props;
+		const flight = this.props.store.flightModal.data;
+		const { author, updatedTime, content, link, seller, buyer, type, isHot } = flight;
 
 		return (
 			<div className={classes.root} onClick={this.handleClickFlight}>
 				<div className={classes.header}>
 					<Avatar size={40} style={{ marginRight: 5 }} />
-					<span className={classes.author}>{author.fullname}</span>
+					<span className={classes.author}>{type === 'Sell' ? seller.fullName : buyer.fullName}</span>
 					<span className={classes.note}>{updatedTime}</span>
 				</div>
 
@@ -230,8 +240,6 @@ export default class SearchBar extends Component {
 				<div className={classes.footer}>
 					{this._renderFooter()}
 				</div>
-
-
 			</div>
 		);
 	}

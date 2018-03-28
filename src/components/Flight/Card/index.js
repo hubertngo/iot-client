@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Row, Col, Tag, Icon, Button } from 'antd';
+import { Row, Col, Tag, Icon, Button, notification } from 'antd';
 
 import withStyles from 'src/theme/jss/withStyles';
 import Avatar from 'src/components/Photo/Avatar';
@@ -19,6 +19,9 @@ import Price from 'src/components/Stuff/Price';
 import IconDeparture from 'src/components/Photo/IconDeparture';
 
 import { toggleFlightModal } from 'src/redux/actions/modal';
+import { updateFlight } from 'src/redux/actions/flight';
+import AuthStorage from 'src/utils/AuthStorage';
+import CheckLogin from 'src/components/Form/CheckLogin';
 
 import GroupStar from './GroupStar';
 import BidBlock from './BidBlock';
@@ -112,6 +115,13 @@ const styleSheet = (theme) => ({
 			marginRight: 5,
 		},
 	},
+	content: {
+		display: '-webkit-box',
+		WebkitLineClamp: 3,
+		WebkitBoxOrient: 'vertical',
+		overflow: 'hidden',
+		marginBottom: 5,
+	},
 });
 
 function mapStateToProps(state) {
@@ -123,6 +133,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		action: bindActionCreators({
 			toggleFlightModal,
+			updateFlight,
 		}, dispatch),
 	};
 };
@@ -135,16 +146,17 @@ export default class FlightCard extends Component {
 		flight: PropTypes.object,
 		action: PropTypes.shape({
 			toggleFlightModal: PropTypes.func,
+			updateFlight: PropTypes.func,
 		}).isRequired,
-
+		loading: PropTypes.bool,
 	}
 
 	static defaultProps = {
 		flight: {
-			author: {
-				fullname: 'Trịnh Thu Hương',
+			buyer: {
+				fullName: 'Trịnh Thu Hương',
 			},
-			updatedTime: '12/02/2018 16:08',
+			updatedAt: '12/02/2018 16:08',
 			content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
 			link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
 			departure: 'Nha Trang',
@@ -161,33 +173,86 @@ export default class FlightCard extends Component {
 
 
 		},
+		loading: false,
 	}
 
 	state = {
 	}
 
-	handleClickFlight = () => {
+	handleClickFlight = (e) => {
 		this.props.action.toggleFlightModal({ open: true, data: this.props.flight });
+	}
+
+	handleSell = () => {
+		this.setState({
+			btnLoading: true,
+		});
+		this.props.action.updateFlight({
+			status: 'Payment pending',
+			updatedAt: new Date(),
+			id: this.props.flight.id,
+			sellerId: AuthStorage.userId,
+		}, () => {
+			this.setState({
+				btnLoading: false,
+			});
+			notification.success({
+				message: 'Chúc mừng!',
+				description: 'Bạn đã mua vé thành công! Vui lòng kiểm tra hộp thư.',
+			});
+		}, () => {
+			this.setState({
+				btnLoading: false,
+			});
+		});
+	}
+
+	handleBuy = () => {
+		this.setState({
+			btnLoading: true,
+		});
+		this.props.action.updateFlight({
+			status: 'Payment pending',
+			updatedAt: new Date(),
+			id: this.props.flight.id,
+			buyerId: AuthStorage.userId,
+		}, () => {
+			this.setState({
+				btnLoading: false,
+			});
+			notification.success({
+				message: 'Chúc mừng!',
+				description: 'Bạn đã đặt vé thành công! Vui lòng kiểm tra hộp thư.',
+			});
+		}, () => {
+			this.setState({
+				btnLoading: false,
+			});
+		});
 	}
 
 	_renderBodyRight = () => {
 		const { type, stock, price } = this.props.flight;
 
-		if (type === 'sell') {
+		if (type === 'Sell') {
 			return (
 				<Fragment>
 					<p>{stock} vé</p>
-					<Button type="primary">Liên hệ</Button>
+					<CheckLogin onClick={this.handleSell}>
+						<Button type="primary" loading={this.state.btnLoading}>Liên hệ</Button>
+					</CheckLogin>
 				</Fragment>
 			);
-		} else if (type === 'buy') {
+		} else if (type === 'Buy') {
 			return (
 				<Fragment>
 					<p><Price price={price} type="primary" /></p>
-					<Button type="primary">Mua</Button>
+					<CheckLogin onClick={this.handleBuy} >
+						<Button type="primary" loading={this.state.btnLoading} style={{zIndex: 1}}>Mua</Button>
+					</CheckLogin>
 				</Fragment>
 			);
-		} else if (type === 'bid') {
+		} else if (type === 'Bid') {
 			return (
 				<Fragment>
 					<BidBlock isStart price={1200000} />
@@ -200,23 +265,51 @@ export default class FlightCard extends Component {
 	}
 
 	render() {
-		const { classes, flight } = this.props;
-		const { author, updatedTime, content, link, rate, type, isHot } = flight;
+		const { classes, flight, loading } = this.props;
+		const { updatedAt, content, link, rate, type, isHot, seller, buyer } = flight;
 
+		if (loading) {
+			return (
+				<div className={classes.root} onClick={this.handleClickFlight}>
+					<Row type="flex" className={classes.header}>
+						<Col span={18}>
+							<div className="loading-block" />
+							<div className="loading-block" />
+							<div className="loading-block" />
+						</Col>
+						<Col offset={1} span={5} style={{ textAlign: 'center' }}>
+							<Avatar style={{ marginBottom: 5 }} size={40} loading />
+						</Col>
+					</Row>
+
+					<Row className={classes.body}>
+						<Col span={16}>
+							<FlightBlock flight={flight} loading />
+						</Col>
+						<Col span={7} offset={1} className={classes.bodyRight}>
+							<div className="loading-block" />
+							<Button type="primary" loading />
+						</Col>
+					</Row>
+				</div>
+			);
+		}
 		return (
 			<div className={classes.root} onClick={this.handleClickFlight}>
 				<Row type="flex" className={classes.header}>
 					<Col span={18}>
-						<span className={classes.author}>{author.fullname}</span>
-						<span className={classes.note}>{updatedTime}</span>
-						<div>{content}</div>
+						<span className={classes.author}>
+							{ type === 'Sell' ? seller.fullName : buyer.fullName}
+						</span>
+						<span className={classes.note}>{updatedAt}</span>
+						<div className={classes.content}>{content}</div>
 						<span className={classes.link}>
 							<Icon type="link" />
-							<a href={link}>{link}</a>
+							<a href={link}>Link</a>
 						</span>
 					</Col>
 					<Col offset={1} span={5} style={{ textAlign: 'center' }}>
-						<Avatar style={{ marginBottom: 5 }} size={40} />
+						<Avatar style={{ marginBottom: 5 }} size={40} src={type === 'Sell' ? seller.avatar : buyer.avatar} />
 						<GroupStar rate={rate} />
 					</Col>
 				</Row>

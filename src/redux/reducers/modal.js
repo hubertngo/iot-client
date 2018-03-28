@@ -47,12 +47,8 @@ export default (state = initialState, action) => {
 			});
 
 		case 'TOGGLE_FLIGHT_MODAL':
-			return state.update('flight', () => {
-				return {
-					open: !!action.payload.open,
-					closable: !!action.payload.closable,
-					data: action.payload.open ? action.payload.data : {},
-				};
+			return state.update('flight', (flight) => {
+				return { ...flight, ...action.payload };
 			});
 
 		case 'TOGGLE_TICKET_POSTER_MODAL':
