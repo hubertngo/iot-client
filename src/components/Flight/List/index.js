@@ -10,13 +10,11 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import isEqual from 'lodash/isEqual';
 
 import { Button, Col, Row } from 'antd';
 import partition from 'lodash/partition';
 
 import withStyles from 'src/theme/jss/withStyles';
-import AuthStorage from 'src/utils/AuthStorage';
 import SearchBar from 'src/components/Form/SearchBar';
 
 import { getFlightList } from 'src/redux/actions/flight';
@@ -80,7 +78,6 @@ export default class FlightList extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
 		where: PropTypes.object,
-		hideBtnAdd: PropTypes.bool,
 		// store
 		store: PropTypes.shape({
 			auth: PropTypes.object.isRequired,
@@ -94,7 +91,6 @@ export default class FlightList extends Component {
 
 	static defaultProps = {
 		where: {},
-		hideBtnAdd: false,
 	}
 
 	state = {
@@ -108,22 +104,6 @@ export default class FlightList extends Component {
 			this.setState({ loading: false });
 		});
 	}
-
-	// componentWillReceiveProps(nextProps) {
-	// 	if (!isEqual(nextProps.where, this.props.where)) {
-	// 		this.setState({
-	// 			loading: true,
-	// 		});
-	// 		this.filter.skip = 0;
-	// 		this.filter.page = 1;
-	// 		this.filter.where = { ...nextProps.where };
-	// 		nextProps.action.getFlightList({ filter: this.filter, firstLoad: true }, () => {
-	// 			this.setState({
-	// 				loading: false,
-	// 			});
-	// 		});
-	// 	}
-	// }
 
 	filter = {
 		limit: 4,

@@ -11,21 +11,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Row, Col, Tag, Icon, Button, Input } from 'antd';
+import { Icon, Button, Input } from 'antd';
 
 import withStyles from 'src/theme/jss/withStyles';
 import Avatar from 'src/components/Photo/Avatar';
-import Price from 'src/components/Stuff/Price';
-import IconDeparture from 'src/components/Photo/IconDeparture';
 import IconMedal from 'src/components/Photo/IconMedal';
 import CheckLogin from 'src/components/Form/CheckLogin';
 
 import { toggleFlightModal, toggleLoginModal } from 'src/redux/actions/modal';
 
-import AuthStorage from 'src/utils/AuthStorage';
-
-import GroupStar from './GroupStar';
-import BidBlock from './BidBlock';
 import FlightBlock from './FlightBlock';
 
 const styleSheet = (theme) => ({
@@ -140,14 +134,13 @@ const mapDispatchToProps = (dispatch) => {
 export default class SearchBar extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
-		type: PropTypes.string.isRequired,
-		badge: PropTypes.string,
+		store: PropTypes.shape({
+			flightModal: PropTypes.object,
+		}).isRequired,
 
 	}
 
 	static defaultProps = {
-		badge: '',
-		type: 'bid',
 	}
 
 	state = {
@@ -183,8 +176,9 @@ export default class SearchBar extends Component {
 	}
 
 	_renderFooter() {
-		const { classes, flight } = this.props;
-		const { author, updatedTime, content, link, rate, type, isHot } = flight;
+		const { classes } = this.props;
+		const flight = this.props.store.flightModal.data;
+		const { type } = flight;
 
 		if (type === 'Sell') {
 			return (
@@ -227,7 +221,7 @@ export default class SearchBar extends Component {
 	render() {
 		const { classes } = this.props;
 		const flight = this.props.store.flightModal.data;
-		const { author, updatedTime, content, link, seller, buyer, type, isHot } = flight;
+		const { updatedTime, content, link, seller, buyer, type } = flight;
 
 		return (
 			<div className={classes.root}>

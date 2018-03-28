@@ -11,12 +11,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Row, Col, Tag, Icon, Button, notification } from 'antd';
+import { Row, Col, Icon, Button, notification } from 'antd';
 
 import withStyles from 'src/theme/jss/withStyles';
 import Avatar from 'src/components/Photo/Avatar';
 import Price from 'src/components/Stuff/Price';
-import IconDeparture from 'src/components/Photo/IconDeparture';
 
 import { toggleFlightModal } from 'src/redux/actions/modal';
 import { updateFlight } from 'src/redux/actions/flight';
@@ -124,7 +123,7 @@ const styleSheet = (theme) => ({
 	},
 });
 
-function mapStateToProps(state) {
+function mapStateToProps(/* state */) {
 	return {
 	};
 }
@@ -179,7 +178,7 @@ export default class FlightCard extends Component {
 	state = {
 	}
 
-	handleClickFlight = (e) => {
+	handleClickFlight = () => {
 		this.props.action.toggleFlightModal({ open: true, data: this.props.flight });
 	}
 
@@ -248,7 +247,7 @@ export default class FlightCard extends Component {
 				<Fragment>
 					<p><Price price={price} type="primary" /></p>
 					<CheckLogin onClick={this.handleBuy} >
-						<Button type="primary" loading={this.state.btnLoading} style={{zIndex: 1}}>Mua</Button>
+						<Button type="primary" loading={this.state.btnLoading}>Mua</Button>
 					</CheckLogin>
 				</Fragment>
 			);
