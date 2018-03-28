@@ -18,6 +18,18 @@ const styleSheet = () => ({
 	},
 });
 
+const getAgencyLogo = (angencyName) => {
+	switch (angencyName) {
+		case 'vna':
+			return '/static/assets/images/logo/logo_vna.png';
+		case 'jetstar':
+			return '/static/assets/images/logo/logo_jetstar.png';
+		case 'vietjet':
+			return '/static/assets/images/logo/logo_vietjet.png';
+		default:
+	}
+};
+
 const FlightBlock = ({ flight, style, classes }) => {
 	const { departure, destination, startDate, agency } = flight;
 
@@ -45,7 +57,7 @@ const FlightBlock = ({ flight, style, classes }) => {
 								<span className={classes.note} style={{ marginLeft: 5 }}>Tất cả các hãng</span>
 							</Fragment>
 						) : (
-							<img src="/static/assets/images/logo/logo_vna.png" alt="" height={18} />
+							<img src={getAgencyLogo(agency)} alt="" height={18} />
 						)
 					}
 				</Col>

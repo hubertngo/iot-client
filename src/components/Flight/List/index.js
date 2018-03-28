@@ -151,7 +151,128 @@ export default class FlightList extends Component {
 
 	render() {
 		const { classes } = this.props;
-		const [flightListSell, flightListBuy] = partition(this.props.store.flightList.data, (item) => item.type === 'Sell');
+		// const [flightListSell, flightListBuy] = partition(this.props.store.flightList.data, (item) => item.type === 'Sell');
+
+		const flightListBuy = [
+			{
+				author: {
+					fullname: 'Trịnh Thu Hương',
+				},
+				updatedTime: '12/02/2018 16:08',
+				content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
+				link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
+				departure: 'Nha Trang',
+				destination: 'Hải Phòng',
+				agency: null,
+				type: 'buy',
+				dueDate: '12/02/2018 16:08',
+				startDate: '12/02/2018',
+				startPrice: 1200000,
+				currentPrice: 1300000,
+				bidderId: 1,
+				rate: 3,
+				stock: 1,
+			},
+			{
+				author: {
+					fullname: 'Trịnh Thu Hương',
+				},
+				updatedTime: '12/02/2018 16:08',
+				content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
+				link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
+				departure: 'Nha Trang',
+				destination: 'Hải Phòng',
+				agency: 'vna',
+				type: 'buy',
+				dueDate: '12/02/2018 16:08',
+				startDate: '12/02/2018',
+				startPrice: 1200000,
+				currentPrice: 1300000,
+				bidderId: 1,
+				rate: 3,
+				stock: 1,
+			},
+			{
+				author: {
+					fullname: 'Trịnh Thu Hương',
+				},
+				updatedTime: '12/02/2018 16:08',
+				content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
+				link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
+				departure: 'Nha Trang',
+				destination: 'Hải Phòng',
+				agency: 'jetstar',
+				type: 'buy',
+				dueDate: '12/02/2018 16:08',
+				startDate: '12/02/2018',
+				startPrice: 1200000,
+				currentPrice: 1300000,
+				bidderId: 1,
+				rate: 3,
+				stock: 1,
+			},
+		];
+
+		const flightListSell = [
+			{
+				author: {
+					fullname: 'Trịnh Thu Hương',
+				},
+				updatedTime: '12/02/2018 16:08',
+				content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
+				link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
+				departure: 'Nha Trang',
+				destination: 'Hải Phòng',
+				agency: 'vietjet',
+				type: 'bid',
+				dueDate: '06/04/2018 16:08',
+				startDate: '28/03/2018',
+				startPrice: 1200000,
+				currentPrice: 1300000,
+				bidderId: 1,
+				rate: 3,
+				stock: 1,
+				isHot: true,
+			},
+			{
+				author: {
+					fullname: 'Trịnh Minh Hằng',
+				},
+				updatedTime: '12/04/2018 16:08',
+				content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
+				link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
+				departure: 'Nha Trang',
+				destination: 'Hải Phòng',
+				agency: 'jetstar',
+				type: 'sell',
+				dueDate: '12/04/2018 16:08',
+				startDate: '28/03/2018',
+				startPrice: 1200000,
+				currentPrice: 1300000,
+				bidderId: 1,
+				rate: 3,
+				stock: 1,
+			},
+			{
+				author: {
+					fullname: 'Nguyễn Thành Trung',
+				},
+				updatedTime: '20/04/2018 16:08',
+				content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
+				link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
+				departure: 'Nha Trang',
+				destination: 'Hải Phòng',
+				agency: 'vna',
+				type: 'sell',
+				dueDate: '20/04/2018 16:08',
+				startDate: '28/03/2018',
+				startPrice: 1200000,
+				currentPrice: 1300000,
+				bidderId: 1,
+				rate: 3,
+				stock: 1,
+			},
+		];
 
 		return (
 			<Row gutter={20} className={classes.wrapperContent}>
@@ -159,13 +280,13 @@ export default class FlightList extends Component {
 				<Col span={12}>
 					<Button type="primary" className={classes.btn}>Tìm mua</Button>
 					{
-						flightListBuy.map(flight => <FlightCard key={flight.id} />)
+						flightListBuy.map(flight => <FlightCard key={flight.id} flight={flight} />)
 					}
 				</Col>
 				<Col span={12}>
-					<Button type="primary" className={classes.btn}>Tìm mua</Button>
+					<Button type="primary" className={classes.btn}>Đăng bán</Button>
 					{
-						flightListSell.map(flight => <FlightCard key={flight.id} />)
+						flightListSell.map(flight => <FlightCard key={flight.id} flight={flight} />)
 					}
 				</Col>
 			</Row>
