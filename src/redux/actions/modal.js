@@ -33,3 +33,17 @@ export function toggleTicketPosterModal(payload) {
 		payload,
 	};
 }
+
+export function toggleUserInfoModal(payload) {
+	return {
+		type: 'TOGGLE_USER_INFO_MODAL',
+		payload,
+	};
+}
+
+export function toggleEditUserInfoModal(payload) {
+	return {
+		type: 'TOGGLE_EDIT_USER_INFO_MODAL',
+		payload,
+	};
+}

@@ -20,6 +20,7 @@ import Avatar from 'src/components/Photo/Avatar';
 import GroupStar from 'src/components/Flight/Card/GroupStar';
 
 import { logoutRequest } from 'src/redux/actions/auth';
+import { toggleUserInfoModal } from 'src/redux/actions/modal';
 
 const styles = (/* theme */) => ({
 	avatar: {
@@ -82,6 +83,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		action: bindActionCreators({
 			logoutRequest,
+			toggleUserInfoModal,
 		}, dispatch),
 	};
 };
@@ -103,7 +105,7 @@ const AvatarBtn = ({ store, action, classes }) => {
 			</div>
 			<Divider className={classes.divider} />
 			<div className={classes.itemWrapper}>
-				<div className={classes.item} onClick={() => Router.pushRoute('/profile/' + store.auth.id)}>
+				<div className={classes.item} onClick={() => action.toggleUserInfoModal({ open: true })}>
 					<Icon type="user" />
 					<span> Thông tin cá nhân </span>
 				</div>
@@ -156,6 +158,7 @@ AvatarBtn.propTypes = {
 	// action
 	action: PropTypes.shape({
 		logoutRequest: PropTypes.func.isRequired,
+		toggleUserInfoModal: PropTypes.func.isRequired,
 	}).isRequired,
 };
 

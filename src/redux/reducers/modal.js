@@ -26,6 +26,14 @@ export const initialState = fromJS({
 		open: false,
 		closable: false,
 	},
+	userInfo: {
+		open: false,
+		closable: false,
+	},
+	editUserInfo: {
+		open: false,
+		closable: false,
+	},
 });
 
 export default (state = initialState, action) => {
@@ -57,6 +65,22 @@ export default (state = initialState, action) => {
 
 		case 'TOGGLE_TICKET_POSTER_MODAL':
 			return state.update('ticketPoster', () => {
+				return {
+					open: !!action.payload.open,
+					closable: !!action.payload.closable,
+				};
+			});
+
+		case 'TOGGLE_USER_INFO_MODAL':
+			return state.update('userInfo', () => {
+				return {
+					open: !!action.payload.open,
+					closable: !!action.payload.closable,
+				};
+			});
+
+		case 'TOGGLE_EDIT_USER_INFO_MODAL':
+			return state.update('editUserInfo', () => {
 				return {
 					open: !!action.payload.open,
 					closable: !!action.payload.closable,
