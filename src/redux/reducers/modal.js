@@ -68,11 +68,8 @@ export default (state = initialState, action) => {
 			});
 
 		case 'TOGGLE_USER_INFO_MODAL':
-			return state.update('userInfo', () => {
-				return {
-					open: !!action.payload.open,
-					closable: !!action.payload.closable,
-				};
+			return state.update('userInfo', (userInfo) => {
+				return { ...userInfo, ...action.payload };
 			});
 
 		case 'TOGGLE_EDIT_USER_INFO_MODAL':

@@ -37,6 +37,8 @@ const styleSheet = (theme) => ({
 	},
 	header: {
 		padding: 15,
+		display: 'flex',
+		alignItems: 'center',
 	},
 	author: {
 		textTransform: 'uppercase',
@@ -159,9 +161,32 @@ export default class SearchBar extends Component {
 	// 	}
 	// }
 
+	handleClickAvatar = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		const { type, seller, buyer, from } = this.props.store.flightModal.data;
+
+		if (from) {
+			window.open(`https://fb.com/${from.id}`);
+		}
+	}
+
+	_getAuthor = (flight) => {
+		const { type, seller, buyer, from } = flight;
+
+		if (from && from.id) {
+			return {
+				id: from.id,
+				fullName: from.name,
+				avatar: from.picture ? from.picture.data.url : '',
+			};
+		}
+
+		return (type === 'Buy') ? buyer : seller;
+	}
+
 	_renderAction() {
 		const { classes } = this.props;
-
 
 		return (
 			<div className={classes.actionWrapper}>
@@ -221,13 +246,14 @@ export default class SearchBar extends Component {
 	render() {
 		const { classes } = this.props;
 		const flight = this.props.store.flightModal.data;
-		const { updatedTime, content, link, seller, buyer, type } = flight;
+		const { updatedTime, content, link } = flight;
+		const author = this._getAuthor(flight);
 
 		return (
 			<div className={classes.root}>
 				<div className={classes.header}>
-					<Avatar size={40} style={{ marginRight: 5 }} />
-					<span className={classes.author}>{type === 'Sell' ? seller.fullName : buyer.fullName}</span>
+					<Avatar size={40} style={{ marginRight: 5 }} src={author.avatar} onClick={this.handleClickAvatar} />
+					<span className={classes.author} onClick={this.handleClickAvatar}>{author.fullName}</span>
 					<span className={classes.note}>{updatedTime}</span>
 				</div>
 

@@ -127,6 +127,8 @@ export default class UserInfoForm extends Component {
 
 	render() {
 		const { form: { getFieldDecorator }, classes, style, store, action } = this.props;
+		const userData = store.modal.userInfo.data;
+
 		const content = 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018';
 		const	updatedTime = '12/02/2018 16:08';
 		const	link = 'https://dulichgiare.com.vn/vemaybay/147dqe';
@@ -139,21 +141,21 @@ export default class UserInfoForm extends Component {
 				</div>
 				<Row className={classes.formItem} type="flex">
 					<Col span={4} className={classes.formLabel}>
-						<Avatar size={40} src={store.auth.avatar} name={store.auth.fullName} />
+						<Avatar size={40} src={userData.avatar} name={userData.fullName} />
 					</Col>
 					<Col span={13}>
-						<h4>{store.auth.fullName}</h4>
+						<h4>{userData.fullName}</h4>
 						<div className={classes.infoRow}>
 							<span> <Icon type="gift" /> </span>
-							<span> {store.auth.birthday || ''}</span>
+							<span> {userData.birthday || ''}</span>
 						</div>
 						<div className={classes.infoRow}>
 							<span> <Icon type="mail" /> </span>
-							<span> {store.auth.email} </span>
+							<span> {userData.email} </span>
 						</div>
 						<div className={classes.infoRow}>
 							<span> <Icon type="phone" /> </span>
-							<span> {store.auth.phone || ''} </span>
+							<span> {userData.phone || ''} </span>
 						</div>
 					</Col>
 					<Col span={7} className={classes.rightCol}>

@@ -17,8 +17,9 @@ import withStyles from 'src/theme/jss/withStyles';
 import Avatar from 'src/components/Photo/Avatar';
 import Price from 'src/components/Stuff/Price';
 
-import { toggleFlightModal } from 'src/redux/actions/modal';
+import { toggleFlightModal, toggleUserInfoModal } from 'src/redux/actions/modal';
 import { updateFlight } from 'src/redux/actions/flight';
+
 import AuthStorage from 'src/utils/AuthStorage';
 import CheckLogin from 'src/components/Form/CheckLogin';
 
@@ -133,6 +134,7 @@ const mapDispatchToProps = (dispatch) => {
 		action: bindActionCreators({
 			toggleFlightModal,
 			updateFlight,
+			toggleUserInfoModal,
 		}, dispatch),
 	};
 };
@@ -146,6 +148,7 @@ export default class FlightCard extends Component {
 		action: PropTypes.shape({
 			toggleFlightModal: PropTypes.func,
 			updateFlight: PropTypes.func,
+			toggleUserInfoModal: PropTypes.func,
 		}).isRequired,
 		loading: PropTypes.bool,
 	}
@@ -230,6 +233,18 @@ export default class FlightCard extends Component {
 		});
 	}
 
+	handleClickAvatar = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		const { type, seller, buyer, from } = this.props.flight;
+
+		if (from) {
+			window.open(`https://fb.com/${from.id}`);
+		} else {
+			this.props.action.toggleUserInfoModal({ open: true, data: type === 'Buy' ? buyer : seller });
+		}
+	}
+
 	_renderBodyRight = () => {
 		const { type, stock, price } = this.props.flight;
 
@@ -263,9 +278,24 @@ export default class FlightCard extends Component {
 		return null;
 	}
 
+	_getAuthor = () => {
+		const { type, seller, buyer, from } = this.props.flight;
+
+		if (from && from.id) {
+			return {
+				id: from.id,
+				fullName: from.name,
+				avatar: from.picture ? from.picture.data.url : '',
+			};
+		}
+
+		return (type === 'Buy') ? buyer : seller;
+	}
+
 	render() {
 		const { classes, flight, loading } = this.props;
-		const { updatedAt, content, link, rate, type, isHot, seller, buyer } = flight;
+		const { updatedAt, content, link, rate, type, isHot } = flight;
+		const author = this._getAuthor(flight);
 
 		if (loading) {
 			return (
@@ -297,9 +327,7 @@ export default class FlightCard extends Component {
 			<div className={classes.root} onClick={this.handleClickFlight}>
 				<Row type="flex" className={classes.header}>
 					<Col span={18}>
-						<span className={classes.author}>
-							{ type === 'Sell' ? seller.fullName : buyer.fullName}
-						</span>
+						<span className={classes.author} onClick={this.handleClickAvatar}>{author.fullName}</span>
 						<span className={classes.note}>{updatedAt}</span>
 						<div className={classes.content}>{content}</div>
 						<span className={classes.link}>
@@ -308,7 +336,7 @@ export default class FlightCard extends Component {
 						</span>
 					</Col>
 					<Col offset={1} span={5} style={{ textAlign: 'center' }}>
-						<Avatar style={{ marginBottom: 5 }} size={40} src={type === 'Sell' ? seller.avatar : buyer.avatar} />
+						<Avatar style={{ marginBottom: 5 }} size={40} src={author.avatar} onClick={this.handleClickAvatar} />
 						<GroupStar rate={rate} />
 					</Col>
 				</Row>
