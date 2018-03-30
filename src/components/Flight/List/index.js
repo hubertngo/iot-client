@@ -10,13 +10,12 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import isEqual from 'lodash/isEqual';
 
 import { Button, Col, Row } from 'antd';
 import partition from 'lodash/partition';
 
 import withStyles from 'src/theme/jss/withStyles';
-import AuthStorage from 'src/utils/AuthStorage';
+import SearchBar from 'src/components/Form/SearchBar';
 
 import { getFlightList } from 'src/redux/actions/flight';
 
@@ -79,7 +78,6 @@ export default class FlightList extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
 		where: PropTypes.object,
-		hideBtnAdd: PropTypes.bool,
 		// store
 		store: PropTypes.shape({
 			auth: PropTypes.object.isRequired,
@@ -93,7 +91,6 @@ export default class FlightList extends Component {
 
 	static defaultProps = {
 		where: {},
-		hideBtnAdd: false,
 	}
 
 	state = {
@@ -104,192 +101,235 @@ export default class FlightList extends Component {
 	componentDidMount() {
 		this.filter.where = { ...this.filter.where, ...this.props.where };
 		this.props.action.getFlightList({ filter: this.filter, firstLoad: true }, () => {
-			console.log('whasdasdasdasdasd');
+			this.setState({ loading: false });
 		});
 	}
-
-	// componentWillReceiveProps(nextProps) {
-	// 	if (!isEqual(nextProps.where, this.props.where)) {
-	// 		this.setState({
-	// 			loading: true,
-	// 		});
-	// 		this.filter.skip = 0;
-	// 		this.filter.page = 1;
-	// 		this.filter.where = { ...nextProps.where };
-	// 		nextProps.action.getFlightList({ filter: this.filter, firstLoad: true }, () => {
-	// 			this.setState({
-	// 				loading: false,
-	// 			});
-	// 		});
-	// 	}
-	// }
 
 	filter = {
 		limit: 4,
 		skip: 0,
 		page: 1,
+		include: [
+			{
+				relation: 'seller',
+				scope: {
+					fields: ['id', 'username', 'avatar', 'fullName'],
+				},
+			},
+			{
+				relation: 'buyer',
+				scope: {
+					fields: ['id', 'username', 'avatar', 'fullName'],
+				},
+			},
+		],
+		where: {
+			status: 'Open',
+		},
 	}
 
-
 	handleViewMore = () => {
-		// this.setState({
-		// 	loadingMore: true,
-		// });
+		this.setState({
+			loadingMore: true,
+		});
 
-		// this.filter.skip = this.filter.limit * this.filter.page;
-		// this.props.action.getFlightList({ filter: this.filter }, () => {
-		// 	this.filter.page = this.filter.page + 1;
-		// 	this.setState({
-		// 		loadingMore: false,
-		// 	});
-		// }, () => {
-		// 	this.setState({
-		// 		loadingMore: false,
-		// 	});
-		// });
+		this.filter.skip = this.filter.limit * this.filter.page;
+		this.props.action.getFlightList({ filter: this.filter }, () => {
+			this.filter.page = this.filter.page + 1;
+			this.setState({
+				loadingMore: false,
+			});
+		}, () => {
+			this.setState({
+				loadingMore: false,
+			});
+		});
+	}
+
+	handleSearch = (where) => {
+		this.filter.where = {
+			...this.filter.where,
+			...where,
+		};
+		this.filter.skip = 0;
+		this.filter.limit = 4;
+		this.filter.page = 1;
+
+		this.props.action.getFlightList({ filter: this.filter, firstLoad: true }, () => {
+			this.setState({ loading: false });
+		});
 	}
 
 	render() {
 		const { classes } = this.props;
-		// const [flightListSell, flightListBuy] = partition(this.props.store.flightList.data, (item) => item.type === 'Sell');
+		const [flightListSell, flightListBuy] = partition(this.props.store.flightList.data, (item) => item.type === 'Sell');
 
-		const flightListBuy = [
-			{
-				author: {
-					fullname: 'Trịnh Thu Hương',
-				},
-				updatedTime: '12/02/2018 16:08',
-				content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
-				link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
-				departure: 'Nha Trang',
-				destination: 'Hải Phòng',
-				agency: null,
-				type: 'sell',
-				dueDate: '12/02/2018 16:08',
-				startDate: '12/02/2018',
-				startPrice: 1200000,
-				currentPrice: 1300000,
-				bidderId: 1,
-				rate: 3,
-				stock: 1,
-			},
-			{
-				author: {
-					fullname: 'Trịnh Thu Hương',
-				},
-				updatedTime: '12/02/2018 16:08',
-				content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
-				link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
-				departure: 'Nha Trang',
-				destination: 'Hải Phòng',
-				agency: 'vna',
-				type: 'sell',
-				dueDate: '12/02/2018 16:08',
-				startDate: '12/02/2018',
-				startPrice: 1200000,
-				currentPrice: 1300000,
-				bidderId: 1,
-				rate: 3,
-				stock: 1,
-			},
-			{
-				author: {
-					fullname: 'Trịnh Thu Hương',
-				},
-				updatedTime: '12/02/2018 16:08',
-				content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
-				link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
-				departure: 'Nha Trang',
-				destination: 'Hải Phòng',
-				agency: 'jetstar',
-				type: 'sell',
-				dueDate: '12/02/2018 16:08',
-				startDate: '12/02/2018',
-				startPrice: 1200000,
-				currentPrice: 1300000,
-				bidderId: 1,
-				rate: 3,
-				stock: 1,
-			},
-		];
+		// const flightListBuy = [
+		// 	{
+		// 		author: {
+		// 			fullname: 'Trịnh Thu Hương',
+		// 		},
+		// 		updatedTime: '12/02/2018 16:08',
+		// 		content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
+		// 		link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
+		// 		departure: 'Nha Trang',
+		// 		destination: 'Hải Phòng',
+		// 		agency: null,
+		// 		type: 'sell',
+		// 		dueDate: '12/02/2018 16:08',
+		// 		startDate: '12/02/2018',
+		// 		startPrice: 1200000,
+		// 		currentPrice: 1300000,
+		// 		bidderId: 1,
+		// 		rate: 3,
+		// 		stock: 1,
+		// 	},
+		// 	{
+		// 		author: {
+		// 			fullname: 'Trịnh Thu Hương',
+		// 		},
+		// 		updatedTime: '12/02/2018 16:08',
+		// 		content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
+		// 		link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
+		// 		departure: 'Nha Trang',
+		// 		destination: 'Hải Phòng',
+		// 		agency: 'vna',
+		// 		type: 'sell',
+		// 		dueDate: '12/02/2018 16:08',
+		// 		startDate: '12/02/2018',
+		// 		startPrice: 1200000,
+		// 		currentPrice: 1300000,
+		// 		bidderId: 1,
+		// 		rate: 3,
+		// 		stock: 1,
+		// 	},
+		// 	{
+		// 		author: {
+		// 			fullname: 'Trịnh Thu Hương',
+		// 		},
+		// 		updatedTime: '12/02/2018 16:08',
+		// 		content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
+		// 		link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
+		// 		departure: 'Nha Trang',
+		// 		destination: 'Hải Phòng',
+		// 		agency: 'jetstar',
+		// 		type: 'sell',
+		// 		dueDate: '12/02/2018 16:08',
+		// 		startDate: '12/02/2018',
+		// 		startPrice: 1200000,
+		// 		currentPrice: 1300000,
+		// 		bidderId: 1,
+		// 		rate: 3,
+		// 		stock: 1,
+		// 	},
+		// ];
 
-		const flightListSell = [
-			{
-				author: {
-					fullname: 'Trịnh Thu Hương',
-				},
-				updatedTime: '12/02/2018 16:08',
-				content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
-				link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
-				departure: 'Nha Trang',
-				destination: 'Hải Phòng',
-				agency: 'vietjet',
-				type: 'bid',
-				dueDate: '06/04/2018 16:08',
-				startDate: '28/03/2018',
-				startPrice: 1200000,
-				currentPrice: 1300000,
-				bidderId: 1,
-				rate: 3,
-				stock: 1,
-				isHot: true,
-			},
-			{
-				author: {
-					fullname: 'Trịnh Minh Hằng',
-				},
-				updatedTime: '12/04/2018 16:08',
-				content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
-				link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
-				departure: 'Nha Trang',
-				destination: 'Hải Phòng',
-				agency: 'jetstar',
-				type: 'buy',
-				dueDate: '12/04/2018 16:08',
-				startDate: '28/03/2018',
-				startPrice: 1200000,
-				currentPrice: 1300000,
-				bidderId: 1,
-				rate: 3,
-				stock: 1,
-			},
-			{
-				author: {
-					fullname: 'Nguyễn Thành Trung',
-				},
-				updatedTime: '20/04/2018 16:08',
-				content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
-				link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
-				departure: 'Nha Trang',
-				destination: 'Hải Phòng',
-				agency: 'vna',
-				type: 'buy',
-				dueDate: '20/04/2018 16:08',
-				startDate: '28/03/2018',
-				startPrice: 1200000,
-				currentPrice: 1300000,
-				bidderId: 1,
-				rate: 3,
-				stock: 1,
-			},
-		];
+		// const flightListSell = [
+		// 	{
+		// 		author: {
+		// 			fullname: 'Trịnh Thu Hương',
+		// 		},
+		// 		updatedTime: '12/02/2018 16:08',
+		// 		content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
+		// 		link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
+		// 		departure: 'Nha Trang',
+		// 		destination: 'Hải Phòng',
+		// 		agency: 'vietjet',
+		// 		type: 'bid',
+		// 		dueDate: '06/04/2018 16:08',
+		// 		startDate: '28/03/2018',
+		// 		startPrice: 1200000,
+		// 		currentPrice: 1300000,
+		// 		bidderId: 1,
+		// 		rate: 3,
+		// 		stock: 1,
+		// 		isHot: true,
+		// 	},
+		// 	{
+		// 		author: {
+		// 			fullname: 'Trịnh Minh Hằng',
+		// 		},
+		// 		updatedTime: '12/04/2018 16:08',
+		// 		content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
+		// 		link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
+		// 		departure: 'Nha Trang',
+		// 		destination: 'Hải Phòng',
+		// 		agency: 'jetstar',
+		// 		type: 'buy',
+		// 		dueDate: '12/04/2018 16:08',
+		// 		startDate: '28/03/2018',
+		// 		startPrice: 1200000,
+		// 		currentPrice: 1300000,
+		// 		bidderId: 1,
+		// 		rate: 3,
+		// 		stock: 1,
+		// 	},
+		// 	{
+		// 		author: {
+		// 			fullname: 'Nguyễn Thành Trung',
+		// 		},
+		// 		updatedTime: '20/04/2018 16:08',
+		// 		content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
+		// 		link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
+		// 		departure: 'Nha Trang',
+		// 		destination: 'Hải Phòng',
+		// 		agency: 'vna',
+		// 		type: 'buy',
+		// 		dueDate: '20/04/2018 16:08',
+		// 		startDate: '28/03/2018',
+		// 		startPrice: 1200000,
+		// 		currentPrice: 1300000,
+		// 		bidderId: 1,
+		// 		rate: 3,
+		// 		stock: 1,
+		// 	},
+		// ];
+
+		if (this.state.loading) {
+			return (
+				<Fragment>
+					<SearchBar />
+					<Row gutter={20} className={classes.wrapperContent}>
+						<div className={classes.border} />
+						<Col span={12}>
+							<Button type="primary" className={classes.btn}>Tìm mua</Button>
+							{
+								[0, 0].map((flight, index) => <FlightCard key={index} loading />)
+							}
+						</Col>
+						<Col span={12}>
+							<Button type="primary" className={classes.btn}>Đăng bán</Button>
+							{
+								[0, 0].map((flight, index) => <FlightCard key={index} loading />)
+							}
+						</Col>
+					</Row>
+				</Fragment>
+			);
+		}
 
 		return (
-			<Row gutter={20} className={classes.wrapperContent}>
-				<div className={classes.border} />
-				<Col span={12}>
-					<Button type="primary" className={classes.btn}>Tìm mua</Button>
-					{
-						flightListBuy.map(flight => <FlightCard key={flight.id} flight={flight} />)
-					}
-				</Col>
-				<Col span={12}>
-					<Button type="primary" className={classes.btn}>Đăng bán</Button>
-					{
-						flightListSell.map(flight => <FlightCard key={flight.id} flight={flight} />)
-					}
-				</Col>
-			</Row>
+			<Fragment>
+				<SearchBar onSearch={this.handleSearch} />
+				<Row gutter={20} className={classes.wrapperContent}>
+					<div className={classes.border} />
+					<Col span={12}>
+						<Button type="primary" className={classes.btn}>Tìm mua</Button>
+						{
+							flightListBuy.map(flight => <FlightCard flight={flight} key={flight.id} />)
+						}
+					</Col>
+					<Col span={12}>
+						<Button type="primary" className={classes.btn}>Đăng bán</Button>
+						{
+							flightListSell.map(flight => <FlightCard flight={flight} key={flight.id} />)
+						}
+					</Col>
+					<Col span={24}>
+						<Button style={{ width: '100%' }} size="large" onClick={this.handleViewMore} loading={this.state.loadingMore}>Xem thêm</Button>
+					</Col>
+				</Row>
+			</Fragment>
 		);
 	}
 }

@@ -11,15 +11,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Row, Col, Tag, Icon, Button, Input } from 'antd';
+import { Icon, Button, Input, notification } from 'antd';
 
 import withStyles from 'src/theme/jss/withStyles';
 import Avatar from 'src/components/Photo/Avatar';
-import Price from 'src/components/Stuff/Price';
-import IconDeparture from 'src/components/Photo/IconDeparture';
 import IconMedal from 'src/components/Photo/IconMedal';
 
 import { toggleFlightModal, toggleLoginModal } from 'src/redux/actions/modal';
+import { updateFlight } from 'src/redux/actions/flight';
 
 import AuthStorage from 'src/utils/AuthStorage';
 
@@ -41,6 +40,8 @@ const styleSheet = (theme) => ({
 	},
 	header: {
 		padding: 15,
+		display: 'flex',
+		alignItems: 'center',
 	},
 	author: {
 		textTransform: 'uppercase',
@@ -122,6 +123,9 @@ const styleSheet = (theme) => ({
 
 function mapStateToProps(state) {
 	return {
+		store: {
+			flightModal: state.getIn(['modal', 'flight']),
+		},
 	};
 }
 
@@ -130,6 +134,7 @@ const mapDispatchToProps = (dispatch) => {
 		action: bindActionCreators({
 			toggleFlightModal,
 			toggleLoginModal,
+			updateFlight,
 		}, dispatch),
 	};
 };
@@ -139,25 +144,99 @@ const mapDispatchToProps = (dispatch) => {
 export default class SearchBar extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
-		type: PropTypes.string.isRequired,
-		badge: PropTypes.string,
-
+		store: PropTypes.shape({
+			flightModal: PropTypes.object,
+		}).isRequired,
+		action: PropTypes.shape({
+			updateFlight: PropTypes.func,
+			toggleFlightModal: PropTypes.func,
+		}).isRequired,
 	}
 
 	static defaultProps = {
-		badge: '',
-		type: 'bid',
 	}
 
 	state = {
 	}
 
-	handleClickFlight = () => {
-		this.props.action.toggleFlightModal({ open: true });
+	handleSell = () => {
+		this.setState({
+			btnLoading: true,
+		});
+		this.props.action.updateFlight({
+			status: 'Payment pending',
+			updatedAt: new Date(),
+			id: this.props.flight.id,
+			sellerId: AuthStorage.userId,
+		}, () => {
+			this.setState({
+				btnLoading: false,
+			});
+			notification.success({
+				message: 'Chúc mừng!',
+				description: 'Bạn đã đặt vé thành công! Vui lòng kiểm tra hộp thư.',
+			});
+			this.props.action.toggleFlightModal({ open: false });
+		}, () => {
+			this.setState({
+				btnLoading: false,
+			});
+			this.props.action.toggleFlightModal({ open: false });
+		});
+	}
+
+	handleBuy = () => {
+		this.setState({
+			btnLoading: true,
+		});
+		this.props.action.updateFlight({
+			status: 'Payment pending',
+			updatedAt: new Date(),
+			id: this.props.flight.id,
+			buyerId: AuthStorage.userId,
+		}, () => {
+			this.setState({
+				btnLoading: false,
+			});
+			notification.success({
+				message: 'Chúc mừng!',
+				description: 'Bạn đã mua vé thành công! Vui lòng kiểm tra hộp thư.',
+			});
+			this.props.action.toggleFlightModal({ open: false });
+		}, () => {
+			this.setState({
+				btnLoading: false,
+			});
+			this.props.action.toggleFlightModal({ open: false });
+		});
+	}
+
+	handleClickAvatar = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		const { type, seller, buyer, from } = this.props.store.flightModal.data;
+
+		if (from) {
+			window.open(`https://fb.com/${from.id}`);
+		}
+	}
+
+	_getAuthor = (flight) => {
+		const { type, seller, buyer, from } = flight;
+
+		if (from && from.id) {
+			return {
+				id: from.id,
+				fullName: from.name,
+				avatar: from.picture ? from.picture.data.url : '',
+			};
+		}
+
+		return (type === 'Buy') ? buyer : seller;
 	}
 
 	_renderAction() {
-		const { classes, flight } = this.props.flight;
+		const { classes } = this.props;
 
 		return (
 			<div className={classes.actionWrapper}>
@@ -172,27 +251,27 @@ export default class SearchBar extends Component {
 	}
 
 	_renderFooter() {
-		const { handleClickFlight } = this;
-		const { classes, flight } = this.props;
-		const { author, updatedTime, content, link, rate, type, isHot } = flight;
+		const { classes } = this.props;
+		const flight = this.props.store.flightModal.data;
+		const { type } = flight;
 
-		if (type === 'sell') {
+		if (type === 'Buy') {
 			return (
-				<CheckLogin onClick={() => handleClickFlight()}>
-					<Button type="primary">Liên hệ</Button>
+				<CheckLogin onClick={this.handleSell}>
+					<Button type="primary" loading={this.state.btnLoading}>Liên hệ</Button>
 				</CheckLogin>
 			);
-		} else if (type === 'buy') {
+		} else if (type === 'Sell') {
 			return (
 				<div className={classes.examine}>
 					<IconMedal />
 					<span style={{ marginRight: 10, marginLeft: 5 }}>Kiểm định bởi chove.vn</span>
-					<CheckLogin onClick={() => handleClickFlight()}>
-						<Button type="primary">Liên hệ</Button>
+					<CheckLogin onClick={this.handleBuy}>
+						<Button type="primary" loading={this.state.btnLoading}>Mua</Button>
 					</CheckLogin>
 				</div>
 			);
-		} else if (type === 'bid') {
+		} else if (type === 'Bid') {
 			return (
 				<Fragment>
 					<div className={classes.actionWrapper}>
@@ -201,9 +280,7 @@ export default class SearchBar extends Component {
 							addonAfter={<span>VND</span>}
 							className={classes.input}
 						/>
-						<CheckLogin style={{ display: 'inline-block' }} onClick={() => handleClickFlight()}>
-							<Button type="primary">Đấu giá</Button>
-						</CheckLogin>
+						<Button type="primary" loading={this.state.btnLoading}>Đấu giá</Button>
 					</div>
 					<div className={classes.examine} style={{ marginTop: 15 }}>
 						<IconMedal />
@@ -217,20 +294,16 @@ export default class SearchBar extends Component {
 	}
 
 	render() {
-		const { classes, flight, action } = this.props;
-
-		if (!flight) {
-			action.toggleFlightModal({ open: false });
-			return null;
-		}
-
-		const { author, updatedTime, content, link, rate, type, isHot } = flight;
+		const { classes } = this.props;
+		const flight = this.props.store.flightModal.data;
+		const { updatedTime, content, link } = flight;
+		const author = this._getAuthor(flight);
 
 		return (
 			<div className={classes.root}>
 				<div className={classes.header}>
-					<Avatar size={40} style={{ marginRight: 5 }} />
-					<span className={classes.author}>{author.fullname}</span>
+					<Avatar size={40} style={{ marginRight: 5 }} src={author.avatar} onClick={this.handleClickAvatar} />
+					<span className={classes.author} onClick={this.handleClickAvatar}>{author.fullName}</span>
 					<span className={classes.note}>{updatedTime}</span>
 				</div>
 

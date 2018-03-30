@@ -11,21 +11,21 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Row, Col, Tag, Icon, Button } from 'antd';
+import { Row, Col, Icon, Button } from 'antd';
 
 import withStyles from 'src/theme/jss/withStyles';
 import Avatar from 'src/components/Photo/Avatar';
 import Price from 'src/components/Stuff/Price';
-import IconDeparture from 'src/components/Photo/IconDeparture';
 
-import { toggleFlightModal } from 'src/redux/actions/modal';
+import { toggleFlightModal, toggleUserInfoModal } from 'src/redux/actions/modal';
+
+import AuthStorage from 'src/utils/AuthStorage';
 
 import GroupStar from './GroupStar';
 import BidBlock from './BidBlock';
 import FlightBlock from './FlightBlock';
 import CheckLogin from 'src/components/Form/CheckLogin';
 
-import AuthStorage from 'src/utils/AuthStorage';
 
 const styleSheet = (theme) => ({
 	root: {
@@ -118,9 +118,16 @@ const styleSheet = (theme) => ({
 	blur: {
 		opacity: 0.6,
 	},
+	content: {
+		display: '-webkit-box',
+		WebkitLineClamp: 3,
+		WebkitBoxOrient: 'vertical',
+		overflow: 'hidden',
+		marginBottom: 5,
+	},
 });
 
-function mapStateToProps(state) {
+function mapStateToProps(/* state */) {
 	return {
 	};
 }
@@ -129,6 +136,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		action: bindActionCreators({
 			toggleFlightModal,
+			toggleUserInfoModal,
 		}, dispatch),
 	};
 };
@@ -141,16 +149,17 @@ export default class FlightCard extends Component {
 		flight: PropTypes.object,
 		action: PropTypes.shape({
 			toggleFlightModal: PropTypes.func,
+			toggleUserInfoModal: PropTypes.func,
 		}).isRequired,
-
+		loading: PropTypes.bool,
 	}
 
 	static defaultProps = {
 		flight: {
-			author: {
-				fullname: 'Trịnh Thu Hương',
+			buyer: {
+				fullName: 'Trịnh Thu Hương',
 			},
-			updatedTime: '12/02/2018 16:08',
+			updatedAt: '12/02/2018 16:08',
 			content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
 			link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
 			departure: 'Nha Trang',
@@ -167,6 +176,7 @@ export default class FlightCard extends Component {
 
 
 		},
+		loading: false,
 	}
 
 	state = {
@@ -176,29 +186,41 @@ export default class FlightCard extends Component {
 		this.props.action.toggleFlightModal({ open: true, data: this.props.flight });
 	}
 
+	handleClickAvatar = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		const { type, seller, buyer, from } = this.props.flight;
+
+		if (from) {
+			window.open(`https://fb.com/${from.id}`);
+		} else {
+			this.props.action.toggleUserInfoModal({ open: true, data: type === 'Buy' ? buyer : seller });
+		}
+	}
+
 	_renderBodyRight = () => {
 		const { handleClickFlight } = this;
 		const { type, stock, price } = this.props.flight;
 
-		if (type === 'sell') {
+		if (type === 'Buy') {
 			return (
 				<Fragment>
 					<p>{stock} vé</p>
-					<CheckLogin onClick={() => handleClickFlight()}>
+					<CheckLogin onClick={handleClickFlight}>
 						<Button type="primary">Liên hệ</Button>
 					</CheckLogin>
 				</Fragment>
 			);
-		} else if (type === 'buy') {
+		} else if (type === 'Sell') {
 			return (
 				<Fragment>
 					<p><Price price={price} type="primary" /></p>
-					<CheckLogin onClick={() => handleClickFlight()}>
+					<CheckLogin onClick={handleClickFlight} >
 						<Button type="primary">Mua</Button>
 					</CheckLogin>
 				</Fragment>
 			);
-		} else if (type === 'bid') {
+		} else if (type === 'Bid') {
 			return (
 				<Fragment>
 					<BidBlock isStart price={1200000} />
@@ -210,27 +232,67 @@ export default class FlightCard extends Component {
 		return null;
 	}
 
+	_getAuthor = () => {
+		const { type, seller, buyer, from } = this.props.flight;
+
+		if (from && from.id) {
+			return {
+				id: from.id,
+				fullName: from.name,
+				avatar: from.picture ? from.picture.data.url : '',
+			};
+		}
+
+		return (type === 'Buy') ? buyer : seller;
+	}
+
 	render() {
 		const { handleClickFlight } = this;
-		const { classes, flight } = this.props;
-		const { author, updatedTime, content, link, rate, type, isHot } = flight;
+		const { classes, flight, loading } = this.props;
+		const { updatedAt, content, link, rate, type, isHot } = flight;
+		const author = this._getAuthor(flight);
 
+		console.log('flight', flight);
+		if (loading) {
+			return (
+				<div className={classes.root}>
+					<Row type="flex" className={classes.header}>
+						<Col span={18}>
+							<div className="loading-block" />
+							<div className="loading-block" />
+							<div className="loading-block" />
+						</Col>
+						<Col offset={1} span={5} style={{ textAlign: 'center' }}>
+							<Avatar style={{ marginBottom: 5 }} size={40} loading />
+						</Col>
+					</Row>
+
+					<Row className={classes.body}>
+						<Col span={16}>
+							<FlightBlock flight={flight} loading />
+						</Col>
+						<Col span={7} offset={1} className={classes.bodyRight}>
+							<div className="loading-block" />
+							<Button type="primary" loading />
+						</Col>
+					</Row>
+				</div>
+			);
+		}
 		return (
 			<div className={classes.root}>
 				<Row type="flex" className={classes.header}>
 					<Col span={18}>
-						<span className={classes.author}>{author.fullname}</span>
-						<span className={classes.note}>{updatedTime}</span>
-						<div>{content}</div>
-						<span className={`${classes.link} ${!AuthStorage.loggedIn && classes.blur}`}>
+						<span className={classes.author} onClick={this.handleClickAvatar}>{author.fullName}</span>
+						<span className={classes.note}>{updatedAt}</span>
+						<div className={classes.content}>{content}</div>
+						<span className={classes.link}>
 							<Icon type="link" />
-							<CheckLogin style={{ display: 'inline-block' }}>
-								<a href={AuthStorage.loggedIn && link}>{link}</a>
-							</CheckLogin>
+							<a href={link}>{link}</a>
 						</span>
 					</Col>
 					<Col offset={1} span={5} style={{ textAlign: 'center' }}>
-						<Avatar style={{ marginBottom: 5 }} size={40} />
+						<Avatar style={{ marginBottom: 5 }} size={40} src={author.avatar} onClick={this.handleClickAvatar} />
 						<GroupStar rate={rate} />
 					</Col>
 				</Row>
@@ -251,7 +313,7 @@ export default class FlightCard extends Component {
 								<div className={classes.footerTitle}>Giá khởi điểm</div>
 								<div className={classes.footerInfo}>8 giờ 30 phút</div>
 							</div>
-							<CheckLogin onClick={() => handleClickFlight()}>
+							<CheckLogin onClick={handleClickFlight}>
 								<Button type="primary">Đấu giá</Button>
 							</CheckLogin>
 						</div>

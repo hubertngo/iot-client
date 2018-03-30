@@ -106,7 +106,7 @@ export default class TicketPosterForm extends Component {
 					loading: true,
 				});
 
-				const data = { ...values, sellerId: AuthStorage.userId, status: 'Open' };
+				const data = { ...values, sellerId: AuthStorage.userId, status: 'Open', stock: 1 };
 
 				this.props.action.createFlight(data, () => {
 					this.setState({
@@ -124,24 +124,9 @@ export default class TicketPosterForm extends Component {
 		});
 	}
 
-	// _handleDepartureChange = (value) => {
-	// }
-
-	// _handleDestinationChange = (value) => {
-	// }
-
 	render() {
 		const { form: { getFieldDecorator }, classes, action } = this.props;
-		// const menuDeparture = (
-		// 	<Menu className={classes.dropdownMenu} onClick={this._handleDepartureChange}>
-		// 		{locationOptions.map(location => <Menu.Item key={location.value}>{location.label}</Menu.Item>)}
-		// 	</Menu>
-		// );
-		// const menuDestination = (
-		// 	<Menu className={classes.dropdownMenu} onClick={this._handleDestinationChange}>
-		// 		{locationOptions.map(location => <Menu.Item key={location.value}>{location.label}</Menu.Item>)}
-		// 	</Menu>
-		// );
+
 		return (
 			<div className={classes.root}>
 				<Icon type="close-circle" className={classes.closeBtn} onClick={() => action.toggleTicketPosterModal({ open: false })} />
@@ -160,17 +145,19 @@ export default class TicketPosterForm extends Component {
 						)}
 					</Form.Item>
 					<Form.Item>
-						{getFieldDecorator('flightType')(
-							<Row className={classes.formItem} type="flex">
-								<Col span={3} className={classes.formLabel}> Loại vé </Col>
-								<Col span={21}>
+						<Row className={classes.formItem} type="flex">
+							<Col span={3} className={classes.formLabel}> Loại vé </Col>
+							<Col span={21}>
+								{getFieldDecorator('flightType', {
+									initialValue: 'One way',
+								})(
 									<Radio.Group>
 										<Radio value="One way"> Một chiều </Radio>
 										<Radio value="Round trip"> Khứ hồi </Radio>
-									</Radio.Group>
-								</Col>
-							</Row>,
-						)}
+									</Radio.Group>,
+								)}
+							</Col>
+						</Row>
 					</Form.Item>
 					<Form.Item>
 						{getFieldDecorator('seatNumber')(
@@ -232,35 +219,42 @@ export default class TicketPosterForm extends Component {
 					</Row>
 					<PosterDivider title="Thông tin khác" titleWidth={23} />
 					<Form.Item>
-						{getFieldDecorator('seatType')(
-							<Row className={classes.formItem} type="flex">
-								<Col span={6} className={classes.formLabel}> Loại ghế </Col>
-								<Col span={18}>
+						<Row className={classes.formItem} type="flex">
+							<Col span={6} className={classes.formLabel}> Loại ghế </Col>
+							<Col span={18}>
+								{getFieldDecorator('seatType', {
+									initialValue: 'Promo',
+								})(
 									<Radio.Group>
 										<Radio value="Promo"> Promo </Radio>
 										<Radio value="Eco"> Eco </Radio>
 										<Radio value="Skyboss"> Skyboss </Radio>
-									</Radio.Group>
-								</Col>
-							</Row>,
-						)}
+									</Radio.Group>,
+								)}
+							</Col>
+						</Row>
 					</Form.Item>
 					<Form.Item>
-						{getFieldDecorator('packageWeight')(
-							<Row className={classes.formItem} type="flex">
-								<Col span={6} className={classes.formLabel}> Số kg hành lý </Col>
-								<Col span={18}>
+						<Row className={classes.formItem} type="flex">
+							<Col span={6} className={classes.formLabel}> Số kg hành lý </Col>
+							<Col span={18}>
+								{getFieldDecorator('packageWeight', {
+									initialValue: 7,
+								})(
 									<Radio.Group>
 										<Radio value={7}> 7kg </Radio>
 										<Radio value={20}> 20kg </Radio>
-										<Radio value={-1}> Khác </Radio>
+										<Radio value={-1}>
+											Khác
+											<span>
+												<Input size="default" className="radius-small" maxLength="25" style={{ width: 90 }} suffix="KG" />
+											</span>
+										</Radio>
 									</Radio.Group>
-									<span>
-										<Input size="default" className="radius-small" maxLength="25" style={{ width: 90 }} suffix="KG" />
-									</span>
-								</Col>
-							</Row>,
-						)}
+									,
+								)}
+							</Col>
+						</Row>
 					</Form.Item>
 					<Row className={classes.formItem} type="flex">
 						<span>
@@ -274,16 +268,28 @@ export default class TicketPosterForm extends Component {
 					</Row>
 					<PosterDivider />
 					<div className={classes.action}>
-						<div className={classes.actionGroup}>
-							<Button.Group>
-								<Button> Đấu thầu</Button>
-								<Button> Cố định </Button>
-							</Button.Group>
-						</div>
-						<div className={classes.actionGroup}>
-							<span> Giá khởi điểm </span>
-							<span> <Input size="default" className="radius-small" maxLength="25" style={{ width: 150 }} suffix="VNĐ" /> </span>
-						</div>
+						<Form.Item>
+							<div className={classes.actionGroup}>
+								{getFieldDecorator('type', {
+									initialValue: 'Sell',
+								})(
+									<Radio.Group>
+										<Radio.Button value="Bid"> Đấu thầu</Radio.Button>
+										<Radio.Button value="Sell">Cố định</Radio.Button>
+									</Radio.Group>,
+								)}
+							</div>
+						</Form.Item>
+						<Form.Item>
+							<div className={classes.actionGroup}>
+								<span> Giá khởi điểm </span>
+								<span>
+									{getFieldDecorator('price')(
+										<Input size="default" className="radius-small" maxLength="25" style={{ width: 150 }} suffix="VNĐ" />,
+									)}
+								</span>
+							</div>
+						</Form.Item>
 						<div className={classes.actionGroup}>
 							<Button type="primary" htmlType="submit" loading={this.state.loading}> Đăng tin </Button>
 						</div>

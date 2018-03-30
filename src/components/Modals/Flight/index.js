@@ -59,7 +59,6 @@ const FlightModal = (props) => {
 			bodyStyle={{ padding: 0 }}
 			className={classes.root}
 			wrapClassName={classes.wrap}
-			width="auto"
 			destroyOnClose
 			onCancel={flight.closable ? f => f : () => props.action.toggleFlightModal({ open: false })}
 		>

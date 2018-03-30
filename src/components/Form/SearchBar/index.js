@@ -19,6 +19,8 @@ import withStyles from 'src/theme/jss/withStyles';
 
 import { locationOptions } from 'src/constants/selectOption';
 
+import moment from 'moment';
+
 const styleSheet = (theme) => ({
 	root: {
 		marginTop: 20,
@@ -130,6 +132,7 @@ export default class SearchBar extends Component {
 			validateFields: PropTypes.func,
 			setFieldsValue: PropTypes.func,
 		}).isRequired,
+		onSearch: PropTypes.func.isRequired,
 	}
 
 	static defaultProps = {}
@@ -139,9 +142,26 @@ export default class SearchBar extends Component {
 
 	handleSubmit = (e) => {
 		e.preventDefault();
+
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				console.log('values', values);
+				const filter = { ...values };
+
+				if (filter.startDate) {
+					filter.startDate = {
+						gte: moment(filter.startDate).startOf('day'),
+						lte: moment(filter.startDate).endOf('day'),
+					};
+				}
+
+				if (filter.endDate) {
+					filter.endDate = {
+						gte: moment(filter.endDate).startOf('day'),
+						lte: moment(filter.endDate).endOf('day'),
+					};
+				}
+
+				this.props.onSearch(filter);
 			}
 		});
 	}
@@ -230,8 +250,8 @@ export default class SearchBar extends Component {
 						<Form.Item style={{ marginBottom: 0 }}>
 							{getFieldDecorator('type')(
 								<Select defaultValue="one-way" size="large" className={classes.select}>
-									<Select.Option value="one-way">One way</Select.Option>
-									<Select.Option value="round-trip">Round trip</Select.Option>
+									<Select.Option value="One way">One way</Select.Option>
+									<Select.Option value="Round trip">Round trip</Select.Option>
 								</Select>,
 							)}
 						</Form.Item>

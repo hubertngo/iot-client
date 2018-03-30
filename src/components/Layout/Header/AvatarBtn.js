@@ -105,7 +105,7 @@ const AvatarBtn = ({ store, action, classes }) => {
 			</div>
 			<Divider className={classes.divider} />
 			<div className={classes.itemWrapper}>
-				<div className={classes.item} onClick={() => action.toggleUserInfoModal({ open: true })}>
+				<div className={classes.item} onClick={() => action.toggleUserInfoModal({ open: true, data: store.auth })}>
 					<Icon type="user" />
 					<span> Thông tin cá nhân </span>
 				</div>

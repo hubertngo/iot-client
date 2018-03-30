@@ -18,21 +18,43 @@ const styleSheet = () => ({
 	},
 });
 
-const getAgencyLogo = (angencyName) => {
-	switch (angencyName) {
-		case 'vna':
-			return '/static/assets/images/logo/logo_vna.png';
-		case 'jetstar':
-			return '/static/assets/images/logo/logo_jetstar.png';
-		case 'vietjet':
-			return '/static/assets/images/logo/logo_vietjet.png';
-		default:
+const FlightBlock = ({ flight, style, classes, loading }) => {
+	const { departure, destination, startDate, airline } = flight;
+	const getAirlineLogo = (airlineName) => {
+		switch (airlineName) {
+			case 'vna':
+				return '/static/assets/images/logo/logo_vna.png';
+			case 'jetstar':
+				return '/static/assets/images/logo/logo_jetstar.png';
+			case 'vietjet':
+				return '/static/assets/images/logo/logo_vietjet.png';
+			default:
+		}
+	};
+
+	if (loading) {
+		return (
+			<div style={style}>
+				<Row type="flex" justify="center" style={{ marginBottom: 10 }}>
+					<Col span={10}>
+						<div className="loading-block" />
+						<div className="loading-block" />
+					</Col>
+					<Col span={4} className="text-center">
+						<IconDeparture color="#4368C4" />
+					</Col>
+					<Col span={10} className="text-right">
+						<div className="loading-block" />
+					</Col>
+				</Row>
+				<Row type="flex">
+					<Col span={12} style={{ display: 'flex' }}>
+						<div className="loading-block" />
+					</Col>
+				</Row>
+			</div>
+		);
 	}
-};
-
-const FlightBlock = ({ flight, style, classes }) => {
-	const { departure, destination, startDate, agency } = flight;
-
 	return (
 		<div style={style}>
 			<Row type="flex" justify="center" style={{ marginBottom: 10 }}>
@@ -51,13 +73,13 @@ const FlightBlock = ({ flight, style, classes }) => {
 			<Row type="flex">
 				<Col span={12} style={{ display: 'flex' }}>
 					{
-						!agency ? (
+						!airline ? (
 							<Fragment>
 								<IconDeparture size={18} extended />
 								<span className={classes.note} style={{ marginLeft: 5 }}>Tất cả các hãng</span>
 							</Fragment>
 						) : (
-							<img src={getAgencyLogo(agency)} alt="" height={18} />
+							<img src={getAirlineLogo(airline)} alt="" height={18} />
 						)
 					}
 				</Col>
@@ -74,6 +96,7 @@ FlightBlock.propTypes = {
 	flight: PropTypes.object.isRequired,
 	classes: PropTypes.object.isRequired,
 	style: PropTypes.object,
+	loading: PropTypes.bool.isRequired,
 };
 
 FlightBlock.defaultProps = {

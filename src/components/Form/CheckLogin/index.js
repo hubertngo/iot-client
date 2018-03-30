@@ -32,7 +32,10 @@ const mapDispatchToProps = (dispatch) => {
 const CheckLogin = (props) => {
 	const { children, onClick, style } = props;
 
-	const handleClick = () => {
+	const handleClick = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+
 		if (AuthStorage.loggedIn) {
 			onClick();
 		} else {
