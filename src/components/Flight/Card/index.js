@@ -23,6 +23,7 @@ import { toggleFlightModal } from 'src/redux/actions/modal';
 import GroupStar from './GroupStar';
 import BidBlock from './BidBlock';
 import FlightBlock from './FlightBlock';
+import CheckLogin from 'src/components/Form/CheckLogin';
 
 const styleSheet = (theme) => ({
 	root: {
@@ -171,20 +172,25 @@ export default class FlightCard extends Component {
 	}
 
 	_renderBodyRight = () => {
+		const { handleClickFlight } = this;
 		const { type, stock, price } = this.props.flight;
 
 		if (type === 'sell') {
 			return (
 				<Fragment>
 					<p>{stock} vé</p>
-					<Button type="primary">Liên hệ</Button>
+					<CheckLogin onClick={() => handleClickFlight()}>
+						<Button type="primary">Liên hệ</Button>
+					</CheckLogin>
 				</Fragment>
 			);
 		} else if (type === 'buy') {
 			return (
 				<Fragment>
 					<p><Price price={price} type="primary" /></p>
-					<Button type="primary">Mua</Button>
+					<CheckLogin onClick={() => handleClickFlight()}>
+						<Button type="primary">Mua</Button>
+					</CheckLogin>
 				</Fragment>
 			);
 		} else if (type === 'bid') {
@@ -200,11 +206,12 @@ export default class FlightCard extends Component {
 	}
 
 	render() {
+		const { handleClickFlight } = this;
 		const { classes, flight } = this.props;
 		const { author, updatedTime, content, link, rate, type, isHot } = flight;
 
 		return (
-			<div className={classes.root} onClick={this.handleClickFlight}>
+			<div className={classes.root}>
 				<Row type="flex" className={classes.header}>
 					<Col span={18}>
 						<span className={classes.author}>{author.fullname}</span>
@@ -237,7 +244,9 @@ export default class FlightCard extends Component {
 								<div className={classes.footerTitle}>Giá khởi điểm</div>
 								<div className={classes.footerInfo}>8 giờ 30 phút</div>
 							</div>
-							<Button type="primary">Đấu giá</Button>
+							<CheckLogin onClick={() => handleClickFlight()}>
+								<Button type="primary">Đấu giá</Button>
+							</CheckLogin>
 						</div>
 					)
 				}

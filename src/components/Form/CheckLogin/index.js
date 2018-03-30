@@ -30,7 +30,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const CheckLogin = (props) => {
-	const { children, onClick } = props;
+	const { children, onClick, style } = props;
 
 	const handleClick = () => {
 		if (AuthStorage.loggedIn) {
@@ -46,7 +46,7 @@ const CheckLogin = (props) => {
 	};
 
 	return (
-		<div onClick={handleClick}>
+		<div style={style} onClick={handleClick}>
 			{children}
 		</div>
 	);
@@ -55,6 +55,7 @@ const CheckLogin = (props) => {
 CheckLogin.propTypes = {
 	children: PropTypes.node.isRequired,
 	onClick: PropTypes.func,
+	style: PropTypes.object.isRequired,
 	// action
 	action: PropTypes.shape({
 		toggleLoginModal: PropTypes.func.isRequired,

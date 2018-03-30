@@ -26,6 +26,7 @@ import AuthStorage from 'src/utils/AuthStorage';
 import GroupStar from './GroupStar';
 import BidBlock from './BidBlock';
 import FlightBlock from './FlightBlock';
+import CheckLogin from 'src/components/Form/CheckLogin';
 
 const styleSheet = (theme) => ({
 	root: {
@@ -150,16 +151,7 @@ export default class SearchBar extends Component {
 	}
 
 	handleClickFlight = () => {
-		const { store, action, flight } = this.props;
-
-		console.log('AuthStorage', AuthStorage.loggedIn);
-
-		if (!AuthStorage.loggedIn) {
-			action.toggleLoginModal({ open: true });
-			action.toggleFlightModal({ open: false });
-		} else {
-			action.toggleFlightModal({ open: true });
-		}
+		this.props.action.toggleFlightModal({ open: true });
 	}
 
 	_renderAction() {
@@ -178,19 +170,24 @@ export default class SearchBar extends Component {
 	}
 
 	_renderFooter() {
+		const { handleClickFlight } = this;
 		const { classes, flight } = this.props;
 		const { author, updatedTime, content, link, rate, type, isHot } = flight;
 
 		if (type === 'sell') {
 			return (
-				<Button type="primary">Liên hệ</Button>
+				<CheckLogin onClick={() => handleClickFlight()}>
+					<Button type="primary">Liên hệ</Button>
+				</CheckLogin>
 			);
 		} else if (type === 'buy') {
 			return (
 				<div className={classes.examine}>
 					<IconMedal />
 					<span style={{ marginRight: 10, marginLeft: 5 }}>Kiểm định bởi chove.vn</span>
-					<Button type="primary">Liên hệ</Button>
+					<CheckLogin onClick={() => handleClickFlight()}>
+						<Button type="primary">Liên hệ</Button>
+					</CheckLogin>
 				</div>
 			);
 		} else if (type === 'bid') {
@@ -202,7 +199,9 @@ export default class SearchBar extends Component {
 							addonAfter={<span>VND</span>}
 							className={classes.input}
 						/>
-						<Button type="primary">Đấu giá</Button>
+						<CheckLogin style={{ display: 'inline-block' }} onClick={() => handleClickFlight()}>
+							<Button type="primary">Đấu giá</Button>
+						</CheckLogin>
 					</div>
 					<div className={classes.examine} style={{ marginTop: 15 }}>
 						<IconMedal />
@@ -226,7 +225,7 @@ export default class SearchBar extends Component {
 		const { author, updatedTime, content, link, rate, type, isHot } = flight;
 
 		return (
-			<div className={classes.root} onClick={() => this.handleClickFlight()}>
+			<div className={classes.root}>
 				<div className={classes.header}>
 					<Avatar size={40} style={{ marginRight: 5 }} />
 					<span className={classes.author}>{author.fullname}</span>
