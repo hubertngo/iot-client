@@ -252,7 +252,6 @@ export default class FlightCard extends Component {
 		const { updatedAt, content, link, rate, type, isHot } = flight;
 		const author = this._getAuthor(flight);
 
-		console.log('flight', flight);
 		if (loading) {
 			return (
 				<div className={classes.root}>
