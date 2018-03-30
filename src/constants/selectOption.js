@@ -17,4 +17,12 @@ export const locationOptions = [
 	{ value: 'Côn Đảo (VCS)', label: 'Côn Đảo (VCS)' },
 	{ value: 'Rạch Giá (VKG)', label: 'Rạch Giá (VKG)' },
 	{ value: 'Cà Mau (CAH)', label: 'Cà Mau (CAH)' },
-]
+];
+
+
+export const flightOptions = [
+	{ value: 'vna', label: 'Vietnam Airline', logo: '/static/assets/images/logo/logo_vna.png' },
+	{ value: 'vietjet', label: 'Vietjet', logo: '/static/assets/images/logo/logo_vietjet.png' },
+	{ value: 'jetstar', label: 'Jetstar', logo: '/static/assets/images/logo/logo_jetstar.png' },
+];
+
