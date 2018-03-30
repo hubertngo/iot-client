@@ -23,8 +23,6 @@ import { toggleFlightModal, toggleLoginModal } from 'src/redux/actions/modal';
 
 import AuthStorage from 'src/utils/AuthStorage';
 
-import GroupStar from './GroupStar';
-import BidBlock from './BidBlock';
 import FlightBlock from './FlightBlock';
 import CheckLogin from 'src/components/Form/CheckLogin';
 
@@ -115,6 +113,10 @@ const styleSheet = (theme) => ({
 		alignItems: 'center',
 		justifyContent: 'flex-end',
 		color: theme.palette.primary[500],
+	},
+
+	blur: {
+		opacity: 0.6,
 	},
 });
 
@@ -235,9 +237,11 @@ export default class SearchBar extends Component {
 				<div className={classes.body}>
 					<div className={classes.title}>Nội dung</div>
 					<div>{content}</div>
-					<span className={classes.link}>
+					<span className={`${classes.link} ${!AuthStorage.loggedIn && classes.blur}`}>
 						<Icon type="link" style={{ marginRight: 5 }} />
-						<a href={link}>{link}</a>
+						<CheckLogin style={{ display: 'inline-block' }}>
+							<a href={AuthStorage.loggedIn && link}>{link}</a>
+						</CheckLogin>
 					</span>
 					<FlightBlock flight={flight} style={{ maxWidth: '66.67%' }} />
 					<div className={classes.divider} />

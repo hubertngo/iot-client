@@ -25,6 +25,8 @@ import BidBlock from './BidBlock';
 import FlightBlock from './FlightBlock';
 import CheckLogin from 'src/components/Form/CheckLogin';
 
+import AuthStorage from 'src/utils/AuthStorage';
+
 const styleSheet = (theme) => ({
 	root: {
 		textAlign: 'left',
@@ -112,6 +114,9 @@ const styleSheet = (theme) => ({
 		'& > i': {
 			marginRight: 5,
 		},
+	},
+	blur: {
+		opacity: 0.6,
 	},
 });
 
@@ -217,9 +222,11 @@ export default class FlightCard extends Component {
 						<span className={classes.author}>{author.fullname}</span>
 						<span className={classes.note}>{updatedTime}</span>
 						<div>{content}</div>
-						<span className={classes.link}>
+						<span className={`${classes.link} ${!AuthStorage.loggedIn && classes.blur}`}>
 							<Icon type="link" />
-							<a href={link}>{link}</a>
+							<CheckLogin style={{ display: 'inline-block' }}>
+								<a href={AuthStorage.loggedIn && link}>{link}</a>
+							</CheckLogin>
 						</span>
 					</Col>
 					<Col offset={1} span={5} style={{ textAlign: 'center' }}>
