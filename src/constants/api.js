@@ -8,6 +8,6 @@
 // import env from './env';
 
 export default {
-	// BASE_URL: 'http://35.201.229.48:3005/api/v1/',
-	BASE_URL: 'http://localhost:3005/api/v1/',
+	BASE_URL: 'http://35.201.229.48:3005/api/v1/',
+	// BASE_URL: 'http://localhost:3005/api/v1/',
 };
