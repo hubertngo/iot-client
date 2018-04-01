@@ -53,6 +53,11 @@ const styleSheet = (/* theme */) => ({
 			left: '50%',
 		},
 	},
+	btnMore: {
+		width: '100%',
+		boxShadow: '0px 0px 16px 0px rgba(0, 0, 0, 0.15)',
+		border: '0',
+	},
 });
 
 const mapStateToProps = (state) => {
@@ -205,7 +210,7 @@ export default class FlightList extends Component {
 						}
 					</Col>
 					<Col span={24}>
-						<Button style={{ width: '100%' }} size="large" onClick={this.handleViewMore} loading={this.state.loadingMore}>Xem thêm</Button>
+						<Button className={classes.btnMore} size="large" onClick={this.handleViewMore} loading={this.state.loadingMore}>Xem thêm</Button>
 					</Col>
 				</Row>
 			</Fragment>

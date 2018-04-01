@@ -1,23 +1,53 @@
-.ant-input {
-  height: 34px;
-  background: #F0F4F7;
-  border: 0;
-  font-size: 14px;
-  color: #333333;
-  padding: 5px 11px;
+.ant-input,
+.ant-time-picker-input {
+    height: 34px;
+    background: #F0F4F7;
+    border: 0;
+    font-size: 14px;
+    color: #333333;
+    padding: 5px 11px;
 }
 
 .ant-input-lg {
-  padding: 6px 11px;
-  height: 40px;
-  font-size: 16px;
+    padding: 6px 11px;
+    height: 40px;
+    font-size: 16px;
 }
 
 .ant-input-sm {
-  padding: 1px 7px;
-  height: 24px;
+    padding: 1px 7px;
+    height: 24px;
 }
 
 .ant-form-item label {
-  color: #828282;
+    color: #828282;
+}
+
+.ant-input-number {
+    height: 32px;
+    background: #F0F4F7;
+    border: 1px solid #F0F4F7 !important;
+    border: 0;
+    font-size: 14px;
+    color: #333333;
+    position: relative;
+}
+
+.ant-input-number.price {
+    padding-right: 35px;
+    &::after {
+        content: 'VNĐ';
+        position: absolute;
+        top: 6px;
+        right: 10px;
+        color: gray;
+    }
+    & .ant-input-number-handler-wrap {
+        display: none;
+    }
+}
+
+.ant-input-number .ant-input-number-input {
+    background: #F0F4F7;
+    height: 32px;
 }

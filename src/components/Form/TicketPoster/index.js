@@ -13,13 +13,17 @@ import { bindActionCreators } from 'redux';
 import moment from 'moment';
 
 import withStyles from 'src/theme/jss/withStyles';
+
+import { Form, Icon, Input, Button, Radio, Select, Row, Col, DatePicker, TimePicker, InputNumber } from 'antd';
+
 import { locationOptions, flightOptions } from 'src/constants/selectOption';
 import AuthStorage from 'src/utils/AuthStorage';
 
+import IconDeparture from 'src/components/Photo/IconDeparture';
+
 import { createFlight } from 'src/redux/actions/flight';
 import { toggleTicketPosterModal } from 'src/redux/actions/modal';
-import { Form, Icon, Input, Button, Radio, Select, Row, Col, DatePicker, TimePicker } from 'antd';
-import IconDeparture from 'src/components/Photo/IconDeparture';
+
 import PosterDivider from './PosterDivider';
 
 const { TextArea } = Input;
@@ -56,7 +60,7 @@ const styleSheet = (theme) => ({
 		textAlign: 'right',
 	},
 	actionGroup: {
-		marginBottom: 15,
+		// marginBottom: 15,
 	},
 });
 
@@ -177,7 +181,7 @@ export default class TicketPosterForm extends Component {
 						})(
 							<div className={classes.formItem}>
 								<div className={classes.formLabel}> Nội dung tin đăng </div>
-								<TextArea className="radius-small" rows={4} style={{ resize: 'none' }} />
+								<TextArea rows={4} style={{ resize: 'none' }} />
 							</div>,
 						)}
 					</Form.Item>
@@ -200,7 +204,13 @@ export default class TicketPosterForm extends Component {
 						{getFieldDecorator('seatNumber')(
 							<div className={classes.formItem}>
 								<Col span={3} className={classes.formLabel}> Số ghế </Col>
-								<Col span={21}> <Input size="default" className="radius-small" maxLength="25" style={{ width: 70 }} /> </Col>
+								<Col span={21}>
+									{getFieldDecorator('seatsCount', {
+										initialValue: 1,
+									})(
+										<InputNumber size="default" style={{ width: 70 }} />,
+									)}
+								</Col>
 							</div>,
 						)}
 					</Form.Item>
@@ -221,7 +231,10 @@ export default class TicketPosterForm extends Component {
 									</Select>,
 								)}
 							</Col>
-							<Col span={10}> <img src={airlineState.logo} alt="airline_logo" style={{ width: 140 }} /> </Col>
+							{
+								airlineState.value !== 'all' &&
+								<Col span={10}> <img src={airlineState.logo} alt="airline_logo" style={{ height: 21 }} /> </Col>
+							}
 						</div>
 					</Form.Item>
 					<PosterDivider title="Chiều đi" titleWidth={13} />
@@ -235,7 +248,7 @@ export default class TicketPosterForm extends Component {
 											setFieldValue={departureState}
 											onChange={(val) => changeValue('departureState', val)}
 											size="default"
-											style={{ width: 200 }}
+											style={{ width: '100%' }}
 										>
 											{locationOptions.map(item => <Option value={item.value} key={item.value}>{item.label}</Option>)}
 										</Select>,
@@ -243,7 +256,7 @@ export default class TicketPosterForm extends Component {
 								</div>
 							</Form.Item>
 						</Col>
-						<Col span={4} style={{ textAlign: 'center', paddingTop: 45 }}> <IconDeparture extended color="#4368C4" /> </Col>
+						<Col span={4} style={{ textAlign: 'center', paddingTop: 45 }}> <IconDeparture color="#4368C4" /> </Col>
 						<Col span={10}>
 							<Form.Item>
 								<div className={classes.formItem}>
@@ -253,7 +266,7 @@ export default class TicketPosterForm extends Component {
 											setFieldValue={destinationState}
 											onChange={(val) => changeValue('destinationState', val)}
 											size="default"
-											style={{ width: 200 }}
+											style={{ width: '100%' }}
 										>
 											{locationOptions.map(item => <Option value={item.value} key={item.value}>{item.label}</Option>)}
 										</Select>,
@@ -262,29 +275,23 @@ export default class TicketPosterForm extends Component {
 							</Form.Item>
 						</Col>
 					</Row>
-					<Row className={classes.formItem} type="flex" style={{ marginBottom: 24 }}>
-						<Col span={10}>
+					<Row className={classes.formItem} type="flex" style={{ marginBottom: 10 }}>
+						<Col span={20}>
 							<div className={classes.formItem}>
 								<div className={classes.formLabel}> Thời gian xuất phát </div>
-								<div>
+								<div style={{ display: 'flex' }}>
 									<Form.Item>
 										{getFieldDecorator('departureStartDate')(
-											<DatePicker style={{ width: '50%' }} />,
+											<DatePicker format="DD/MM/YYY" />,
 										)}
 									</Form.Item>
 									<Form.Item>
 										{getFieldDecorator('departureStartTime')(
-											<TimePicker style={{ width: '50%' }} format="HH:mm" />,
+											<TimePicker format="HH:mm" style={{ marginLeft: 20 }} />,
 										)}
 									</Form.Item>
 								</div>
 							</div>
-						</Col>
-						<Col span={4} />
-						<Col span={10}>
-							{/* <div className={classes.formItem}>
-								<div className={classes.formLabel}> Thời gian hạ cánh </div>
-							</div> */}
 						</Col>
 					</Row>
 					{
@@ -293,50 +300,58 @@ export default class TicketPosterForm extends Component {
 							<PosterDivider title="Chiều về" titleWidth={13} />
 							<Row className={classes.formItem} type="flex">
 								<Col span={10}>
-									<div className={classes.formItem}>
-										<div className={classes.formLabel}> Điểm xuất phát </div>
-										<Input
-											value={destinationState}
-											size="default"
-											style={{ width: 200 }}
-										/>
-									</div>
+									<Form.Item>
+										<div className={classes.formItem}>
+											<div className={classes.formLabel}> Điểm xuất phát </div>
+											{getFieldDecorator('departure')(
+												<Select
+													setFieldValue={departureState}
+													onChange={(val) => changeValue('departureState', val)}
+													size="default"
+													style={{ width: '100%' }}
+												>
+													{locationOptions.map(item => <Option value={item.value} key={item.value}>{item.label}</Option>)}
+												</Select>,
+											)}
+										</div>
+									</Form.Item>
 								</Col>
-								<Col span={4} style={{ textAlign: 'center', paddingTop: 45 }}> <IconDeparture extended color="#4368C4" /> </Col>
+								<Col span={4} style={{ textAlign: 'center', paddingTop: 45 }}> <IconDeparture color="#4368C4" style={{ transform: 'rotateY(180deg)' }} /> </Col>
 								<Col span={10}>
-									<div className={classes.formItem}>
-										<div className={classes.formLabel}> Điểm đến </div>
-										<Input
-											value={departureState}
-											size="default"
-											style={{ width: 200 }}
-										/>
-									</div>
+									<Form.Item>
+										<div className={classes.formItem}>
+											<div className={classes.formLabel}> Điểm đến </div>
+											{getFieldDecorator('destination')(
+												<Select
+													setFieldValue={destinationState}
+													onChange={(val) => changeValue('destinationState', val)}
+													size="default"
+													style={{ width: '100%' }}
+												>
+													{locationOptions.map(item => <Option value={item.value} key={item.value}>{item.label}</Option>)}
+												</Select>,
+											)}
+										</div>
+									</Form.Item>
 								</Col>
 							</Row>
-							<Row className={classes.formItem} type="flex">
-								<Col span={10}>
+							<Row className={classes.formItem} type="flex" style={{ marginBottom: 10 }}>
+								<Col span={20}>
 									<div className={classes.formItem}>
 										<div className={classes.formLabel}> Thời gian xuất phát </div>
-										<div>
+										<div style={{ display: 'flex' }}>
 											<Form.Item>
-												{getFieldDecorator('destinationStartDate')(
-													<DatePicker style={{ width: '50%' }} />,
+												{getFieldDecorator('departureStartDate')(
+													<DatePicker format="DD/MM/YYY" />,
 												)}
 											</Form.Item>
 											<Form.Item>
-												{getFieldDecorator('destinationStartTime')(
-													<TimePicker style={{ width: '50%' }} format="HH:mm" />,
+												{getFieldDecorator('departureStartTime')(
+													<TimePicker format="HH:mm" style={{ marginLeft: 20 }} />,
 												)}
 											</Form.Item>
 										</div>
 									</div>
-								</Col>
-								<Col span={4} />
-								<Col span={10}>
-									{/* <div className={classes.formItem}>
-										<div className={classes.formLabel}> Thời gian hạ cánh </div>
-									</div> */}
 								</Col>
 							</Row>
 						</div>
@@ -371,7 +386,7 @@ export default class TicketPosterForm extends Component {
 										<Radio value={-1}>
 											Khác
 											<span style={{ marginLeft: 20 }}>
-												<Input size="default" className="radius-small" maxLength="25" style={{ width: 90 }} suffix="KG" />
+												<Input type="number" size="default" maxLength="25" style={{ width: 90 }} suffix="KG" />
 											</span>
 										</Radio>
 									</Radio.Group>
@@ -411,8 +426,14 @@ export default class TicketPosterForm extends Component {
 									<div className={classes.actionGroup}>
 										<span> { typeState === 'Sell' ? 'Giá đăng bán' : 'Giá khởi điểm' } </span>
 										<span>
-											{getFieldDecorator('price')(
-												<Input size="default" className="radius-small" maxLength="25" style={{ width: 150 }} suffix="VNĐ" />,
+											{getFieldDecorator('price', {
+												initialValue: 0,
+											})(
+												<InputNumber
+													formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+													className="price"
+													style={{ width: 150, marginLeft: 10 }}
+												/>,
 											)}
 										</span>
 									</div>
@@ -420,6 +441,7 @@ export default class TicketPosterForm extends Component {
 						</Form.Item>
 						<div className={classes.actionGroup}>
 							<Button type="primary" htmlType="submit" loading={this.state.loading}> Đăng tin </Button>
+							<Button style={{ marginLeft: 10 }} htmlType="submit" loading={this.state.loading} onClick={() => action.toggleTicketPosterModal({ open: false })}>Hủy</Button>
 						</div>
 					</div>
 				</Form>

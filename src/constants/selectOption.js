@@ -21,6 +21,7 @@ export const locationOptions = [
 
 
 export const flightOptions = [
+	{ value: 'all', label: 'Tất cả các hãng', logo: '' },
 	{ value: 'vna', label: 'Vietnam Airline', logo: '/static/assets/images/logo/logo_vna.png' },
 	{ value: 'vietjet', label: 'Vietjet', logo: '/static/assets/images/logo/logo_vietjet.png' },
 	{ value: 'jetstar', label: 'Jetstar', logo: '/static/assets/images/logo/logo_jetstar.png' },

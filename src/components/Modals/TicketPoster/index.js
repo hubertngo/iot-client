@@ -53,6 +53,8 @@ const TicketPosterModal = (props) => {
 
 	return (
 		<Modal
+			maskClosable={false}
+			style={{ top: 20 }}
 			visible={ticketPoster.open}
 			closable={ticketPoster.closable}
 			footer={null}
