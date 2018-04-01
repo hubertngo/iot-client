@@ -10,6 +10,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import moment from 'moment';
 
 import { Row, Col, Icon, Button } from 'antd';
 
@@ -21,16 +22,17 @@ import { toggleFlightModal, toggleUserInfoModal } from 'src/redux/actions/modal'
 
 import AuthStorage from 'src/utils/AuthStorage';
 
+import CheckLogin from 'src/components/Form/CheckLogin';
+
 import GroupStar from './GroupStar';
 import BidBlock from './BidBlock';
 import FlightBlock from './FlightBlock';
-import CheckLogin from 'src/components/Form/CheckLogin';
 
 
 const styleSheet = (theme) => ({
 	root: {
 		textAlign: 'left',
-		padding: '0 15px',
+		padding: '10px 15px',
 		background: '#FFF',
 		borderRadius: 8,
 		boxShadow: '0px 0px 16px 0px rgba(0, 0, 0, 0.15)',
@@ -55,6 +57,7 @@ const styleSheet = (theme) => ({
 	note: {
 		color: theme.palette.text.disabled,
 		fontWeight: 500,
+		fontSize: 12,
 	},
 	body: {
 		padding: 15,
@@ -62,11 +65,13 @@ const styleSheet = (theme) => ({
 	bodyRight: {
 		textAlign: 'right',
 		borderLeft: `1px solid ${theme.palette.text.divider}`,
+		paddingLeft: 20,
 
 		'& > p': {
-			fontWeight: 600,
-			fontSize: 16,
-			marginBottom: 16,
+			fontWeight: '500',
+			marginBottom: '23px',
+			fontSize: '18px',
+			textTransform: 'uppercase',
 		},
 	},
 	footer: {
@@ -155,27 +160,7 @@ export default class FlightCard extends Component {
 	}
 
 	static defaultProps = {
-		flight: {
-			buyer: {
-				fullName: 'Trịnh Thu Hương',
-			},
-			updatedAt: '12/02/2018 16:08',
-			content: 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018',
-			link: 'https://dulichgiare.com.vn/vemaybay/147dqe',
-			departure: 'Nha Trang',
-			destination: 'Hải Phòng',
-			agency: null,
-			type: 'buy',
-			dueDate: '12/02/2018 16:08',
-			startDate: '12/02/2018',
-			startPrice: 1200000,
-			currentPrice: 1300000,
-			bidderId: 1,
-			rate: 3,
-			stock: 1,
-
-
-		},
+		flight: {},
 		loading: false,
 	}
 
@@ -257,12 +242,14 @@ export default class FlightCard extends Component {
 				<div className={classes.root}>
 					<Row type="flex" className={classes.header}>
 						<Col span={18}>
+							<div className="loading-block" style={{ width: '60%', height: 20, marginRight: 0 }} />
 							<div className="loading-block" />
 							<div className="loading-block" />
 							<div className="loading-block" />
 						</Col>
 						<Col offset={1} span={5} style={{ textAlign: 'center' }}>
-							<Avatar style={{ marginBottom: 5 }} size={40} loading />
+							<div className="loading-block" style={{ width: 40, height: 40, borderRadius: '50%' }} />
+							<div className="loading-block" />
 						</Col>
 					</Row>
 
@@ -271,7 +258,7 @@ export default class FlightCard extends Component {
 							<FlightBlock flight={flight} loading />
 						</Col>
 						<Col span={7} offset={1} className={classes.bodyRight}>
-							<div className="loading-block" />
+							<div className="loading-block" style={{ height: 20, marginBottom: 10, marginRight: 0 }} />
 							<Button type="primary" loading />
 						</Col>
 					</Row>
@@ -283,7 +270,7 @@ export default class FlightCard extends Component {
 				<Row type="flex" className={classes.header}>
 					<Col span={18}>
 						<span className={classes.author} onClick={this.handleClickAvatar}>{author.fullName}</span>
-						<span className={classes.note}>{updatedAt}</span>
+						<span className={classes.note}>{moment(updatedAt).format('DD/MM/YYYY hh:mm')}</span>
 						<div className={classes.content}>{content}</div>
 						<span className={classes.link}>
 							<Icon type="link" />

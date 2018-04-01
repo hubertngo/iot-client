@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 import { Row, Col, Tag } from 'antd';
 
@@ -7,14 +8,21 @@ import IconDeparture from 'src/components/Photo/IconDeparture';
 
 import withStyles from 'src/theme/jss/withStyles';
 
-const styleSheet = () => ({
+const styleSheet = (theme) => ({
 	location: {
 		fontSize: 14,
 		textTransform: 'uppercase',
 		fontWeight: 600,
 	},
 	date: {
-		color: '#95A2AB',
+		color: theme.palette.text.disabled,
+		fontWeight: 500,
+		fontSize: 12,
+	},
+	iconFlight: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 });
 
@@ -48,7 +56,8 @@ const FlightBlock = ({ flight, style, classes, loading }) => {
 					</Col>
 				</Row>
 				<Row type="flex">
-					<Col span={12} style={{ display: 'flex' }}>
+					<Col span={12} style={{ display: 'flex', width: '100%' }}>
+						<div className="loading-block" />
 						<div className="loading-block" />
 					</Col>
 				</Row>
@@ -57,12 +66,12 @@ const FlightBlock = ({ flight, style, classes, loading }) => {
 	}
 	return (
 		<div style={style}>
-			<Row type="flex" justify="center" style={{ marginBottom: 10 }}>
+			<Row type="flex" justify="center" style={{ marginBottom: 20 }}>
 				<Col span={10}>
 					<div className={classes.location}>{departure}</div>
-					<span className={classes.date}>{startDate}</span>
+					<span className={classes.date}>{moment(startDate).format('DD/MM/YYYY hh:mm')}</span>
 				</Col>
-				<Col span={4} className="text-center">
+				<Col span={4} className={classes.iconFlight}>
 					<IconDeparture color="#4368C4" />
 				</Col>
 				<Col span={10} className="text-right">
@@ -84,8 +93,8 @@ const FlightBlock = ({ flight, style, classes, loading }) => {
 					}
 				</Col>
 				<Col span={12} className="text-right">
-					<Tag>Promo</Tag>
-					<Tag style={{ marginRight: 0 }}>7Kg</Tag>
+					<Tag color="#95A2AB">Promo</Tag>
+					<Tag style={{ marginRight: 0, color: '#95A2AB' }} color="#EAEAEA">7Kg</Tag>
 				</Col>
 			</Row>
 		</div>

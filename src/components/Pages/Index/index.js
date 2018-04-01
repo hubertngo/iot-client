@@ -9,7 +9,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+// import { bindActionCreators } from 'redux';
 
 import withStyles from 'src/theme/jss/withStyles';
 import { Button, Input, Select, DatePicker, Tabs, Row, Col } from 'antd';
@@ -133,13 +133,13 @@ export default class ClassName extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
 		// store
-		store: PropTypes.shape({
-			modal: PropTypes.object.isRequired,
-		}).isRequired,
-		// action
-		action: PropTypes.shape({
-			toggleLoginModal: PropTypes.func.isRequired,
-		}).isRequired,
+		// store: PropTypes.shape({
+		// 	modal: PropTypes.object.isRequired,
+		// }).isRequired,
+		// // action
+		// action: PropTypes.shape({
+		// 	toggleLoginModal: PropTypes.func.isRequired,
+		// }).isRequired,
 	}
 
 	static defaultProps = {}
