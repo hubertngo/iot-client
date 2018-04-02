@@ -37,12 +37,12 @@ const Footer = (props) => {
 				<img className={classes.logo} src="/static/assets/images/logo/2x.png" alt="chove.vn" />
 				<Row type="flex">
 					<Col md={12} xs={24}>
-						Hệ thống bán thanh lý các loạ vé giá rẻ. Phiên bản beta1. <br />
-						Địa chỉ: 172 Hai Bà Trưng, Q1, TP.HCM. <br />
-						Hotline: 0909 418 086<br />
+						Hệ thống bán thanh lý các loại vé chưa sử dụng. Phiên bản beta1. <br />
+						Địa chỉ: 25 Lạc Trung, Vĩnh Tuy, Hai Bà Trưng, Hà Nội.<br />
+						Hotline: 0913231019<br />
 					</Col>
 					<Col md={12} xs={24}>
-						Một sản phẩm của Tamotech Inc <br />
+						Một sản phẩm của Chove.vn <br />
 						© Chove.vn <br />
 						Icons made by Freepik from www.flaticon.com is licensed by CC 3.0 BY <br />
 					</Col>

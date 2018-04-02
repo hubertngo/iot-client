@@ -152,11 +152,12 @@ export default class ClassName extends Component {
 				<div className={classes.banner} />
 				<Container>
 					<div className={classes.title}>Tìm kiếm chuyến bay giá rẻ khắp mọi nơi</div>
-					<Tabs defaultActiveKey="1" className={classes.tabs}>
+					<div style={{ height: 60 }} />
+					{/* <Tabs defaultActiveKey="1" className={classes.tabs}>
 						<Tabs.TabPane tab="Vé máy bay" key="1" />
 						<Tabs.TabPane tab="Phòng khách sạn" key="2" />
 						<Tabs.TabPane tab="Voucher" key="3" />
-					</Tabs>
+					</Tabs> */}
 					<FlightList />
 				</Container>
 
