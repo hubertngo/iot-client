@@ -131,7 +131,17 @@ const styleSheet = (theme) => ({
 	},
 
 	blur: {
-		opacity: 0.6,
+		'& a': {
+			WebkitUserSelect: 'none',
+			MozUserSelect: 'none',
+			MsUserSelect: 'none',
+			userSelect: 'none',
+			color: 'transparent',
+			cursor: 'pointer',
+			position: 'relative',
+			textShadow: '0 0 12px #4368C4',
+			display: 'block',
+		},
 	},
 });
 

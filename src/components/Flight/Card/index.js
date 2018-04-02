@@ -123,7 +123,17 @@ const styleSheet = (theme) => ({
 		},
 	},
 	blur: {
-		opacity: 0.6,
+		'& a': {
+			WebkitUserSelect: 'none',
+			MozUserSelect: 'none',
+			MsUserSelect: 'none',
+			userSelect: 'none',
+			color: 'transparent',
+			cursor: 'pointer',
+			position: 'relative',
+			textShadow: '0 0 12px #4368C4',
+			display: 'block',
+		},
 	},
 	content: {
 		display: '-webkit-box',
@@ -287,7 +297,7 @@ export default class FlightCard extends Component {
 						<span className={classes.note}>{moment(flightData.updatedAt).format('DD/MM/YYYY hh:mm')}</span>
 						<div className={classes.content}>{flightData.content}</div>
 						{
-							flightData.dataType === 'fb' &&
+							flightData.dataType !== 'fb' &&
 							<span className={`${classes.link} ${!AuthStorage.loggedIn && classes.blur}`}>
 								<Icon type="link" />
 								<CheckLogin style={{ display: 'inline-block' }}>
