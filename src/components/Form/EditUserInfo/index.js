@@ -123,7 +123,7 @@ export default class EditUserInfoForm extends Component {
 						})(
 							<div className={classes.formItem}>
 								<div className={classes.formLabel}> Ngày tháng năm sinh </div>
-								<Input placeholder="dd/mm/yyyy" defaultValue={store.auth.email} />
+								<Input placeholder="dd/mm/yyyy" />
 							</div>,
 						)}
 					</Form.Item>

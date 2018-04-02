@@ -22,8 +22,9 @@ import { updateFlight } from 'src/redux/actions/flight';
 
 import AuthStorage from 'src/utils/AuthStorage';
 
-import FlightBlock from './FlightBlock';
 import CheckLogin from 'src/components/Form/CheckLogin';
+
+import FlightBlock from './FlightBlock';
 
 const styleSheet = (theme) => ({
 	root: {

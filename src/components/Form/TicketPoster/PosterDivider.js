@@ -6,11 +6,11 @@
 * Created: 2018-03-25 17:32:30
 *------------------------------------------------------- */
 
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'src/theme/jss/withStyles';
 
-const styleSheet = (theme) => ({
+const styleSheet = (/* theme */) => ({
 	root: {
 		marginBottom: 10,
 	},
@@ -41,6 +41,11 @@ PosterDivider.propTypes = {
 	classes: PropTypes.object.isRequired,
 	title: PropTypes.string,
 	titleWidth: PropTypes.number,
+};
+
+PosterDivider.defaultProps = {
+	title: '',
+	titleWidth: 0,
 };
 
 export default withStyles(styleSheet)(PosterDivider);

@@ -8,7 +8,7 @@ const GroupStar = ({ rate }) => {
 		<div>
 			{
 				[0, 0, 0, 0, 0].map((item, index) => (
-					<Icon type="star" style={{ color: rate > index ? '#FFB74D' : '#95A2AB' }} />
+					<Icon type="star" key={index} style={{ color: rate > index ? '#FFB74D' : '#95A2AB' }} />
 				))
 			}
 		</div>

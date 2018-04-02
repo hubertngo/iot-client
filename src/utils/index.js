@@ -76,7 +76,7 @@ export const getLabel = (value, arr = []) => {
 		return value;
 	}
 
-	return arr[index].label;
+	return arr[index];
 };
 
 export const formatNumber = (value, fixed = 2) => {

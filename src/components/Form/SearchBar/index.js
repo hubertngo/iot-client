@@ -249,7 +249,7 @@ export default class SearchBar extends Component {
 					<Col span={3}>
 						<Form.Item style={{ marginBottom: 0 }}>
 							{getFieldDecorator('type')(
-								<Select defaultValue="one-way" size="large" className={classes.select}>
+								<Select size="large" className={classes.select}>
 									<Select.Option value="One way">One way</Select.Option>
 									<Select.Option value="Round trip">Round trip</Select.Option>
 								</Select>,

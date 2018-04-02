@@ -15,7 +15,7 @@ import { formatNumber } from 'src/utils';
 
 const styleSheet = () => ({
 	root: {
-		fontSize: 14,
+		fontSize: 16,
 		fontWeight: 600,
 	},
 	default: {},
@@ -38,13 +38,14 @@ const Price = ({ price, currency, type, classes }) => {
 };
 
 Price.propTypes = {
-	price: PropTypes.number.isRequired,
+	price: PropTypes.number,
 	currency: PropTypes.string,
 	classes: PropTypes.object.isRequired,
 	type: PropTypes.string,
 };
 
 Price.defaultProps = {
+	price: 0,
 	currency: 'VNĐ',
 	type: 'default',
 };

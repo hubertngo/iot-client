@@ -23,6 +23,11 @@ import { logoutRequest } from 'src/redux/actions/auth';
 import { toggleUserInfoModal } from 'src/redux/actions/modal';
 
 const styles = (/* theme */) => ({
+	root: {
+		display: 'flex',
+		height: '46px',
+		alignItems: 'center',
+	},
 	avatar: {
 		cursor: 'pointer',
 	},
@@ -143,8 +148,10 @@ const AvatarBtn = ({ store, action, classes }) => {
 
 	return (
 		<Popover content={content} title={title} trigger="click" placement="bottomRight">
-			<Avatar className={classes.avatar} name={store.auth.fullName} src={store.auth.avatar} />
-			<Icon type="down" style={{ marginLeft: '5px', fontWeight: 'bold', cursor: 'pointer' }} />
+			<div className={classes.root}>
+				<Avatar className={classes.avatar} name={store.auth.fullName} src={store.auth.avatar} />
+				<Icon type="down" style={{ marginLeft: '5px', fontWeight: 'bold', cursor: 'pointer' }} />
+			</div>
 		</Popover>
 	);
 };

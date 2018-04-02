@@ -25,6 +25,7 @@ export const initialState = fromJS({
 	ticketPoster: {
 		open: false,
 		closable: false,
+		type: 'selling',
 	},
 	userInfo: {
 		open: false,
@@ -64,6 +65,7 @@ export default (state = initialState, action) => {
 				return {
 					open: !!action.payload.open,
 					closable: !!action.payload.closable,
+					type: action.payload.type,
 				};
 			});
 

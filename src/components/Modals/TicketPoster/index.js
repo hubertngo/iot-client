@@ -15,7 +15,8 @@ import withStyles from 'src/theme/jss/withStyles';
 
 import { Modal } from 'antd';
 
-import TicketPosterForm from 'src/components/Form/TicketPoster';
+import TicketPosterFormBuying from 'src/components/Form/TicketPoster/Buying';
+import TicketPosterFormSelling from 'src/components/Form/TicketPoster/Selling';
 
 import { toggleTicketPosterModal } from 'src/redux/actions/modal';
 
@@ -65,7 +66,11 @@ const TicketPosterModal = (props) => {
 			destroyOnClose
 			onCancel={ticketPoster.closable ? f => f : () => props.action.toggleTicketPosterModal({ open: false })}
 		>
-			<TicketPosterForm />
+			{
+				ticketPoster.type === 'buying' ?
+					<TicketPosterFormBuying /> :
+					<TicketPosterFormSelling />
+			}
 		</Modal>
 	);
 };

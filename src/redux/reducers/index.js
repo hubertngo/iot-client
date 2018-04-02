@@ -11,6 +11,8 @@ import modal, { initialState as initialModal } from './modal';
 
 import user, { initialState as initialUser } from './user';
 import flight, { initialState as initialFlight } from './flight';
+import ticketSelling, { initialState as initialTicketSelling } from './ticket-selling';
+import ticketBuying, { initialState as initialTicketBuying } from './ticket-buying';
 
 export const initialState = {
 	auth: initialAuth,
@@ -18,6 +20,8 @@ export const initialState = {
 	modal: initialModal,
 	user: initialUser,
 	flight: initialFlight,
+	ticketSelling: initialTicketSelling,
+	ticketBuying: initialTicketBuying,
 };
 
 export default {
@@ -26,4 +30,6 @@ export default {
 	modal,
 	user,
 	flight,
+	ticketSelling,
+	ticketBuying,
 };

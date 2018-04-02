@@ -20,7 +20,7 @@ import Price from 'src/components/Stuff/Price';
 
 import { toggleFlightModal, toggleUserInfoModal } from 'src/redux/actions/modal';
 
-import AuthStorage from 'src/utils/AuthStorage';
+// import AuthStorage from 'src/utils/AuthStorage';
 
 import CheckLogin from 'src/components/Form/CheckLogin';
 
@@ -53,6 +53,7 @@ const styleSheet = (theme) => ({
 		color: theme.palette.text.secondary,
 		fontWeight: 600,
 		marginRight: 10,
+		cursor: 'pointer',
 	},
 	note: {
 		color: theme.palette.text.disabled,
@@ -69,8 +70,8 @@ const styleSheet = (theme) => ({
 
 		'& > p': {
 			fontWeight: '500',
-			marginBottom: '23px',
-			fontSize: '18px',
+			marginBottom: '26px',
+			fontSize: '16px',
 			textTransform: 'uppercase',
 		},
 	},
@@ -83,6 +84,7 @@ const styleSheet = (theme) => ({
 	},
 	footerTitle: {
 		color: '#596A75',
+		fontSize: 12,
 	},
 	footerInfo: {
 		fontWeight: 600,
@@ -132,8 +134,11 @@ const styleSheet = (theme) => ({
 	},
 });
 
-function mapStateToProps(/* state */) {
+function mapStateToProps(state) {
 	return {
+		// store: {
+		// 	auth: state.getIn('auth'),
+		// },
 	};
 }
 
@@ -151,65 +156,68 @@ const mapDispatchToProps = (dispatch) => {
 export default class FlightCard extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
-		flight: PropTypes.object,
+		flightData: PropTypes.object,
+		type: PropTypes.string,
+		loading: PropTypes.bool,
+		// store
+		// store: PropTypes.shape({
+		// 	auth: PropTypes.object.isRequired,
+		// }).isRequired,
+		// action
 		action: PropTypes.shape({
 			toggleFlightModal: PropTypes.func,
 			toggleUserInfoModal: PropTypes.func,
 		}).isRequired,
-		loading: PropTypes.bool,
 	}
 
 	static defaultProps = {
-		flight: {},
+		flightData: {},
 		loading: false,
+		type: 'buying',
 	}
 
 	state = {
 	}
 
 	handleClickFlight = () => {
-		this.props.action.toggleFlightModal({ open: true, data: this.props.flight });
+		this.props.action.toggleFlightModal({ open: true, data: this.props.flightData });
 	}
 
 	handleClickAvatar = (e) => {
 		e.preventDefault();
 		e.stopPropagation();
-		const { type, seller, buyer, from } = this.props.flight;
+		const { seller = {} } = this.props.flightData;
 
-		if (from) {
-			window.open(`https://fb.com/${from.id}`);
-		} else {
-			this.props.action.toggleUserInfoModal({ open: true, data: type === 'Buy' ? buyer : seller });
-		}
+		this.props.action.toggleUserInfoModal({ open: true, data: seller });
 	}
 
 	_renderBodyRight = () => {
-		const { handleClickFlight } = this;
-		const { type, stock, price } = this.props.flight;
+		const { type, flightData } = this.props;
 
-		if (type === 'Buy') {
+		if (type === 'buying') {
 			return (
 				<Fragment>
-					<p>{stock} vé</p>
-					<CheckLogin onClick={handleClickFlight}>
+					<p>{flightData.stock} vé</p>
+					<CheckLogin onClick={this.handleClickFlight}>
 						<Button type="primary">Liên hệ</Button>
 					</CheckLogin>
 				</Fragment>
 			);
-		} else if (type === 'Sell') {
+		} else if (type === 'selling') {
+			if (flightData.isBid) {
+				return (
+					<Fragment>
+						<BidBlock isStart price={1200000} />
+						<BidBlock price={1300000} />
+					</Fragment>
+				);
+			}
 			return (
 				<Fragment>
-					<p><Price price={price} type="primary" /></p>
-					<CheckLogin onClick={handleClickFlight} >
+					<p><Price price={flightData.price} type="primary" /></p>
+					<CheckLogin onClick={this.handleClickFlight} >
 						<Button type="primary">Mua</Button>
 					</CheckLogin>
-				</Fragment>
-			);
-		} else if (type === 'Bid') {
-			return (
-				<Fragment>
-					<BidBlock isStart price={1200000} />
-					<BidBlock price={1300000} />
 				</Fragment>
 			);
 		}
@@ -217,25 +225,23 @@ export default class FlightCard extends Component {
 		return null;
 	}
 
-	_getAuthor = () => {
-		const { type, seller, buyer, from } = this.props.flight;
+	// _getAuthor = () => {
+	// 	const { type, seller, buyer, from } = this.props.flightData;
 
-		if (from && from.id) {
-			return {
-				id: from.id,
-				fullName: from.name,
-				avatar: from.picture ? from.picture.data.url : '',
-			};
-		}
+	// 	if (from && from.id) {
+	// 		return {
+	// 			id: from.id,
+	// 			fullName: from.name,
+	// 			avatar: from.picture ? from.picture.data.url : '',
+	// 		};
+	// 	}
 
-		return (type === 'Buy') ? buyer : seller;
-	}
+	// 	return (type === 'Buy') ? buyer : seller;
+	// }
 
 	render() {
-		const { handleClickFlight } = this;
-		const { classes, flight, loading } = this.props;
-		const { updatedAt, content, link, rate, type, isHot } = flight;
-		const author = this._getAuthor(flight);
+		const { classes, flightData = {}, loading } = this.props;
+		const { seller = {} } = flightData;
 
 		if (loading) {
 			return (
@@ -255,7 +261,7 @@ export default class FlightCard extends Component {
 
 					<Row className={classes.body}>
 						<Col span={16}>
-							<FlightBlock flight={flight} loading />
+							<FlightBlock loading />
 						</Col>
 						<Col span={7} offset={1} className={classes.bodyRight}>
 							<div className="loading-block" style={{ height: 20, marginBottom: 10, marginRight: 0 }} />
@@ -269,23 +275,41 @@ export default class FlightCard extends Component {
 			<div className={classes.root}>
 				<Row type="flex" className={classes.header}>
 					<Col span={18}>
-						<span className={classes.author} onClick={this.handleClickAvatar}>{author.fullName}</span>
-						<span className={classes.note}>{moment(updatedAt).format('DD/MM/YYYY hh:mm')}</span>
-						<div className={classes.content}>{content}</div>
-						<span className={classes.link}>
-							<Icon type="link" />
-							<a href={link}>{link}</a>
-						</span>
+						{
+							flightData.dataType === 'fb' ?
+								<a className={classes.author} href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+									{seller.fullName}
+								</a> :
+								<span className={classes.author} onClick={this.handleClickAvatar}>
+									{seller.fullName}
+								</span>
+						}
+						<span className={classes.note}>{moment(flightData.updatedAt).format('DD/MM/YYYY hh:mm')}</span>
+						<div className={classes.content}>{flightData.content}</div>
+						{
+							flightData.dataType === 'fb' &&
+							<span className={classes.link}>
+								<Icon type="link" />
+								<a href="https://facebook.com" target="_blank" rel="noopener noreferrer">https://facebook.com</a>
+							</span>
+						}
 					</Col>
 					<Col offset={1} span={5} style={{ textAlign: 'center' }}>
-						<Avatar style={{ marginBottom: 5 }} size={40} src={author.avatar} onClick={this.handleClickAvatar} />
-						<GroupStar rate={rate} />
+						{
+							flightData.dataType === 'fb' ?
+								<a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+									<Avatar style={{ marginBottom: 5 }} size={40} src={seller.avatar} name={seller.fullName} />
+								</a> :
+								<Avatar style={{ marginBottom: 5, cursor: 'pointer' }} size={40} src={seller.avatar} name={seller.fullName} onClick={this.handleClickAvatar} />
+						}
+
+						<GroupStar />
 					</Col>
 				</Row>
 
 				<Row className={classes.body}>
 					<Col span={16}>
-						<FlightBlock flight={flight} />
+						<FlightBlock flightData={flightData} />
 					</Col>
 					<Col span={7} offset={1} className={classes.bodyRight}>
 						{this._renderBodyRight()}
@@ -293,13 +317,13 @@ export default class FlightCard extends Component {
 				</Row>
 
 				{
-					type === 'bid' && (
+					flightData.isBid && (
 						<div className={classes.footer}>
 							<div style={{ marginRight: 25 }}>
-								<div className={classes.footerTitle}>Giá khởi điểm</div>
+								<div className={classes.footerTitle}>Thời gian còn lại</div>
 								<div className={classes.footerInfo}>8 giờ 30 phút</div>
 							</div>
-							<CheckLogin onClick={handleClickFlight}>
+							<CheckLogin onClick={this.handleClickFlight}>
 								<Button type="primary">Đấu giá</Button>
 							</CheckLogin>
 						</div>
@@ -307,7 +331,7 @@ export default class FlightCard extends Component {
 				}
 
 				{
-					!!isHot && (
+					flightData.isBid && (
 						<div className={classes.badge}>
 							<span>HOT</span>
 						</div>

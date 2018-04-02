@@ -6,7 +6,7 @@
 * Created: 2018-02-13 14:39:16
 *------------------------------------------------------- */
 
-import React, { Fragment, Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -17,16 +17,15 @@ import Link from 'next/link';
 import withStyles from 'src/theme/jss/withStyles';
 
 // Actions
-import { toggleLoginModal, toggleTicketPosterModal } from 'src/redux/actions/modal';
+import { toggleLoginModal } from 'src/redux/actions/modal';
 
 // Store
 import AuthStorage from 'src/utils/AuthStorage';
 
 // Components
-import Avatar from 'src/components/Photo/Avatar';
-import CheckLogin from 'src/components/Form/CheckLogin';
+import BtnTicketPoster from 'src/components/Form/BtnTicketPoster';
+
 import AvatarBtn from './AvatarBtn';
-import { Icon, Dropdown } from 'antd';
 
 const styleSheet = (theme) => ({
 	root: {
@@ -41,6 +40,8 @@ const styleSheet = (theme) => ({
 			margin: 0,
 			'& li': {
 				height: '46px',
+				display: 'flex',
+				alignItems: 'center',
 				'& a': {
 					color: 'black',
 					padding: '0 15px',
@@ -49,7 +50,6 @@ const styleSheet = (theme) => ({
 					fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
 					// fontWeight: '500',
 					fontSize: '0.85rem',
-					lineHeight: '48px',
 				},
 			},
 		},
@@ -77,16 +77,9 @@ const styleSheet = (theme) => ({
 		padding: '0',
 	},
 	postBtn: {
-		padding: '9px',
-		cursor: 'pointer',
-		'& div': {
-			borderRadius: '3px',
-			color: 'white',
-			background: theme.palette.primary[500],
-			height: '30px',
-			lineHeight: '30px',
-			padding: '0 10px',
-		},
+		display: 'flex',
+		alignItems: 'center',
+		margin: '0 20px',
 	},
 	loggedUser: {
 		padding: '9px',
@@ -114,7 +107,6 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		action: bindActionCreators({
 			toggleLoginModal,
-			toggleTicketPosterModal,
 		}, dispatch),
 	};
 };
@@ -132,7 +124,6 @@ export default class Menu extends Component {
 		// action
 		action: PropTypes.shape({
 			toggleLoginModal: PropTypes.func.isRequired,
-			toggleTicketPosterModal: PropTypes.func.isRequired,
 		}).isRequired,
 		router: PropTypes.object.isRequired,
 	}
@@ -140,11 +131,6 @@ export default class Menu extends Component {
 	handleOpenLogin = (e) => {
 		e.preventDefault();
 		this.props.action.toggleLoginModal({ open: true });
-	}
-
-	handleOpenTicketPoster = () => {
-		// e.preventDefault();
-		this.props.action.toggleTicketPosterModal({ open: true });
 	}
 
 	isAtCurrentRoute = (checkingRoute, currentRoute) => {
@@ -182,14 +168,11 @@ export default class Menu extends Component {
 						{
 							AuthStorage.loggedIn &&
 							<li className={classes.postBtn}>
-								<CheckLogin onClick={this.handleOpenTicketPoster}>
-									<div>Đăng tin</div>
-								</CheckLogin>
+								<BtnTicketPoster />
 							</li>
 						}
 					</ul>
 				</nav>
-				{/* <BtnAddQuestion node={<Button className={classes.btnAdd} type="primary" ghost>Tạo câu hỏi</Button>} /> */}
 				{
 					AuthStorage.loggedIn &&
 					<AvatarBtn />

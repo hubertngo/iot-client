@@ -12,12 +12,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { Button, Col, Row } from 'antd';
-import partition from 'lodash/partition';
 
 import withStyles from 'src/theme/jss/withStyles';
 import SearchBar from 'src/components/Form/SearchBar';
 
-import { getFlightList } from 'src/redux/actions/flight';
+import { getTicketSellingList } from 'src/redux/actions/ticket-selling';
+import { getTicketBuyingList } from 'src/redux/actions/ticket-buying';
+import { toggleTicketPosterModal } from 'src/redux/actions/modal';
 
 import FlightCard from '../Card';
 
@@ -63,8 +64,9 @@ const styleSheet = (/* theme */) => ({
 const mapStateToProps = (state) => {
 	return {
 		store: {
-			auth: state.getIn('auth'),
-			flightList: state.getIn(['flight', 'flightList']),
+			auth: state.get('auth'),
+			ticketSellingList: state.getIn(['ticketSelling', 'list']),
+			ticketBuyingList: state.getIn(['ticketBuying', 'list']),
 		},
 	};
 };
@@ -72,7 +74,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		action: bindActionCreators({
-			getFlightList,
+			getTicketSellingList,
+			getTicketBuyingList,
+			toggleTicketPosterModal,
 		}, dispatch),
 	};
 };
@@ -82,20 +86,22 @@ const mapDispatchToProps = (dispatch) => {
 export default class FlightList extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
-		where: PropTypes.object,
 		// store
 		store: PropTypes.shape({
 			auth: PropTypes.object.isRequired,
-			flightList: PropTypes.object.isRequired,
+			ticketSellingList: PropTypes.object.isRequired,
+			ticketBuyingList: PropTypes.object.isRequired,
 		}).isRequired,
 		// action
 		action: PropTypes.shape({
-			getFlightList: PropTypes.func.isRequired,
+			getTicketSellingList: PropTypes.func.isRequired,
+			getTicketBuyingList: PropTypes.func.isRequired,
+			toggleTicketPosterModal: PropTypes.func.isRequired,
 		}).isRequired,
 	}
 
 	static defaultProps = {
-		where: {},
+		// where: {},
 	}
 
 	state = {
@@ -104,8 +110,22 @@ export default class FlightList extends Component {
 	}
 
 	componentDidMount() {
-		this.filter.where = { ...this.filter.where, ...this.props.where };
-		this.props.action.getFlightList({ filter: this.filter, firstLoad: true }, () => {
+		const p1 = new Promise((resolve) => {
+			this.props.action.getTicketSellingList({ filter: this.filter, firstLoad: true }, () => {
+				resolve();
+			});
+		});
+
+		const p2 = new Promise((resolve) => {
+			this.props.action.getTicketBuyingList({ filter: this.filter, firstLoad: true }, () => {
+				resolve();
+			});
+		});
+
+		Promise.all([
+			p1,
+			p2,
+		]).then(() => {
 			this.setState({ loading: false });
 		});
 	}
@@ -121,15 +141,9 @@ export default class FlightList extends Component {
 					fields: ['id', 'username', 'avatar', 'fullName'],
 				},
 			},
-			{
-				relation: 'buyer',
-				scope: {
-					fields: ['id', 'username', 'avatar', 'fullName'],
-				},
-			},
 		],
 		where: {
-			status: 'Open',
+			status: 'open',
 		},
 	}
 
@@ -139,37 +153,56 @@ export default class FlightList extends Component {
 		});
 
 		this.filter.skip = this.filter.limit * this.filter.page;
-		this.props.action.getFlightList({ filter: this.filter }, () => {
+
+		const p1 = new Promise((resolve, reject) => {
+			this.props.action.getTicketSellingList({ filter: this.filter }, () => {
+				resolve();
+			}, () => {
+				reject();
+			});
+		});
+
+		const p2 = new Promise((resolve, reject) => {
+			this.props.action.getTicketBuyingList({ filter: this.filter }, () => {
+				resolve();
+			}, () => {
+				reject();
+			});
+		});
+
+		Promise.all([
+			p1,
+			p2,
+		]).then(() => {
 			this.filter.page = this.filter.page + 1;
 			this.setState({
 				loadingMore: false,
 			});
-		}, () => {
+		}).catch(() => {
 			this.setState({
 				loadingMore: false,
 			});
 		});
 	}
 
-	handleSearch = (where) => {
-		this.filter.where = {
-			...this.filter.where,
-			...where,
-		};
-		this.filter.skip = 0;
-		this.filter.limit = 4;
-		this.filter.page = 1;
+	handleSearch = (/* where */) => {
+		// this.filter.where = {
+		// 	...this.filter.where,
+		// 	...where,
+		// };
+		// this.filter.skip = 0;
+		// this.filter.limit = 4;
+		// this.filter.page = 1;
 
-		this.props.action.getFlightList({ filter: this.filter, firstLoad: true }, () => {
-			this.setState({ loading: false });
-		});
+		// this.props.action.getTicketSellingList({ filter: this.filter, firstLoad: true }, () => {
+		// 	this.setState({ loading: false });
+		// });
 	}
 
 	render() {
-		const { classes } = this.props;
-		const [flightListSell, flightListBuy] = partition(this.props.store.flightList.data, (item) => item.type === 'Sell' || item.type === 'Bid');
+		const { classes, action, store: { ticketBuyingList, ticketSellingList } } = this.props;
 
-		if (this.state.loading) {
+		if (this.state.loading || ticketBuyingList.loading || ticketSellingList.loading) {
 			return (
 				<Fragment>
 					<SearchBar />
@@ -178,13 +211,13 @@ export default class FlightList extends Component {
 						<Col span={12}>
 							<Button type="primary" className={classes.btn}>Tìm mua</Button>
 							{
-								[0, 0].map((flight, index) => <FlightCard key={index} loading />)
+								[0, 0, 0, 0].map((flight, index) => <FlightCard key={index} loading />)
 							}
 						</Col>
 						<Col span={12}>
 							<Button type="primary" className={classes.btn}>Đăng bán</Button>
 							{
-								[0, 0].map((flight, index) => <FlightCard key={index} loading />)
+								[0, 0, 0, 0].map((flight, index) => <FlightCard key={index} loading />)
 							}
 						</Col>
 					</Row>
@@ -198,15 +231,15 @@ export default class FlightList extends Component {
 				<Row gutter={20} className={classes.wrapperContent}>
 					<div className={classes.border} />
 					<Col span={12}>
-						<Button type="primary" className={classes.btn}>Tìm mua</Button>
+						<Button type="primary" className={classes.btn} onClick={() => action.toggleTicketPosterModal({ open: true, type: 'buying' })}>Tìm mua</Button>
 						{
-							flightListBuy.map(flight => <FlightCard flight={flight} key={flight.id} />)
+							ticketBuyingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="buying" />)
 						}
 					</Col>
 					<Col span={12}>
-						<Button type="primary" className={classes.btn}>Đăng bán</Button>
+						<Button type="primary" className={classes.btn} onClick={() => action.toggleTicketPosterModal({ open: true, type: 'selling' })}>Đăng bán</Button>
 						{
-							flightListSell.map(flight => <FlightCard flight={flight} key={flight.id} />)
+							ticketSellingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="selling" />)
 						}
 					</Col>
 					<Col span={24}>

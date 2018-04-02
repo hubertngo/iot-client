@@ -24,7 +24,7 @@ export default (state = initialState, action) => {
 	switch (action.type) {
 		case 'GET_USER_LIST_REQUEST':
 			return state.update('list', () => {
-				return initialState.get('list');
+				return initialState.get('list').toJS();
 			});
 
 		case 'GET_USER_LIST_SUCCESS': {
@@ -39,7 +39,7 @@ export default (state = initialState, action) => {
 
 		case 'GET_USER_DATA_REQUEST':
 			return state.update('view', () => {
-				return initialState.get('view');
+				return initialState.get('view').toJS();
 			});
 
 		case 'GET_USER_DATA_SUCCESS':
