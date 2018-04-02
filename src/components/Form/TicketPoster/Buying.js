@@ -117,7 +117,7 @@ export default class TicketPosterForm extends Component {
 		page: 1,
 		include: [
 			{
-				relation: 'seller',
+				relation: 'creator',
 				scope: {
 					fields: ['id', 'username', 'avatar', 'fullName'],
 				},
@@ -151,7 +151,7 @@ export default class TicketPosterForm extends Component {
 					};
 				}
 
-				dataSend.sellerId = AuthStorage.userId;
+				dataSend.creatorId = AuthStorage.userId;
 
 				this.setState({
 					loading: true,

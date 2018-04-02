@@ -21,6 +21,7 @@ export const initialState = fromJS({
 		open: false,
 		closable: false,
 		data: {},
+		type: 'selling',
 	},
 	ticketPoster: {
 		open: false,
@@ -56,8 +57,13 @@ export default (state = initialState, action) => {
 			});
 
 		case 'TOGGLE_FLIGHT_MODAL':
-			return state.update('flight', (flight) => {
-				return { ...flight, ...action.payload };
+			return state.update('flight', () => {
+				return {
+					open: !!action.payload.open,
+					closable: !!action.payload.closable,
+					type: action.payload.type,
+					data: action.payload.data,
+				};
 			});
 
 		case 'TOGGLE_TICKET_POSTER_MODAL':

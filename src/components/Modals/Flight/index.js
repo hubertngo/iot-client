@@ -62,7 +62,7 @@ const FlightModal = (props) => {
 			destroyOnClose
 			onCancel={flight.closable ? f => f : () => props.action.toggleFlightModal({ open: false })}
 		>
-			{ flight.open ? <FlightDetail flight={flight.data} /> : null }
+			{flight.data ? <FlightDetail flightData={flight.data} type={flight.type} /> : null }
 		</Modal>
 	);
 };

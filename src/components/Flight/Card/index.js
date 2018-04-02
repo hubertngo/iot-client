@@ -20,7 +20,7 @@ import Price from 'src/components/Stuff/Price';
 
 import { toggleFlightModal, toggleUserInfoModal } from 'src/redux/actions/modal';
 
-// import AuthStorage from 'src/utils/AuthStorage';
+import AuthStorage from 'src/utils/AuthStorage';
 
 import CheckLogin from 'src/components/Form/CheckLogin';
 
@@ -180,15 +180,15 @@ export default class FlightCard extends Component {
 	}
 
 	handleClickFlight = () => {
-		this.props.action.toggleFlightModal({ open: true, data: this.props.flightData });
+		this.props.action.toggleFlightModal({ open: true, data: this.props.flightData, type: this.props.type });
 	}
 
 	handleClickAvatar = (e) => {
 		e.preventDefault();
 		e.stopPropagation();
-		const { seller = {} } = this.props.flightData;
+		const { creator = {} } = this.props.flightData;
 
-		this.props.action.toggleUserInfoModal({ open: true, data: seller });
+		this.props.action.toggleUserInfoModal({ open: true, data: creator });
 	}
 
 	_renderBodyRight = () => {
@@ -226,7 +226,7 @@ export default class FlightCard extends Component {
 	}
 
 	// _getAuthor = () => {
-	// 	const { type, seller, buyer, from } = this.props.flightData;
+	// 	const { type, creator, buyer, from } = this.props.flightData;
 
 	// 	if (from && from.id) {
 	// 		return {
@@ -236,12 +236,12 @@ export default class FlightCard extends Component {
 	// 		};
 	// 	}
 
-	// 	return (type === 'Buy') ? buyer : seller;
+	// 	return (type === 'Buy') ? buyer : creator;
 	// }
 
 	render() {
 		const { classes, flightData = {}, loading } = this.props;
-		const { seller = {} } = flightData;
+		const { creator = {} } = flightData;
 
 		if (loading) {
 			return (
@@ -278,19 +278,21 @@ export default class FlightCard extends Component {
 						{
 							flightData.dataType === 'fb' ?
 								<a className={classes.author} href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-									{seller.fullName}
+									{creator.fullName}
 								</a> :
 								<span className={classes.author} onClick={this.handleClickAvatar}>
-									{seller.fullName}
+									{creator.fullName}
 								</span>
 						}
 						<span className={classes.note}>{moment(flightData.updatedAt).format('DD/MM/YYYY hh:mm')}</span>
 						<div className={classes.content}>{flightData.content}</div>
 						{
 							flightData.dataType === 'fb' &&
-							<span className={classes.link}>
+							<span className={`${classes.link} ${!AuthStorage.loggedIn && classes.blur}`}>
 								<Icon type="link" />
-								<a href="https://facebook.com" target="_blank" rel="noopener noreferrer">https://facebook.com</a>
+								<CheckLogin style={{ display: 'inline-block' }}>
+									<a href="https://facebook.com" target="_blank" rel="noopener noreferrer">https://facebook.com</a>
+								</CheckLogin>
 							</span>
 						}
 					</Col>
@@ -298,9 +300,9 @@ export default class FlightCard extends Component {
 						{
 							flightData.dataType === 'fb' ?
 								<a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-									<Avatar style={{ marginBottom: 5 }} size={40} src={seller.avatar} name={seller.fullName} />
+									<Avatar style={{ marginBottom: 5 }} size={40} src={creator.avatar} name={creator.fullName} />
 								</a> :
-								<Avatar style={{ marginBottom: 5, cursor: 'pointer' }} size={40} src={seller.avatar} name={seller.fullName} onClick={this.handleClickAvatar} />
+								<Avatar style={{ marginBottom: 5, cursor: 'pointer' }} size={40} src={creator.avatar} name={creator.fullName} onClick={this.handleClickAvatar} />
 						}
 
 						<GroupStar />

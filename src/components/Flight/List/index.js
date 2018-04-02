@@ -136,7 +136,7 @@ export default class FlightList extends Component {
 		page: 1,
 		include: [
 			{
-				relation: 'seller',
+				relation: 'creator',
 				scope: {
 					fields: ['id', 'username', 'avatar', 'fullName'],
 				},
