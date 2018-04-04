@@ -102,7 +102,7 @@ export default class GgBtnLogin extends PureComponent {
 
 		return (
 			<GoogleLogin
-				clientId="671782562952-rhmgci05iqn7bfg7l380c24ftb2kq5r5.apps.googleusercontent.com"
+				clientId="314929847304-blffjtcncvq4vbc92msgojprhqnudu8i.apps.googleusercontent.com"
 				onSuccess={this.handleResponseGoogle}
 				onFailure={this.handleResponseGoogle}
 				className={classes.buttonGG}
