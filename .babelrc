@@ -12,7 +12,8 @@
                 "polyfill": false,
                 "regenerator": true
             }
-        ],
+		],
+		"inline-dotenv",
 		"transform-decorators-legacy",
         [
             "module-resolver",
@@ -32,17 +33,5 @@
                 "style": false
             }
         ]
-	],
-	"env": {
-		"development": {
-			"plugins": [
-				"inline-dotenv"
-			]
-		},
-		"production": {
-			"plugins": [
-				"inline-dotenv"
-			]
-		}
-	}
+	]
 }
