@@ -72,7 +72,7 @@ export default class MyDocument extends Document {
 					<meta charSet="utf-8" />
 					<meta
 						name="description"
-						content="Tìm kiếm chuyến bay giá rẻ đến khắp mọi nơi!"
+						content="Sang nhượng vé rẻ khắp mọi nơi!"
 					/>
 					{/* Use minimum-scale=1 to enable GPU rasterization */}
 					<meta
@@ -91,7 +91,7 @@ export default class MyDocument extends Document {
 					<meta name="twitter:title" content="Chợ vé" />
 					<meta
 						name="twitter:description"
-						content="Tìm kiếm chuyến bay giá rẻ đến khắp mọi nơi!"
+						content="Sang nhượng vé rẻ khắp mọi nơi!"
 					/>
 					<meta name="twitter:image" content="https://chove.vn/static/assets/images/banner.jpeg" />
 					{/* Facebook */}
@@ -99,7 +99,7 @@ export default class MyDocument extends Document {
 					<meta property="og:title" content="Chợ vé" />
 					<meta
 						property="og:description"
-						content="Tìm kiếm chuyến bay giá rẻ đến khắp mọi nơi!"
+						content="Sang nhượng vé rẻ khắp mọi nơi!"
 					/>
 					<meta property="og:image" content="https://chove.vn/static/assets/images/banner.jpeg" />
 					<meta property="og:locale" content="vi_VN" />

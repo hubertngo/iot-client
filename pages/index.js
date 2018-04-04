@@ -34,7 +34,7 @@ export default class IndexPage extends PureComponent {
 		return (
 			<MainLayout>
 				<Head>
-					<title>Chove.vn - Tìm kiếm chuyến bay giá rẻ đến khắp mọi nơi!</title>
+					<title>Chove.vn - Sang nhượng vé rẻ khắp mọi nơi!</title>
 				</Head>
 				<Index />
 

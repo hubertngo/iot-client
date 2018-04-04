@@ -44,7 +44,6 @@ const Footer = (props) => {
 					<Col md={12} xs={24}>
 						Một sản phẩm của Chove.vn <br />
 						© Chove.vn <br />
-						Icons made by Freepik from www.flaticon.com is licensed by CC 3.0 BY <br />
 					</Col>
 				</Row>
 			</Container>

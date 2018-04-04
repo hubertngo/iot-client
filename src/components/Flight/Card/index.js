@@ -193,9 +193,7 @@ export default class FlightCard extends Component {
 		this.props.action.toggleFlightModal({ open: true, data: this.props.flightData, type: this.props.type });
 	}
 
-	handleClickAvatar = (e) => {
-		e.preventDefault();
-		e.stopPropagation();
+	handleClickAvatar = () => {
 		const { creator = {} } = this.props.flightData;
 
 		this.props.action.toggleUserInfoModal({ open: true, data: creator });
@@ -312,7 +310,9 @@ export default class FlightCard extends Component {
 								<a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
 									<Avatar style={{ marginBottom: 5 }} size={40} src={creator.avatar} name={creator.fullName} />
 								</a> :
-								<Avatar style={{ marginBottom: 5, cursor: 'pointer' }} size={40} src={creator.avatar} name={creator.fullName} onClick={this.handleClickAvatar} />
+								<CheckLogin onClick={this.handleClickAvatar}>
+									<Avatar style={{ marginBottom: 5, cursor: 'pointer' }} size={40} src={creator.avatar} name={creator.fullName} />
+								</CheckLogin>
 						}
 
 						<GroupStar />

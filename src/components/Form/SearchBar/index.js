@@ -199,7 +199,7 @@ export default class SearchBar extends Component {
 											addonAfter={<IconDeparture extended />}
 											className={[classes.dropdownInput, classes.firstChild]}
 											size="large"
-											placeholder="Departure"
+											placeholder="Nơi xuất phát"
 										/>,
 									)}
 								</Form.Item>
@@ -215,7 +215,7 @@ export default class SearchBar extends Component {
 											addonAfter={<IconDestination extended />}
 											className={classes.dropdownInput}
 											size="large"
-											placeholder="Destination"
+											placeholder="Nơi đến"
 										/>,
 									)}
 								</Form.Item>
@@ -228,7 +228,7 @@ export default class SearchBar extends Component {
 								<DatePicker
 									className={classes.datePicker}
 									size="large"
-									placeholder="Start Date"
+									placeholder="Thời gian đi"
 								/>,
 							)}
 
@@ -241,17 +241,20 @@ export default class SearchBar extends Component {
 								<DatePicker
 									className={classes.datePicker}
 									size="large"
-									placeholder="End Date"
+									placeholder="Thời gian đến"
 								/>,
 							)}
 						</Form.Item>
 					</Col>
 					<Col span={3}>
 						<Form.Item style={{ marginBottom: 0 }}>
-							{getFieldDecorator('type')(
-								<Select size="large" className={classes.select}>
-									<Select.Option value="One way">One way</Select.Option>
-									<Select.Option value="Round trip">Round trip</Select.Option>
+							{getFieldDecorator('type', {
+								// initialValue: 'all',
+							})(
+								<Select size="large" className={classes.select} placeholder="Loại vé">
+									<Select.Option value="all">Tất cả</Select.Option>
+									<Select.Option value="One way">Một chiều</Select.Option>
+									<Select.Option value="Round trip">Hai chiều</Select.Option>
 								</Select>,
 							)}
 						</Form.Item>
