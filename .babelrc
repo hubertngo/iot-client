@@ -32,5 +32,17 @@
                 "style": false
             }
         ]
-    ]
+	],
+	"env": {
+		"development": {
+			"plugins": [
+				"inline-dotenv"
+			]
+		},
+		"production": {
+			"plugins": [
+				"inline-dotenv"
+			]
+		}
+	}
 }

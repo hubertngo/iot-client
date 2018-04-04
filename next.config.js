@@ -6,8 +6,6 @@
 * Created: 2018-02-12 01:16:17
 *------------------------------------------------------- */
 
-/* eslint-disable */
-
 module.exports = {
 	webpack: (config) => {
 		config.module.rules.push(
@@ -26,7 +24,7 @@ module.exports = {
 					loader: 'less-loader',
 				}],
 				include: /theme/,
-			}
+			},
 		);
 
 		return config;
