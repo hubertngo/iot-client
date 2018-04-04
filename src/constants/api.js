@@ -8,5 +8,5 @@
 // import env from './env';
 
 export default {
-	BASE_URL: process.env.API_URL,
+	BASE_URL: process.env.API_URL || 'http://localhost:3005/api/v1/',
 };
