@@ -122,6 +122,9 @@ export default class TicketPosterForm extends Component {
 					fields: ['id', 'username', 'avatar', 'fullName'],
 				},
 			},
+			{
+				relation: 'fbFeed',
+			},
 		],
 		where: {
 			status: 'open',

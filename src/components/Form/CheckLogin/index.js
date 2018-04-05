@@ -58,7 +58,7 @@ const CheckLogin = (props) => {
 CheckLogin.propTypes = {
 	children: PropTypes.node.isRequired,
 	onClick: PropTypes.func,
-	style: PropTypes.object.isRequired,
+	style: PropTypes.object,
 	// action
 	action: PropTypes.shape({
 		toggleLoginModal: PropTypes.func.isRequired,
@@ -67,6 +67,7 @@ CheckLogin.propTypes = {
 
 CheckLogin.defaultProps = {
 	onClick: f => f,
+	style: {},
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckLogin);

@@ -112,6 +112,13 @@ const styleSheet = (theme) => ({
 	link: {
 		marginTop: 10,
 		display: 'inline-block',
+		'& a': {
+			display: 'inline-block',
+			width: '250px',
+			whiteSpace: 'nowrap',
+			overflow: 'hidden !important',
+			textOverflow: 'ellipsis',
+		},
 	},
 
 	input: {
@@ -312,14 +319,32 @@ export default class FlightDetail extends Component {
 	render() {
 		const { classes, flightData = {}, action } = this.props;
 
-		const { creator = {} } = flightData;
+		const { creator = {}, fbFeed = {} } = flightData;
 
 		return (
 			<div className={classes.root}>
 				<Icon type="close-circle" className={classes.closeBtn} onClick={this.state.loading ? f => f : () => action.toggleFlightModal({ open: false })} />
 				<div className={classes.header}>
-					<Avatar size={40} style={{ marginRight: 5 }} src={creator.avatar} name={creator.fullName} onClick={this.handleClickAvatar} />
-					<span className={classes.author} onClick={this.handleClickAvatar}>{creator.fullName}</span>
+					{
+						flightData.dataType === 'fb' ?
+							<a
+								href={'https://facebook.com/' + fbFeed.author.id}
+								target="_blank"
+								rel="noopener noreferrer"
+								style={{
+									display: 'flex',
+									alignItems: 'center',
+								}}
+							>
+								<Avatar style={{ marginBottom: 5, marginRight: 10 }} size={40} src={fbFeed.author.picture.data.url} name={fbFeed.author.name} />
+								<span className={classes.author} onClick={this.handleClickAvatar}>{fbFeed.author.name}</span>
+							</a> :
+							<Fragment>
+								<Avatar size={40} style={{ marginRight: 5 }} src={creator.avatar} name={creator.fullName} onClick={this.handleClickAvatar} />
+								<span className={classes.author} onClick={this.handleClickAvatar}>{creator.fullName}</span>
+							</Fragment>
+					}
+
 					<span className={classes.note}>{moment(flightData.updatedAt).format('DD/MM/YYYY hh:mm')}</span>
 				</div>
 
@@ -331,7 +356,7 @@ export default class FlightDetail extends Component {
 						<span className={`${classes.link} ${!AuthStorage.loggedIn && classes.blur}`}>
 							<Icon type="link" style={{ marginRight: 5 }} />
 							<CheckLogin style={{ display: 'inline-block' }}>
-								<a href="https://facebook.com" target="_blank" rel="noopener noreferrer">https://facebook.com</a>
+								<a href={'https://facebook.com/' + fbFeed.id} target="_blank" rel="noopener noreferrer">https://facebook.com/{fbFeed.id}</a>
 							</CheckLogin>
 						</span>
 					}

@@ -114,9 +114,18 @@ const styleSheet = (theme) => ({
 	},
 	link: {
 		color: theme.palette.primary[500],
-		maxWidth: 350,
 		overflow: 'hidden',
-		textOverflow: 'ellipsic',
+		maxWidth: '350px',
+		textOverflow: 'ellipsis',
+		display: 'flex',
+		alignItems: 'center',
+		'& a': {
+			display: 'inline-block',
+			width: '250px',
+			whiteSpace: 'nowrap',
+			overflow: 'hidden !important',
+			textOverflow: 'ellipsis',
+		},
 
 		'& > i': {
 			marginRight: 5,
@@ -144,7 +153,7 @@ const styleSheet = (theme) => ({
 	},
 });
 
-function mapStateToProps(state) {
+function mapStateToProps(/* state */) {
 	return {
 		// store: {
 		// 	auth: state.getIn('auth'),
@@ -249,7 +258,7 @@ export default class FlightCard extends Component {
 
 	render() {
 		const { classes, flightData = {}, loading } = this.props;
-		const { creator = {} } = flightData;
+		const { creator = {}, fbFeed = {} } = flightData;
 
 		if (loading) {
 			return (
@@ -284,13 +293,21 @@ export default class FlightCard extends Component {
 				<Row type="flex" className={classes.header}>
 					<Col span={18}>
 						{
-							flightData.dataType === 'fb' ?
-								<a className={classes.author} href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-									{creator.fullName}
-								</a> :
-								<span className={classes.author} onClick={this.handleClickAvatar}>
-									{creator.fullName}
-								</span>
+							flightData.dataType === 'fb' ? // eslint-disable-line
+								AuthStorage.loggedIn ?
+									<a className={classes.author} href={'https://facebook.com/' + fbFeed.author.id} target="_blank" rel="noopener noreferrer">
+										{fbFeed.author.name}
+									</a> :
+									<CheckLogin style={{ display: 'inline' }}>
+										<a className={classes.author}>
+											{fbFeed.author.name}
+										</a>
+									</CheckLogin> :
+								<CheckLogin onClick={this.handleClickAvatar} style={{ display: 'inline' }}>
+									<span className={classes.author}>
+										{creator.fullName}
+									</span>
+								</CheckLogin>
 						}
 						<span className={classes.note}>{moment(flightData.updatedAt).format('DD/MM/YYYY hh:mm')}</span>
 						<div className={classes.content}>{flightData.content}</div>
@@ -299,17 +316,21 @@ export default class FlightCard extends Component {
 							<span className={`${classes.link} ${!AuthStorage.loggedIn && classes.blur}`}>
 								<Icon type="link" />
 								<CheckLogin style={{ display: 'inline-block' }}>
-									<a href="https://facebook.com" target="_blank" rel="noopener noreferrer">https://facebook.com</a>
+									<a href={'https://facebook.com/' + fbFeed.id} target="_blank" rel="noopener noreferrer">https://facebook.com/{fbFeed.id}</a>
 								</CheckLogin>
 							</span>
 						}
 					</Col>
 					<Col offset={1} span={5} style={{ textAlign: 'center' }}>
 						{
-							flightData.dataType === 'fb' ?
-								<a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-									<Avatar style={{ marginBottom: 5 }} size={40} src={creator.avatar} name={creator.fullName} />
-								</a> :
+							flightData.dataType === 'fb' ? // eslint-disable-line
+								AuthStorage.loggedIn ?
+									<a href={'https://facebook.com/' + fbFeed.author.id} target="_blank" rel="noopener noreferrer">
+										<Avatar style={{ marginBottom: 5 }} size={40} src={fbFeed.author.picture.data.url} name={fbFeed.author.name} />
+									</a> :
+									<CheckLogin>
+										<Avatar style={{ marginBottom: 5 }} size={40} src={fbFeed.author.picture.data.url} name={fbFeed.author.name} />
+									</CheckLogin> :
 								<CheckLogin onClick={this.handleClickAvatar}>
 									<Avatar style={{ marginBottom: 5, cursor: 'pointer' }} size={40} src={creator.avatar} name={creator.fullName} />
 								</CheckLogin>

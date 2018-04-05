@@ -141,6 +141,9 @@ export default class FlightList extends Component {
 					fields: ['id', 'username', 'avatar', 'fullName'],
 				},
 			},
+			{
+				relation: 'fbFeed',
+			},
 		],
 		where: {
 			status: 'open',
