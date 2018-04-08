@@ -144,21 +144,35 @@ export default class SearchBar extends Component {
 		e.preventDefault();
 
 		this.props.form.validateFields((err, values) => {
+			console.log('values', values);
 			if (!err) {
-				const filter = { ...values };
+				const { startDate, endDate, departure, destination, flightType } = values;
+				const filter = {};
 
-				if (filter.startDate) {
-					filter.startDate = {
-						gte: moment(filter.startDate).startOf('day'),
-						lte: moment(filter.startDate).endOf('day'),
+				if (departure) {
+					filter['trip.departure'] = departure;
+				}
+
+				if (destination) {
+					filter['trip.destination'] = destination;
+				}
+
+				if (startDate) {
+					filter['trip.startDate'] = {
+						gte: moment(startDate).startOf('day'),
+						lte: moment(startDate).endOf('day'),
 					};
 				}
 
-				if (filter.endDate) {
-					filter.endDate = {
-						gte: moment(filter.endDate).startOf('day'),
-						lte: moment(filter.endDate).endOf('day'),
-					};
+				if (flightType) {
+					filter.flightType = flightType;
+
+					if (endDate) {
+						filter['tripBack.startDate'] = {
+							gte: moment(endDate).startOf('day'),
+							lte: moment(endDate).endOf('day'),
+						};
+					}
 				}
 
 				this.props.onSearch(filter);
@@ -248,13 +262,13 @@ export default class SearchBar extends Component {
 					</Col>
 					<Col span={3}>
 						<Form.Item style={{ marginBottom: 0 }}>
-							{getFieldDecorator('type', {
+							{getFieldDecorator('flightType', {
 								// initialValue: 'all',
 							})(
 								<Select size="large" className={classes.select} placeholder="Loại vé">
-									<Select.Option value="all">Tất cả</Select.Option>
-									<Select.Option value="One way">Một chiều</Select.Option>
-									<Select.Option value="Round trip">Hai chiều</Select.Option>
+									<Select.Option value={null}>Tất cả</Select.Option>
+									<Select.Option value="oneWay">Một chiều</Select.Option>
+									<Select.Option value="roundTrip">Hai chiều</Select.Option>
 								</Select>,
 							)}
 						</Form.Item>

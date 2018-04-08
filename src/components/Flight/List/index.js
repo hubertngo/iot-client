@@ -188,14 +188,21 @@ export default class FlightList extends Component {
 		});
 	}
 
-	handleSearch = (/* where */) => {
-		// this.filter.where = {
-		// 	...this.filter.where,
-		// 	...where,
-		// };
-		// this.filter.skip = 0;
-		// this.filter.limit = 4;
-		// this.filter.page = 1;
+	handleSearch = (where) => {
+		this.filter.where = {
+			...this.filter.where,
+			...where,
+		};
+		this.filter.skip = 0;
+		this.filter.limit = 4;
+		this.filter.page = 1;
+
+		Promise.all([
+			this.props.action.getTicketSellingList({ filter: this.filter, firstLoad: true }),
+			this.props.action.getTicketBuyingList({ filter: this.filter, firstLoad: true }),
+		]).then(() => {
+			this.setState({ loading: false });
+		});
 
 		// this.props.action.getTicketSellingList({ filter: this.filter, firstLoad: true }, () => {
 		// 	this.setState({ loading: false });

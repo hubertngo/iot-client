@@ -12,10 +12,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 
-import { Icon, Button, Input, notification, Row, Col, Tag } from 'antd';
+import { Icon, Button, InputNumber, notification, Row, Col, Tag } from 'antd';
 
 import { flightOptions } from 'src/constants/selectOption';
-import { getLabel } from 'src/utils';
+import { getLabel, formatNumber } from 'src/utils';
 
 import withStyles from 'src/theme/jss/withStyles';
 import Avatar from 'src/components/Photo/Avatar';
@@ -24,12 +24,12 @@ import IconDeparture from 'src/components/Photo/IconDeparture';
 
 import { toggleFlightModal, toggleLoginModal } from 'src/redux/actions/modal';
 import { updateTicketBuying } from 'src/redux/actions/ticket-buying';
-import { updateTicketSelling } from 'src/redux/actions/ticket-selling';
+import { updateTicketSelling, createTicketSellingBid } from 'src/redux/actions/ticket-selling';
 
 import AuthStorage from 'src/utils/AuthStorage';
 
 import CheckLogin from 'src/components/Form/CheckLogin';
-
+import BidBlock from './BidBlock';
 import TripBlock from './TripBlock';
 
 const styleSheet = (theme) => ({
@@ -79,6 +79,11 @@ const styleSheet = (theme) => ({
 	footer: {
 		textAlign: 'right',
 		padding: 20,
+	},
+
+	remainingTimeInfo: {
+		fontWeight: 600,
+		fontSize: 16,
 	},
 
 	bidInfo: {
@@ -167,6 +172,7 @@ const mapDispatchToProps = (dispatch) => {
 			toggleLoginModal,
 			updateTicketBuying,
 			updateTicketSelling,
+			createTicketSellingBid,
 		}, dispatch),
 	};
 };
@@ -185,6 +191,7 @@ export default class FlightDetail extends Component {
 			updateTicketBuying: PropTypes.func,
 			updateTicketSelling: PropTypes.func,
 			toggleFlightModal: PropTypes.func,
+			createTicketSellingBid: PropTypes.func,
 		}).isRequired,
 	}
 
@@ -195,6 +202,7 @@ export default class FlightDetail extends Component {
 
 	state = {
 		btnLoading: false,
+		bidPrice: '',
 	}
 
 	handleSell = () => {
@@ -253,6 +261,34 @@ export default class FlightDetail extends Component {
 		}
 	}
 
+	handleBid = () => {
+		if (this.props.flightData.id) {
+			this.setState({
+				btnLoading: true,
+			});
+			this.props.action.createTicketSellingBid({
+				price: this.state.bidPrice,
+				status: 'active',
+				bidderId: AuthStorage.userId,
+				ticketSellingId: this.props.flightData.id,
+			}, () => {
+				this.setState({
+					btnLoading: false,
+				});
+				notification.success({
+					message: 'Chúc mừng!',
+					description: 'Bạn đã đấu giá thành công!',
+				});
+				this.props.action.toggleFlightModal({ open: false });
+			}, () => {
+				this.setState({
+					btnLoading: false,
+				});
+				this.props.action.toggleFlightModal({ open: false });
+			});
+		}
+	}
+
 	handleClickAvatar = (e) => {
 		// e.preventDefault();
 		// e.stopPropagation();
@@ -286,13 +322,33 @@ export default class FlightDetail extends Component {
 			if (flightData.isBid) {
 				return (
 					<Fragment>
+						<Row>
+							<Col span={6} offset={4}>
+								<BidBlock isStart price={1200000} />
+							</Col>
+							<Col span={6}>
+								<BidBlock price={1300000} />
+							</Col>
+							<Col span={8}>
+								<div>
+									<div style={{ marginRight: 25 }}>
+										<div>Thời gian còn lại</div>
+										<div className={classes.remainingTimeInfo}>8 giờ 30 phút</div>
+									</div>
+								</div>
+							</Col>
+						</Row>
 						<div className={classes.actionWrapper}>
 							<span>Mức giá của bạn</span>
-							<Input
-								addonAfter={<span>VND</span>}
-								className={classes.input}
+							<InputNumber
+								formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+								className="price"
+								// className={classes.input}
+								value={this.state.bidPrice}
+								style={{ width: 150, marginLeft: 10, marginRight: 10 }}
+								onChange={(bidPrice) => { this.setState({ bidPrice }); }}
 							/>
-							<Button type="primary" loading={this.state.btnLoading}>Đấu giá</Button>
+							<Button type="primary" loading={this.state.btnLoading} onClick={this.handleBid}>Đấu giá</Button>
 						</div>
 					</Fragment>
 				);
@@ -316,10 +372,41 @@ export default class FlightDetail extends Component {
 		return null;
 	}
 
+	renderLoading() {
+		const { classes, action } = this.props;
+
+
+		return (
+			<div className={classes.root}>
+				<Icon type="close-circle" className={classes.closeBtn} onClick={this.state.loading ? f => f : () => action.toggleFlightModal({ open: false })} />
+				<div className={classes.header}>
+					<Avatar size={40} style={{ marginRight: 5 }} loading />
+					<span className="loading-block" style={{ width: 200 }} />
+				</div>
+
+				<div className={classes.body} style={{ paddingBottom: 30 }}>
+					<div className={classes.title}>Nội dung</div>
+					<div className="loading-block" />
+					<div className="loading-block" />
+					<div className="loading-block" />
+
+					<div style={{ marginTop: 30, paddingRight: 80 }}>
+						<TripBlock loading />
+					</div>
+
+				</div>
+
+			</div>
+		);
+	}
 	render() {
 		const { classes, flightData = {}, action } = this.props;
 
 		const { creator = {}, fbFeed = {} } = flightData;
+
+		if (flightData.loading) {
+			return this.renderLoading();
+		}
 
 		return (
 			<div className={classes.root}>
@@ -350,7 +437,15 @@ export default class FlightDetail extends Component {
 
 				<div className={classes.body}>
 					<div className={classes.title}>Nội dung</div>
-					<div className="pre-wrap">{flightData.content}</div>
+					<div className="pre-wrap">
+						<div>{flightData.content}</div>
+						<div>
+							<b>Số vé: </b><span>{flightData.seatCount}</span>
+						</div>
+						<div>
+							<b>Giá vé: </b><span>{formatNumber(flightData.price)} VNĐ</span>
+						</div>
+					</div>
 					{
 						flightData.dataType === 'fb' &&
 						<span className={`${classes.link} ${!AuthStorage.loggedIn && classes.blur}`}>

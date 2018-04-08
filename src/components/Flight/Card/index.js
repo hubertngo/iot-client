@@ -28,6 +28,7 @@ import GroupStar from './GroupStar';
 import BidBlock from './BidBlock';
 import FlightBlock from './FlightBlock';
 
+moment.locale('vi');
 
 const styleSheet = (theme) => ({
 	root: {
@@ -199,7 +200,7 @@ export default class FlightCard extends Component {
 	}
 
 	handleClickFlight = () => {
-		this.props.action.toggleFlightModal({ open: true, data: this.props.flightData, type: this.props.type });
+		this.props.action.toggleFlightModal({ open: true, type: this.props.type, id: this.props.flightData.id });
 	}
 
 	handleClickAvatar = () => {
@@ -224,8 +225,8 @@ export default class FlightCard extends Component {
 			if (flightData.isBid) {
 				return (
 					<Fragment>
-						<BidBlock isStart price={1200000} />
-						<BidBlock price={1300000} />
+						<BidBlock isStart price={flightData.startingPrice} />
+						<BidBlock price={flightData.price} />
 					</Fragment>
 				);
 			}
@@ -241,20 +242,6 @@ export default class FlightCard extends Component {
 
 		return null;
 	}
-
-	// _getAuthor = () => {
-	// 	const { type, creator, buyer, from } = this.props.flightData;
-
-	// 	if (from && from.id) {
-	// 		return {
-	// 			id: from.id,
-	// 			fullName: from.name,
-	// 			avatar: from.picture ? from.picture.data.url : '',
-	// 		};
-	// 	}
-
-	// 	return (type === 'Buy') ? buyer : creator;
-	// }
 
 	render() {
 		const { classes, flightData = {}, loading } = this.props;
@@ -354,7 +341,7 @@ export default class FlightCard extends Component {
 						<div className={classes.footer}>
 							<div style={{ marginRight: 25 }}>
 								<div className={classes.footerTitle}>Thời gian còn lại</div>
-								<div className={classes.footerInfo}>8 giờ 30 phút</div>
+								<div className={classes.footerInfo}>{moment(flightData.bidDueDate).fromNow()}</div>
 							</div>
 							<CheckLogin onClick={this.handleClickFlight}>
 								<Button type="primary">Đấu giá</Button>

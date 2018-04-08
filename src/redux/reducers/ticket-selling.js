@@ -97,6 +97,22 @@ export default (state = initialState, action) => {
 			});
 		}
 
+		case 'CREATE_BID_TICKET_SELLING_SUCCESS': {
+			return state.update('list', (list) => {
+				const { isUpdatePrice, ticketSellingId, price } = action.payload;
+
+				if (isUpdatePrice) {
+					const index = list.data.findIndex((row) => {
+						return row.id === ticketSellingId;
+					});
+
+					list.data[index] = { ...list.data[index], price }; // eslint-disable-line
+				}
+
+				return list;
+			});
+		}
+
 		default:
 			return state;
 	}

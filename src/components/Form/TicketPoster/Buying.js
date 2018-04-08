@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
+import moment from 'moment';
 import withStyles from 'src/theme/jss/withStyles';
 
 import { Form, Icon, Input, Button, Radio, Select, Row, Col, DatePicker, TimePicker, InputNumber } from 'antd';
@@ -146,6 +146,7 @@ export default class TicketPosterForm extends Component {
 					startDate: trip.startDate.format('DD/MM/YYYY'),
 					startTime: trip.startTime.format('HH:mm'),
 				};
+
 				if (tripBack) {
 					dataSend.tripBack = {
 						...tripBack,

@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import moment from 'moment';
 
 import withStyles from 'src/theme/jss/withStyles';
 
@@ -146,6 +147,16 @@ export default class TicketPosterForm extends Component {
 					startDate: trip.startDate.format('DD/MM/YYYY'),
 					startTime: trip.startTime.format('HH:mm'),
 				};
+
+				if (dataSend.isBid) {
+					dataSend.bidDueDate = moment(trip.startDate)
+						.hours(trip.startTime.hours())
+						.minute(trip.startTime.minute())
+						.subtract(1, 'day');
+
+					dataSend.startingPrice = dataSend.price;
+				}
+
 				if (tripBack) {
 					dataSend.tripBack = {
 						...tripBack,

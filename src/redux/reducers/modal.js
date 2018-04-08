@@ -62,7 +62,8 @@ export default (state = initialState, action) => {
 					open: !!action.payload.open,
 					closable: !!action.payload.closable,
 					type: action.payload.type,
-					data: action.payload.data,
+					// data: action.payload.data,
+					id: action.payload.id,
 				};
 			});
 

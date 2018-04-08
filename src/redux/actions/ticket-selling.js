@@ -42,6 +42,20 @@ export const updateTicketSelling = (payload, next, nextError) => {
 	};
 };
 
+export const createTicketSellingBid = (payload, next, nextError) => {
+	return {
+		type: SINGLE_API,
+		payload: {
+			uri: 'ticket-selling-bids',
+			params: payload,
+			opt: { method: 'POST' },
+			successType: 'CREATE_BID_TICKET_SELLING_SUCCESS',
+			afterSuccess: next,
+			afterError: nextError,
+		},
+	};
+};
+
 export const getTicketSellingData = (payload = {}, next, nextError) => {
 	const { id, filter } = payload;
 
