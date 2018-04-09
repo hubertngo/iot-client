@@ -11,12 +11,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Form, Icon, Row, Col, Button, Input, Radio } from 'antd';
+import { Form, Icon, Row, Col, Button, Input, Radio, DatePicker } from 'antd';
 import Avatar from 'src/components/Photo/Avatar';
 
 import withStyles from 'src/theme/jss/withStyles';
 
 import { toggleEditUserInfoModal } from 'src/redux/actions/modal';
+import { updateUser } from 'src/redux/actions/user';
+import moment from 'moment';
 
 const styleSheet = (theme) => ({
 	root: {
@@ -51,6 +53,7 @@ function mapStateToProps(state) {
 		store: {
 			auth: state.get('auth').toJS(),
 			modal: state.get('modal').toJS(),
+			userView: state.getIn(['user', 'view']),
 		},
 	};
 }
@@ -59,6 +62,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		action: bindActionCreators({
 			toggleEditUserInfoModal,
+			updateUser,
 		}, dispatch),
 	};
 };
@@ -70,25 +74,46 @@ export default class EditUserInfoForm extends Component {
 	static propTypes = {
 		form: PropTypes.object.isRequired,
 		classes: PropTypes.object.isRequired,
-		style: PropTypes.object,
+		style: PropTypes.object.isRequired,
 		// store
 		store: PropTypes.shape({
 			auth: PropTypes.object.isRequired,
+			modal: PropTypes.object,
+			userView: PropTypes.object,
 		}).isRequired,
 		// action
 		action: PropTypes.shape({
-			toggleEditUserInfoModal,
+			toggleEditUserInfoModal: PropTypes.func,
+			updateUser: PropTypes.func,
 		}).isRequired,
 	}
 
-  static defaultProps = {
-  }
+	static defaultProps = {
+	}
 
 	state = {
 	}
 
+	handleSubmit = (e) => {
+		e.preventDefault();
+		this.props.form.validateFields((err, values) => {
+			if (!err) {
+				const userData = { ...values, id: this.props.store.userView.id };
+
+				this.setState({ loading: true });
+
+				this.props.action.updateUser(userData, () => {
+					this.setState({ loading: false });
+
+					this.props.action.toggleEditUserInfoModal({ open: false });
+				});
+			}
+		});
+	}
+
 	render() {
-		const { form: { getFieldDecorator }, classes, style, store, action } = this.props;
+		const { form: { getFieldDecorator }, classes, style, store: { userView }, action } = this.props;
+		console.log('userView', userView);
 
 		return (
 			<div className={classes.root} style={style}>
@@ -104,54 +129,60 @@ export default class EditUserInfoForm extends Component {
 							</Button>
 						</span>
 						<span style={{ padding: '25px 0 0 20px' }}>
-              Chọn ảnh đại diện
+							Chọn ảnh đại diện
 						</span>
 					</Row>
 					<Form.Item style={{ marginBottom: 0 }}>
-						{getFieldDecorator('fullName', {
-							rules: [{ required: true, message: 'Làm ơn nhập tên của bạn!' }],
-						})(
-							<div className={classes.formItem}>
-								<div className={classes.formLabel}> Tên hiển thị </div>
-								<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Họ và Tên" />
-							</div>,
-						)}
+						<div className={classes.formItem}>
+							<div className={classes.formLabel}> Tên hiển thị </div>
+							{getFieldDecorator('fullName', {
+								initialValue: userView.fullName,
+								rules: [{ required: true, message: 'Làm ơn nhập tên của bạn!' }],
+							})(
+								<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Họ và Tên" />,
+							)}
+						</div>
 					</Form.Item>
 					<Form.Item style={{ marginBottom: 0 }}>
-						{getFieldDecorator('birthday', {
-							rules: [{ required: true, message: 'Làm ơn nhập ngày sinh của bạn!' }],
-						})(
-							<div className={classes.formItem}>
-								<div className={classes.formLabel}> Ngày tháng năm sinh </div>
-								<Input placeholder="dd/mm/yyyy" />
-							</div>,
-						)}
+						<div className={classes.formItem}>
+							<div className={classes.formLabel}> Ngày tháng năm sinh </div>
+							{getFieldDecorator('birthday', {
+								initialValue: userView.birthday ? moment(userView.birthday) : '',
+								rules: [{ required: true, message: 'Làm ơn nhập ngày sinh của bạn!' }],
+							})(
+								<DatePicker placeholder="dd/mm/yyyy" />,
+							)}
+						</div>
 					</Form.Item>
 					<Form.Item>
-						{getFieldDecorator('gender')(
-							<Row className={classes.formItem} type="flex">
-								<Col span={6} className={classes.formLabel}> Giới tính </Col>
-								<Col span={18}>
+						<Row className={classes.formItem} type="flex">
+							<Col span={6} className={classes.formLabel}> Giới tính </Col>
+							<Col span={18}>
+								{getFieldDecorator('gender', {
+									initialValue: userView.gender,
+								})(
 									<Radio.Group>
-										<Radio value="Promo"> Nam </Radio>
-										<Radio value="Eco"> Nữ </Radio>
-									</Radio.Group>
-								</Col>
-							</Row>,
-						)}
+										<Radio value="male"> Nam </Radio>
+										<Radio value="female"> Nữ </Radio>
+									</Radio.Group>,
+								)}
+							</Col>
+						</Row>
 					</Form.Item>
 					<Form.Item style={{ marginBottom: 0 }}>
-						{getFieldDecorator('email', {
-							rules: [{ required: true, message: 'Làm ơn nhập email của bạn!' }],
-						})(
-							<div className={classes.formItem}>
-								<div className={classes.formLabel}> Email </div>
-								<Input />
-							</div>,
-						)}
+						<div className={classes.formItem}>
+							<div className={classes.formLabel}> Email </div>
+							{getFieldDecorator('email', {
+								initialValue: userView.email,
+								rules: [{ required: true, message: 'Làm ơn nhập email của bạn!' }, { pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, message: 'Email không hợp lệ!' }],
+							})(
+								<Input />,
+							)}
+						</div>
 					</Form.Item>
 					<Form.Item style={{ marginBottom: 0 }}>
 						{getFieldDecorator('phone', {
+							initialValue: userView.phone,
 							rules: [{ required: true, message: 'Làm ơn nhập số điện thoại của bạn!' }],
 						})(
 							<div className={classes.formItem}>

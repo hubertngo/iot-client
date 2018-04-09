@@ -18,6 +18,11 @@ import GroupStar from 'src/components/Flight/Card/GroupStar';
 import withStyles from 'src/theme/jss/withStyles';
 
 import { toggleEditUserInfoModal, toggleUserInfoModal } from 'src/redux/actions/modal';
+import { getUserData } from 'src/redux/actions/user';
+
+import AuthStorage from 'src/utils/AuthStorage';
+
+import moment from 'moment';
 
 const styleSheet = (theme) => ({
 	root: {
@@ -87,6 +92,7 @@ function mapStateToProps(state) {
 		store: {
 			auth: state.get('auth').toJS(),
 			modal: state.get('modal').toJS(),
+			userView: state.getIn(['user', 'view']),
 		},
 	};
 }
@@ -96,6 +102,7 @@ const mapDispatchToProps = (dispatch) => {
 		action: bindActionCreators({
 			toggleEditUserInfoModal,
 			toggleUserInfoModal,
+			getUserData,
 		}, dispatch),
 	};
 };
@@ -105,33 +112,62 @@ const mapDispatchToProps = (dispatch) => {
 @Form.create()
 export default class UserInfoForm extends Component {
 	static propTypes = {
-		form: PropTypes.object.isRequired,
 		classes: PropTypes.object.isRequired,
-		style: PropTypes.object,
+		style: PropTypes.object.isRequired,
 		// store
 		store: PropTypes.shape({
 			auth: PropTypes.object.isRequired,
+			modal: PropTypes.object,
+			userView: PropTypes.object,
 		}).isRequired,
 		// action
 		action: PropTypes.shape({
-			toggleEditUserInfoModal,
-			toggleUserInfoModal,
+			toggleEditUserInfoModal: PropTypes.func,
+			toggleUserInfoModal: PropTypes.func,
+			getUserData: PropTypes.func,
 		}).isRequired,
+	}
+
+	componentDidMount() {
+		this.props.action.getUserData({ id: this.props.store.modal.userInfo.id, filter: { include: 'logs' } });
 	}
 
 	chooseToEditInfo() {
 		const { action } = this.props;
 		action.toggleUserInfoModal({ open: false });
-		action.toggleEditUserInfoModal({ open: true });
+		action.toggleEditUserInfoModal({ open: true, id: this.props.store.userView.id });
 	}
 
-	render() {
-		const { form: { getFieldDecorator }, classes, style, store, action } = this.props;
-		const userData = store.modal.userInfo.data;
+	renderLogItem = (log) => {
+		const { classes } = this.props;
+		const { ticket } = log;
+		const actionText = log.action === 'buy' ? 'Tìm mua' : 'Bán';
+		const flightType = ticket.flightType === 'oneWay' ? 'một chiều' : 'khứ hồi';
+		const tripText = `${ticket.trip.departure} - ${ticket.trip.destination}`;
+		const tripTimeText = moment(ticket.trip.startDate).format('DD/MM/YYYY');
+		const tripBackTimeText = ticket.flightType === 'oneWay' ? '' : `, về ngày ${moment(ticket.trip.startDate).format('DD/MM/YYYY')}`;
 
-		const content = 'Tìm mua vé máy bay một chiều Nha Trang - Hải Phòng bay ngày 8/11/2018';
-		const	updatedTime = '12/02/2018 16:08';
-		const	link = 'https://dulichgiare.com.vn/vemaybay/147dqe';
+		const content = `${actionText} vé máy bay ${flightType} ${tripText} bay ngày ${tripTimeText} ${tripBackTimeText}`;
+		const link = ticket.dataType === 'fb' ? `https://facebook.com/${ticket.fbFeedId}` : '';
+
+		return (
+			<div className={classes.hisRow}>
+				<span className={classes.note}>{moment(log.createdAt).format('DD/MM/YYYY HH:mm')}</span>
+				<div>{content}</div>
+				{
+					!!link && (
+						<span className={classes.hislink}>
+							<Icon type="link" />
+							<a href={link} target="_blank" rel="noopener noreferrer">{link}</a>
+						</span>
+					)
+				}
+			</div>
+		);
+	}
+
+	renderLoading() {
+		const { classes, style, action } = this.props;
 
 		return (
 			<div className={classes.root} style={style}>
@@ -141,28 +177,28 @@ export default class UserInfoForm extends Component {
 				</div>
 				<Row className={classes.formItem} type="flex">
 					<Col span={4} className={classes.formLabel}>
-						<Avatar size={40} src={userData.avatar} name={userData.fullName} />
+						<Avatar size={40} loading />
 					</Col>
 					<Col span={13}>
-						<h4>{userData.fullName}</h4>
+						<div style={{ width: 200 }} className="loading-block" />
 						<div className={classes.infoRow}>
 							<span> <Icon type="gift" /> </span>
-							<span> {userData.birthday || ''}</span>
+							<span style={{ width: 80 }} className="loading-block" />
 						</div>
 						<div className={classes.infoRow}>
 							<span> <Icon type="mail" /> </span>
-							<span> {userData.email} </span>
+							<span style={{ width: 80 }} className="loading-block" />
 						</div>
 						<div className={classes.infoRow}>
 							<span> <Icon type="phone" /> </span>
-							<span> {userData.phone || ''} </span>
+							<span style={{ width: 80 }} className="loading-block" />
 						</div>
 					</Col>
 					<Col span={7} className={classes.rightCol}>
 						<GroupStar rate={3} />
 						<div className={classes.infoRow}>
 							<div> Ngày tham gia </div>
-							<div> 28/03/2018 </div>
+							<div style={{ width: 80 }} className="loading-block" />
 						</div>
 					</Col>
 				</Row>
@@ -173,21 +209,75 @@ export default class UserInfoForm extends Component {
 				<Divider className={classes.divider} />
 				<div className={classes.hisTitle}> Lịch sử giao dịch (2) </div>
 				<div className={classes.hisRow}>
-					<span className={classes.note}>{updatedTime}</span>
-					<div>{content}</div>
-					<span className={classes.hislink}>
-						<Icon type="link" />
-						<a href={link}>{link}</a>
-					</span>
+					<div style={{ width: 150 }} className="loading-block" />
+					<div className="loading-block" />
+					<div style={{ width: 120 }} className="loading-block" />
 				</div>
 				<div className={classes.hisRow}>
-					<span className={classes.note}>{updatedTime}</span>
-					<div>{content}</div>
-					<span className={classes.hislink}>
-						<Icon type="link" />
-						<a href={link}>{link}</a>
-					</span>
+					<div style={{ width: 150 }} className="loading-block" />
+					<div className="loading-block" />
+					<div style={{ width: 120 }} className="loading-block" />
 				</div>
+			</div>
+		);
+	}
+
+	render() {
+		const { classes, style, store: { userView }, action } = this.props;
+		const logs = userView.logs || [];
+
+		if (userView.loading) {
+			return this.renderLoading();
+		}
+
+		return (
+			<div className={classes.root} style={style}>
+				<Icon type="close-circle" className={classes.closeBtn} onClick={() => action.toggleUserInfoModal({ open: false })} />
+				<div className={classes.header}>
+					Thông tin cá nhân
+				</div>
+				<Row className={classes.formItem} type="flex">
+					<Col span={4} className={classes.formLabel}>
+						<Avatar size={40} src={userView.avatar} name={userView.fullName} />
+					</Col>
+					<Col span={13}>
+						<h4>{userView.fullName}</h4>
+						<div className={classes.infoRow}>
+							<span> <Icon type="gift" /> </span>
+							<span> {userView.birthday || ''}</span>
+						</div>
+						<div className={classes.infoRow}>
+							<span> <Icon type="mail" /> </span>
+							<span> {userView.email} </span>
+						</div>
+						<div className={classes.infoRow}>
+							<span> <Icon type="phone" /> </span>
+							<span> {userView.phone || ''} </span>
+						</div>
+					</Col>
+					<Col span={7} className={classes.rightCol}>
+						<GroupStar rate={3} />
+						<div className={classes.infoRow}>
+							<div> Ngày tham gia </div>
+							<div> {moment(userView.createdAt).format('DD/MM/YYYY')} </div>
+						</div>
+					</Col>
+				</Row>
+				{
+					AuthStorage.userId === userView.id && (
+						<div className={`${classes.rightCol} ${classes.link}`}>
+							<span onClick={() => this.chooseToEditInfo()}> <Icon type="edit" /> </span>
+							<span onClick={() => this.chooseToEditInfo()}> Chỉnh sửa </span>
+						</div>
+					)
+				}
+				<Divider className={classes.divider} />
+				<div className={classes.hisTitle}> Lịch sử giao dịch ({logs.length || 0}) </div>
+				{
+					logs.map(log => (
+						this.renderLogItem(log)
+					))
+				}
 			</div>
 		);
 	}

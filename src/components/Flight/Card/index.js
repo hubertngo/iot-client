@@ -206,7 +206,7 @@ export default class FlightCard extends Component {
 	handleClickAvatar = () => {
 		const { creator = {} } = this.props.flightData;
 
-		this.props.action.toggleUserInfoModal({ open: true, data: creator });
+		this.props.action.toggleUserInfoModal({ open: true, id: creator.id });
 	}
 
 	_renderBodyRight = () => {

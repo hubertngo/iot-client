@@ -40,3 +40,19 @@ export const getUserData = (payload, next, nextError) => {
 	};
 };
 
+export const updateUser = (payload, next, nextError) => {
+	const { id, ...user } = payload;
+
+	return {
+		type: SINGLE_API,
+		payload: {
+			uri: 'users/' + id,
+			params: user,
+			opt: { method: 'PATCH' },
+			successType: 'UPDATE_USER_SUCCESS',
+			afterSuccess: next,
+			afterError: nextError,
+		},
+	};
+};
+

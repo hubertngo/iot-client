@@ -235,6 +235,8 @@ export default class FlightList extends Component {
 			);
 		}
 
+		const isShowMore = (ticketBuyingList.data.length < ticketBuyingList.total) || (ticketSellingList.data.length < ticketSellingList.total);
+
 		return (
 			<Fragment>
 				<SearchBar onSearch={this.handleSearch} />
@@ -252,9 +254,13 @@ export default class FlightList extends Component {
 							ticketSellingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="selling" />)
 						}
 					</Col>
-					<Col span={24}>
-						<Button className={classes.btnMore} size="large" onClick={this.handleViewMore} loading={this.state.loadingMore}>Xem thêm</Button>
-					</Col>
+					{
+						isShowMore && (
+							<Col span={24}>
+								<Button className={classes.btnMore} size="large" onClick={this.handleViewMore} loading={this.state.loadingMore}>Xem thêm</Button>
+							</Col>
+						)
+					}
 				</Row>
 			</Fragment>
 		);

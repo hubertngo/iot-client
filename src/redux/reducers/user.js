@@ -50,6 +50,14 @@ export default (state = initialState, action) => {
 				};
 			});
 
+		case 'UPDATE_USER_SUCCESS':
+			return state.update('view', () => {
+				return {
+					...action.payload,
+					loading: false,
+				};
+			});
+
 		default:
 			return state;
 	}
