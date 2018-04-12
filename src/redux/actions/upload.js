@@ -33,7 +33,7 @@ export const uploadFiles = (payload, next, nextError) => {
 	return {
 		type: SINGLE_API,
 		payload: {
-			uri: 'containers/alfazi/upload',
+			uri: 'containers/chove.vn/upload',
 			params: { files: newFile },
 			opt: { method: 'POST' },
 			uploadFile: true,

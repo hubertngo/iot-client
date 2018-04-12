@@ -11,8 +11,6 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { Modal } from 'antd';
-
 import AuthStorage from 'src/utils/AuthStorage';
 
 import { toggleLoginModal } from 'src/redux/actions/modal';
@@ -39,12 +37,7 @@ const CheckLogin = (props) => {
 		if (AuthStorage.loggedIn) {
 			onClick();
 		} else {
-			Modal.error({
-				title: 'Bạn phải đăng nhập trước khi thực hiện thao tác này.',
-				onOk: () => {
-					props.action.toggleLoginModal({ open: true });
-				},
-			});
+			props.action.toggleLoginModal({ open: true });
 		}
 	};
 
