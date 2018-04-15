@@ -17,7 +17,7 @@ import GroupStar from 'src/components/Flight/Card/GroupStar';
 
 import withStyles from 'src/theme/jss/withStyles';
 
-import { toggleEditUserInfoModal, toggleUserInfoModal } from 'src/redux/actions/modal';
+import { toggleEditUserInfoModal, toggleUserInfoModal, toggleRatingModal } from 'src/redux/actions/modal';
 import { getUserData } from 'src/redux/actions/user';
 
 import AuthStorage from 'src/utils/AuthStorage';
@@ -85,6 +85,11 @@ const styleSheet = (theme) => ({
 			marginRight: 5,
 		},
 	},
+	rating: {
+		'& hover': {
+			pointer: 'cursor',
+		},
+	},
 });
 
 function mapStateToProps(state) {
@@ -102,6 +107,7 @@ const mapDispatchToProps = (dispatch) => {
 		action: bindActionCreators({
 			toggleEditUserInfoModal,
 			toggleUserInfoModal,
+			toggleRatingModal,
 			getUserData,
 		}, dispatch),
 	};
@@ -136,6 +142,13 @@ export default class UserInfoForm extends Component {
 		const { action } = this.props;
 		action.toggleUserInfoModal({ open: false });
 		action.toggleEditUserInfoModal({ open: true, id: this.props.store.userView.id });
+	}
+
+	handleRating = (e) => {
+		e.preventDefault();
+		const { action } = this.props;
+		action.toggleUserInfoModal({ open: false });
+		action.toggleRatingModal({ open: true });
 	}
 
 	renderLogItem = (log) => {
@@ -225,8 +238,7 @@ export default class UserInfoForm extends Component {
 	render() {
 		const { classes, style, store: { userView }, action } = this.props;
 		const logs = userView.logs || [];
-
-		if (userView.loading) {
+		if (userView.loading && !userView.id) {
 			return this.renderLoading();
 		}
 
@@ -256,7 +268,10 @@ export default class UserInfoForm extends Component {
 						</div>
 					</Col>
 					<Col span={7} className={classes.rightCol}>
-						<GroupStar rate={3} />
+						<GroupStar rate={userView.ratingsCount} key={userView.ratingsCount} />
+						{
+							AuthStorage.userId !== userView.id && <a onClick={this.handleRating}>Đánh giá</a>
+						}
 						<div className={classes.infoRow}>
 							<div> Ngày tham gia </div>
 							<div> {moment(userView.createdAt).format('DD/MM/YYYY')} </div>

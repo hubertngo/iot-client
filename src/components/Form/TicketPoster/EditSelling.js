@@ -19,13 +19,13 @@ import AuthStorage from 'src/utils/AuthStorage';
 
 import IconDeparture from 'src/components/Photo/IconDeparture';
 
-import { getTicketSellingList } from 'src/redux/actions/ticket-selling';
-import { getTicketBuyingList, createTicketBuying } from 'src/redux/actions/ticket-buying';
-import { toggleTicketPosterModal } from 'src/redux/actions/modal';
+import { getUserTicketSellingList, getTicketSellingData, updateTicketSelling } from 'src/redux/actions/ticket-selling';
+import { getUserTicketBuyingList } from 'src/redux/actions/ticket-buying';
+import { toggleEditSellingModal } from 'src/redux/actions/modal';
 import { uploadFiles } from 'src/redux/actions/upload';
 
 import { getLabel } from 'src/utils';
-
+import moment from 'moment';
 import PosterDivider from './PosterDivider';
 
 const { TextArea } = Input;
@@ -83,6 +83,7 @@ function mapStateToProps(state) {
 		store: {
 			auth: state.get('auth').toJS(),
 			modal: state.get('modal').toJS(),
+			ticketSellingView: state.getIn(['ticketSelling', 'view']),
 		},
 	};
 }
@@ -90,11 +91,12 @@ function mapStateToProps(state) {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		action: bindActionCreators({
-			getTicketSellingList,
-			getTicketBuyingList,
-			createTicketBuying,
-			toggleTicketPosterModal,
+			getUserTicketSellingList,
+			getUserTicketBuyingList,
+			toggleEditSellingModal,
 			uploadFiles,
+			getTicketSellingData,
+			updateTicketSelling,
 		}, dispatch),
 	};
 };
@@ -110,11 +112,15 @@ export default class TicketPosterForm extends Component {
 			resetFields: PropTypes.func,
 		}).isRequired,
 		action: PropTypes.shape({
-			getTicketSellingList: PropTypes.func.isRequired,
-			getTicketBuyingList: PropTypes.func.isRequired,
-			createTicketBuying: PropTypes.func,
-			toggleTicketPosterModal: PropTypes.func,
+			getUserTicketSellingList: PropTypes.func.isRequired,
+			getUserTicketBuyingList: PropTypes.func.isRequired,
+			toggleEditSellingModal: PropTypes.func,
 			uploadFiles: PropTypes.func,
+			updateTicketSelling: PropTypes.func,
+			getTicketSellingData: PropTypes.func,
+		}).isRequired,
+		store: PropTypes.shape({
+			modal: PropTypes.object,
 		}).isRequired,
 	}
 
@@ -124,6 +130,25 @@ export default class TicketPosterForm extends Component {
 	state = {
 		loading: false,
 		fileList: [],
+	}
+
+	componentDidMount() {
+		this.props.action.getTicketSellingData({
+			id: this.props.store.modal.editSelling.id,
+			filter: {
+				include: [
+					{
+						relation: 'creator',
+						scope: {
+							fields: ['id', 'username', 'avatar', 'fullName', 'ratingsCount'],
+						},
+					},
+					{
+						relation: 'fbFeed',
+					},
+				],
+			},
+		});
 	}
 
 	filter = {
@@ -143,6 +168,7 @@ export default class TicketPosterForm extends Component {
 		],
 		where: {
 			status: 'open',
+			creatorId: AuthStorage.userId,
 		},
 	}
 
@@ -152,8 +178,10 @@ export default class TicketPosterForm extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
+				console.log('values', values);
 				const { packageWeight, packageWeightOther, type, trip, tripBack, ...dataSend } = values;
 
+				dataSend.id = this.props.store.modal.editSelling.id;
 				dataSend.isBid = type === 'bid';
 
 				dataSend.packageWeight = packageWeight !== -1 ? packageWeight : ~~packageWeightOther;
@@ -181,21 +209,21 @@ export default class TicketPosterForm extends Component {
 				this.props.action.uploadFiles({ files: this.state.fileList }, (imageList = []) => {
 					dataSend.images = imageList;
 
-					this.props.action.createTicketBuying(dataSend, () => {
+					this.props.action.updateTicketSelling(dataSend, () => {
 						this.setState({
 							loading: false,
 						}, () => {
-							this.props.action.toggleTicketPosterModal({ open: false });
+							this.props.action.toggleEditSellingModal({ open: false });
 							this.props.form.resetFields();
 
 							const p1 = new Promise((resolve) => {
-								this.props.action.getTicketSellingList({ filter: this.filter, firstLoad: true }, () => {
+								this.props.action.getUserTicketSellingList({ filter: this.filter, firstLoad: true }, () => {
 									resolve();
 								});
 							});
 
 							const p2 = new Promise((resolve) => {
-								this.props.action.getTicketBuyingList({ filter: this.filter, firstLoad: true }, () => {
+								this.props.action.getUserTicketBuyingList({ filter: this.filter, firstLoad: true }, () => {
 									resolve();
 								});
 							});
@@ -218,11 +246,12 @@ export default class TicketPosterForm extends Component {
 	}
 
 	render() {
-		const { form: { getFieldDecorator, getFieldValue }, classes, action } = this.props;
+		const { form: { getFieldDecorator, getFieldValue }, classes, action, store: { ticketSellingView } } = this.props;
+		const { trip = {}, tripBack = {} } = ticketSellingView;
 
 		return (
 			<div className={classes.root}>
-				<Icon type="close-circle" className={classes.closeBtn} onClick={this.state.loading ? f => f : () => action.toggleTicketPosterModal({ open: false })} />
+				<Icon type="close-circle" className={classes.closeBtn} onClick={this.state.loading ? f => f : () => action.toggleEditSellingModal({ open: false })} />
 				<div className={classes.header}>
 					Nhập thông tin mua vé
 				</div>
@@ -232,6 +261,7 @@ export default class TicketPosterForm extends Component {
 							<div className={classes.formLabel}> Nội dung tin đăng </div>
 							{getFieldDecorator('content', {
 								rules: [{ required: true, message: 'Làm ơn nhập nội dung tin đăng' }],
+								initialValue: ticketSellingView.content,
 							})(
 								<TextArea rows={4} style={{ resize: 'none' }} />,
 							)}
@@ -242,7 +272,7 @@ export default class TicketPosterForm extends Component {
 							<Col span={3} className={classes.formLabel}> Loại vé </Col>
 							<Col span={21}>
 								{getFieldDecorator('flightType', {
-									initialValue: 'oneWay',
+									initialValue: ticketSellingView.flightType,
 								})(
 									<Radio.Group>
 										<Radio value="oneWay"> Một chiều </Radio>
@@ -257,7 +287,7 @@ export default class TicketPosterForm extends Component {
 							<Col span={3} className={classes.formLabel}> Số vé </Col>
 							<Col span={21}>
 								{getFieldDecorator('seatCount', {
-									initialValue: 1,
+									initialValue: ticketSellingView.seatCount,
 								})(
 									<InputNumber size="default" style={{ width: 70 }} />,
 								)}
@@ -269,7 +299,7 @@ export default class TicketPosterForm extends Component {
 							<Col span={3} className={classes.formLabel}> Hãng </Col>
 							<Col span={11}>
 								{getFieldDecorator('airline', {
-									initialValue: flightOptions[0].value,
+									initialValue: ticketSellingView.airline,
 								})(
 									<Select
 										size="default"
@@ -293,6 +323,7 @@ export default class TicketPosterForm extends Component {
 									<div className={classes.formLabel}> Điểm xuất phát </div>
 									{getFieldDecorator('trip.departure', {
 										rules: [{ required: true, message: 'Làm ơn chọn điểm xuất phát' }],
+										initialValue: trip.departure,
 									})(
 										<Select
 											size="default"
@@ -311,6 +342,7 @@ export default class TicketPosterForm extends Component {
 									<div className={classes.formLabel}> Điểm đến </div>
 									{getFieldDecorator('trip.destination', {
 										rules: [{ required: true, message: 'Làm ơn chọn điểm đến' }],
+										initialValue: trip.destination,
 									})(
 										<Select
 											size="default"
@@ -331,6 +363,7 @@ export default class TicketPosterForm extends Component {
 									<Form.Item>
 										{getFieldDecorator('trip.startDate', {
 											rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày xuất phát' }],
+											initialValue: moment(trip.startDate),
 										})(
 											<DatePicker format="DD/MM/YYYY" />,
 										)}
@@ -338,6 +371,7 @@ export default class TicketPosterForm extends Component {
 									<Form.Item>
 										{getFieldDecorator('trip.startTime', {
 											rules: [{ type: 'object', required: true, message: 'Làm ơn chọn giờ xuất phát' }],
+											initialValue: moment(trip.startTime, 'HH:mm'),
 										})(
 											<TimePicker format="HH:mm" style={{ marginLeft: 20 }} />,
 										)}
@@ -357,7 +391,7 @@ export default class TicketPosterForm extends Component {
 											<div className={classes.formLabel}> Điểm xuất phát </div>
 											{getFieldDecorator('tripBack.departure', {
 												rules: [{ required: true, message: 'Làm ơn chọn điểm xuất phát' }],
-												initialValue: getFieldValue('trip.destination'),
+												initialValue: tripBack.departure,
 											})(
 												<Select
 													size="default"
@@ -377,7 +411,7 @@ export default class TicketPosterForm extends Component {
 											<div className={classes.formLabel}> Điểm đến </div>
 											{getFieldDecorator('tripBack.destination', {
 												rules: [{ required: true, message: 'Làm ơn chọn điểm đến' }],
-												initialValue: getFieldValue('trip.departure'),
+												initialValue: tripBack.destination,
 											})(
 												<Select
 													size="default"
@@ -399,6 +433,7 @@ export default class TicketPosterForm extends Component {
 											<Form.Item>
 												{getFieldDecorator('tripBack.startDate', {
 													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày xuất phát' }],
+													initialValue: moment(tripBack.startDate),
 												})(
 													<DatePicker format="DD/MM/YYY" />,
 												)}
@@ -406,6 +441,7 @@ export default class TicketPosterForm extends Component {
 											<Form.Item>
 												{getFieldDecorator('tripBack.startTime', {
 													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn giờ xuất phát' }],
+													initialValue: moment(tripBack.startTime, 'HH:mm'),
 												})(
 													<TimePicker format="HH:mm" style={{ marginLeft: 20 }} />,
 												)}
@@ -422,7 +458,7 @@ export default class TicketPosterForm extends Component {
 							<Col span={6} className={classes.formLabel}> Loại ghế </Col>
 							<Col span={18}>
 								{getFieldDecorator('seatType', {
-									initialValue: 'promo',
+									initialValue: ticketSellingView.seatType,
 								})(
 									<Radio.Group>
 										<Radio value="promo"> Promo </Radio>
@@ -438,7 +474,7 @@ export default class TicketPosterForm extends Component {
 							<Col span={6} className={classes.formLabel}> Số kg hành lý </Col>
 							<Col span={18} style={{ display: 'flex' }}>
 								{getFieldDecorator('packageWeight', {
-									initialValue: 7,
+									initialValue: ticketSellingView.packageWeight,
 								})(
 									<Radio.Group>
 										<Radio value={7}> 7kg </Radio>
@@ -451,6 +487,7 @@ export default class TicketPosterForm extends Component {
 									<Form.Item style={{ margin: 0 }}>
 										{getFieldDecorator('packageWeightOther', {
 											rules: [{ required: true, message: 'Làm ơn nhập số kg' }],
+											initialValue: ticketSellingView.packageWeight,
 										})(
 											<Input type="number" autoFocus size="default" maxLength="25" style={{ width: 90, marginLeft: 10 }} suffix="KG" />,
 										)}
@@ -511,7 +548,7 @@ export default class TicketPosterForm extends Component {
 							}
 						</Form.Item> */}
 						<div className={classes.actionGroup}>
-							<Button type="primary" htmlType="submit" loading={this.state.loading}> Đăng tin </Button>
+							<Button type="primary" htmlType="submit" loading={this.state.loading}> Chỉnh sửa </Button>
 							<Button style={{ marginLeft: 10 }} disabled={this.state.loading} onClick={() => action.toggleTicketPosterModal({ open: false })}>Hủy</Button>
 						</div>
 					</div>

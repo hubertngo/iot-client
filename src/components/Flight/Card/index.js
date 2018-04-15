@@ -18,7 +18,7 @@ import withStyles from 'src/theme/jss/withStyles';
 import Avatar from 'src/components/Photo/Avatar';
 import Price from 'src/components/Stuff/Price';
 
-import { toggleFlightModal, toggleUserInfoModal } from 'src/redux/actions/modal';
+import { toggleFlightModal, toggleUserInfoModal, toggleEditBuyingModal, toggleEditSellingModal } from 'src/redux/actions/modal';
 
 import AuthStorage from 'src/utils/AuthStorage';
 
@@ -167,6 +167,8 @@ const mapDispatchToProps = (dispatch) => {
 		action: bindActionCreators({
 			toggleFlightModal,
 			toggleUserInfoModal,
+			toggleEditBuyingModal,
+			toggleEditSellingModal,
 		}, dispatch),
 	};
 };
@@ -187,13 +189,17 @@ export default class FlightCard extends Component {
 		action: PropTypes.shape({
 			toggleFlightModal: PropTypes.func,
 			toggleUserInfoModal: PropTypes.func,
+			toggleEditBuyingModal: PropTypes.func,
+			toggleEditSellingModal: PropTypes.func,
 		}).isRequired,
+		editable: PropTypes.bool,
 	}
 
 	static defaultProps = {
 		flightData: {},
 		loading: false,
 		type: 'buying',
+		editable: false,
 	}
 
 	state = {
@@ -209,13 +215,31 @@ export default class FlightCard extends Component {
 		this.props.action.toggleUserInfoModal({ open: true, id: creator.id });
 	}
 
+	handleEditBuying = () => {
+		this.props.action.toggleEditBuyingModal({ open: true, id: this.props.flightData.id });
+	}
+
+	handleEditSelling = () => {
+		this.props.action.toggleEditSellingModal({ open: true, id: this.props.flightData.id });
+	}
+
 	_renderBodyRight = () => {
-		const { type, flightData } = this.props;
+		const { type, flightData, editable } = this.props;
 
 		if (type === 'buying') {
+			if (editable) {
+				return (
+					<Fragment>
+						<p>{flightData.seatCount} vé</p>
+						<CheckLogin onClick={this.handleEditBuying}>
+							<Button type="primary">Chỉnh sửa</Button>
+						</CheckLogin>
+					</Fragment>
+				);
+			}
 			return (
 				<Fragment>
-					<p>{flightData.stock} vé</p>
+					<p>{flightData.seatCount} vé</p>
 					<CheckLogin onClick={this.handleClickFlight}>
 						<Button type="primary">Liên hệ</Button>
 					</CheckLogin>
@@ -230,6 +254,18 @@ export default class FlightCard extends Component {
 					</Fragment>
 				);
 			}
+
+			if (editable) {
+				return (
+					<Fragment>
+						<p><Price price={flightData.price} type="primary" /></p>
+						<CheckLogin onClick={this.handleEditSelling} >
+							<Button type="primary">Chỉnh sửa</Button>
+						</CheckLogin>
+					</Fragment>
+				);
+			}
+
 			return (
 				<Fragment>
 					<p><Price price={flightData.price} type="primary" /></p>
@@ -323,7 +359,7 @@ export default class FlightCard extends Component {
 								</CheckLogin>
 						}
 
-						<GroupStar />
+						<GroupStar rate={creator.ratingsCount} />
 					</Col>
 				</Row>
 

@@ -16,9 +16,11 @@ import { Button, Col, Row } from 'antd';
 import withStyles from 'src/theme/jss/withStyles';
 import SearchBar from 'src/components/Form/SearchBar';
 
-import { getTicketSellingList } from 'src/redux/actions/ticket-selling';
-import { getTicketBuyingList } from 'src/redux/actions/ticket-buying';
+import { getUserTicketSellingList } from 'src/redux/actions/ticket-selling';
+import { getUserTicketBuyingList } from 'src/redux/actions/ticket-buying';
 import { toggleTicketPosterModal } from 'src/redux/actions/modal';
+
+import AuthStorage from 'src/utils/AuthStorage';
 
 import FlightCard from '../Card';
 
@@ -65,8 +67,8 @@ const mapStateToProps = (state) => {
 	return {
 		store: {
 			auth: state.get('auth'),
-			ticketSellingList: state.getIn(['ticketSelling', 'list']),
-			ticketBuyingList: state.getIn(['ticketBuying', 'list']),
+			ticketSellingList: state.getIn(['ticketSelling', 'userTicketList']),
+			ticketBuyingList: state.getIn(['ticketBuying', 'userTicketList']),
 		},
 	};
 };
@@ -74,8 +76,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		action: bindActionCreators({
-			getTicketSellingList,
-			getTicketBuyingList,
+			getUserTicketSellingList,
+			getUserTicketBuyingList,
 			toggleTicketPosterModal,
 		}, dispatch),
 	};
@@ -94,8 +96,8 @@ export default class FlightList extends Component {
 		}).isRequired,
 		// action
 		action: PropTypes.shape({
-			getTicketSellingList: PropTypes.func.isRequired,
-			getTicketBuyingList: PropTypes.func.isRequired,
+			getUserTicketSellingList: PropTypes.func.isRequired,
+			getUserTicketBuyingList: PropTypes.func.isRequired,
 			toggleTicketPosterModal: PropTypes.func.isRequired,
 		}).isRequired,
 	}
@@ -111,13 +113,13 @@ export default class FlightList extends Component {
 
 	componentDidMount() {
 		const p1 = new Promise((resolve) => {
-			this.props.action.getTicketSellingList({ filter: this.filter, firstLoad: true }, () => {
+			this.props.action.getUserTicketSellingList({ filter: this.filter, firstLoad: true }, () => {
 				resolve();
 			});
 		});
 
 		const p2 = new Promise((resolve) => {
-			this.props.action.getTicketBuyingList({ filter: this.filter, firstLoad: true }, () => {
+			this.props.action.getUserTicketBuyingList({ filter: this.filter, firstLoad: true }, () => {
 				resolve();
 			});
 		});
@@ -147,6 +149,7 @@ export default class FlightList extends Component {
 		],
 		where: {
 			status: 'open',
+			creatorId: AuthStorage.userId,
 		},
 	}
 
@@ -158,7 +161,7 @@ export default class FlightList extends Component {
 		this.filter.skip = this.filter.limit * this.filter.page;
 
 		const p1 = new Promise((resolve, reject) => {
-			this.props.action.getTicketSellingList({ filter: this.filter }, () => {
+			this.props.action.getUserTicketSellingList({ filter: this.filter }, () => {
 				resolve();
 			}, () => {
 				reject();
@@ -166,7 +169,7 @@ export default class FlightList extends Component {
 		});
 
 		const p2 = new Promise((resolve, reject) => {
-			this.props.action.getTicketBuyingList({ filter: this.filter }, () => {
+			this.props.action.getUserTicketBuyingList({ filter: this.filter }, () => {
 				resolve();
 			}, () => {
 				reject();
@@ -198,13 +201,13 @@ export default class FlightList extends Component {
 		this.filter.page = 1;
 
 		Promise.all([
-			this.props.action.getTicketSellingList({ filter: this.filter, firstLoad: true }),
-			this.props.action.getTicketBuyingList({ filter: this.filter, firstLoad: true }),
+			this.props.action.getUserTicketSellingList({ filter: this.filter, firstLoad: true }),
+			this.props.action.getUserTicketBuyingList({ filter: this.filter, firstLoad: true }),
 		]).then(() => {
 			this.setState({ loading: false });
 		});
 
-		// this.props.action.getTicketSellingList({ filter: this.filter, firstLoad: true }, () => {
+		// this.props.action.getUserTicketSellingList({ filter: this.filter, firstLoad: true }, () => {
 		// 	this.setState({ loading: false });
 		// });
 	}
@@ -245,13 +248,13 @@ export default class FlightList extends Component {
 					<Col span={12}>
 						<Button type="primary" className={classes.btn} onClick={() => action.toggleTicketPosterModal({ open: true, type: 'buying' })}>Tìm mua</Button>
 						{
-							ticketBuyingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="buying" />)
+							ticketBuyingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="buying" editable />)
 						}
 					</Col>
 					<Col span={12}>
 						<Button type="primary" className={classes.btn} onClick={() => action.toggleTicketPosterModal({ open: true, type: 'selling' })}>Đăng bán</Button>
 						{
-							ticketSellingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="selling" />)
+							ticketSellingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="selling" editable />)
 						}
 					</Col>
 					{

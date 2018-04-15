@@ -86,6 +86,21 @@ export const getTicketSellingList = (payload = {}, next, nextError) => {
 	};
 };
 
+export const getUserTicketSellingList = (payload = {}, next, nextError) => {
+	const { filter, firstLoad } = payload;
+
+	return {
+		type: SINGLE_API,
+		payload: {
+			uri: `ticket-sellings${applyURIFilter(filter)}`,
+			beforeCallType: firstLoad ? 'GET_USER_TICKET_SELLING_LIST_REQUEST' : '',
+			successType: 'GET_USER_TICKET_SELLING_LIST_SUCCESS',
+			afterSuccess: next,
+			afterError: nextError,
+		},
+	};
+};
+
 export const deleteTicketSelling = (payload, next) => {
 	const { id } = payload;
 

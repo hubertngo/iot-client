@@ -11,21 +11,28 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Form, Icon, Row, Col, Button, Input, Radio, DatePicker } from 'antd';
-import Avatar from 'src/components/Photo/Avatar';
+import { Form, Icon, Row, Col, Button, Input, Radio, DatePicker, Upload } from 'antd';
 
 import withStyles from 'src/theme/jss/withStyles';
 
 import { toggleEditUserInfoModal } from 'src/redux/actions/modal';
-import { updateUser } from 'src/redux/actions/user';
+import { editProfile } from 'src/redux/actions/auth';
+import { uploadFiles } from 'src/redux/actions/upload';
 import moment from 'moment';
 
-const styleSheet = (theme) => ({
+const styleSheet = (/* theme */) => ({
 	root: {
 		minWidth: 393,
 		position: 'relative',
 		textAlign: 'left',
 		padding: 20,
+
+		'& .ant-upload.ant-upload-select-picture-card': {
+			width: 70,
+			height: 70,
+			borderRadius: '50%',
+			borderStyle: 'solid',
+		},
 	},
 	header: {
 		textTransform: 'uppercase',
@@ -46,6 +53,11 @@ const styleSheet = (theme) => ({
 	actionGroup: {
 		marginBottom: 15,
 	},
+	avatar: {
+		width: 70,
+		height: 70,
+		borderRadius: '50%',
+	},
 });
 
 function mapStateToProps(state) {
@@ -53,7 +65,7 @@ function mapStateToProps(state) {
 		store: {
 			auth: state.get('auth').toJS(),
 			modal: state.get('modal').toJS(),
-			userView: state.getIn(['user', 'view']),
+			// userView: state.getIn(['user', 'view']),
 		},
 	};
 }
@@ -62,7 +74,8 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		action: bindActionCreators({
 			toggleEditUserInfoModal,
-			updateUser,
+			editProfile,
+			uploadFiles,
 		}, dispatch),
 	};
 };
@@ -84,7 +97,8 @@ export default class EditUserInfoForm extends Component {
 		// action
 		action: PropTypes.shape({
 			toggleEditUserInfoModal: PropTypes.func,
-			updateUser: PropTypes.func,
+			editProfile: PropTypes.func,
+			uploadFiles: PropTypes.func,
 		}).isRequired,
 	}
 
@@ -92,28 +106,54 @@ export default class EditUserInfoForm extends Component {
 	}
 
 	state = {
+		imageUrl: this.props.store.auth.avatar || '',
+		imageFile: null,
+	}
+
+	handleChangeAvatar = (info) => {
+		/* eslint-disable no-undef */
+		const reader = new FileReader();
+		reader.addEventListener('load', () => {
+			this.setState({
+				imageUrl: reader.result,
+				imageFile: info.file.originFileObj,
+			});
+		});
+		reader.readAsDataURL(info.file.originFileObj);
 	}
 
 	handleSubmit = (e) => {
 		e.preventDefault();
+
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				const userData = { ...values, id: this.props.store.userView.id };
+				const userData = { ...values, id: this.props.store.auth.id };
 
 				this.setState({ loading: true });
 
-				this.props.action.updateUser(userData, () => {
-					this.setState({ loading: false });
+				if (this.state.imageFile) {
+					this.props.action.uploadFiles({ files: [{ status: 'error', originFileObj: this.state.imageFile }] }, (avatars = []) => {
+						userData.avatar = avatars[0] ? avatars[0] + '?' + (+new Date()) : '';
 
-					this.props.action.toggleEditUserInfoModal({ open: false });
-				});
+						this.props.action.editProfile(userData, () => {
+							this.setState({ loading: false });
+
+							this.props.action.toggleEditUserInfoModal({ open: false });
+						});
+					});
+				} else {
+					this.props.action.editProfile(userData, () => {
+						this.setState({ loading: false });
+
+						this.props.action.toggleEditUserInfoModal({ open: false });
+					});
+				}
 			}
 		});
 	}
 
 	render() {
-		const { form: { getFieldDecorator }, classes, style, store: { userView }, action } = this.props;
-		console.log('userView', userView);
+		const { form: { getFieldDecorator }, classes, style, store: { auth }, action } = this.props;
 
 		return (
 			<div className={classes.root} style={style}>
@@ -123,11 +163,15 @@ export default class EditUserInfoForm extends Component {
 				</div>
 				<Form onSubmit={this.handleSubmit} className={classes.form}>
 					<Row className={classes.formItem} type="flex">
-						<span>
-							<Button type="primary" style={{ background: '#E6EAED', border: 'solid 1px #F0F4F7', borderRadius: '50%', width: 70, height: 70 }}>
-								<Icon type="plus" style={{ color: '#BACAD6', fontSize: 20 }} />
-							</Button>
-						</span>
+						<Upload
+							name="avatar"
+							listType="picture-card"
+							showUploadList={false}
+							// action="//jsonplaceholder.typicode.com/posts/"
+							onChange={this.handleChangeAvatar}
+						>
+							{this.state.imageUrl ? <img src={this.state.imageUrl} alt="" className={classes.avatar} /> : <Icon type="plus" style={{ color: '#BACAD6', fontSize: 20 }} />}
+						</Upload>
 						<span style={{ padding: '25px 0 0 20px' }}>
 							Chọn ảnh đại diện
 						</span>
@@ -136,7 +180,7 @@ export default class EditUserInfoForm extends Component {
 						<div className={classes.formItem}>
 							<div className={classes.formLabel}> Tên hiển thị </div>
 							{getFieldDecorator('fullName', {
-								initialValue: userView.fullName,
+								initialValue: auth.fullName,
 								rules: [{ required: true, message: 'Làm ơn nhập tên của bạn!' }],
 							})(
 								<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Họ và Tên" />,
@@ -147,7 +191,7 @@ export default class EditUserInfoForm extends Component {
 						<div className={classes.formItem}>
 							<div className={classes.formLabel}> Ngày tháng năm sinh </div>
 							{getFieldDecorator('birthday', {
-								initialValue: userView.birthday ? moment(userView.birthday) : '',
+								initialValue: auth.birthday ? moment(auth.birthday) : '',
 								rules: [{ required: true, message: 'Làm ơn nhập ngày sinh của bạn!' }],
 							})(
 								<DatePicker placeholder="dd/mm/yyyy" />,
@@ -159,7 +203,7 @@ export default class EditUserInfoForm extends Component {
 							<Col span={6} className={classes.formLabel}> Giới tính </Col>
 							<Col span={18}>
 								{getFieldDecorator('gender', {
-									initialValue: userView.gender,
+									initialValue: auth.gender,
 								})(
 									<Radio.Group>
 										<Radio value="male"> Nam </Radio>
@@ -173,7 +217,7 @@ export default class EditUserInfoForm extends Component {
 						<div className={classes.formItem}>
 							<div className={classes.formLabel}> Email </div>
 							{getFieldDecorator('email', {
-								initialValue: userView.email,
+								initialValue: auth.email,
 								rules: [{ required: true, message: 'Làm ơn nhập email của bạn!' }, { pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, message: 'Email không hợp lệ!' }],
 							})(
 								<Input />,
@@ -181,15 +225,15 @@ export default class EditUserInfoForm extends Component {
 						</div>
 					</Form.Item>
 					<Form.Item style={{ marginBottom: 0 }}>
-						{getFieldDecorator('phone', {
-							initialValue: userView.phone,
-							rules: [{ required: true, message: 'Làm ơn nhập số điện thoại của bạn!' }],
-						})(
-							<div className={classes.formItem}>
-								<div className={classes.formLabel}> Số điện thoại </div>
-								<Input />
-							</div>,
-						)}
+						<div className={classes.formItem}>
+							<div className={classes.formLabel}> Số điện thoại </div>
+							{getFieldDecorator('phone', {
+								initialValue: auth.phone,
+								rules: [{ required: true, message: 'Làm ơn nhập số điện thoại của bạn!' }],
+							})(
+								<Input />,
+							)}
+						</div>
 					</Form.Item>
 					<div className={classes.action}>
 						<div className={classes.actionGroup}>

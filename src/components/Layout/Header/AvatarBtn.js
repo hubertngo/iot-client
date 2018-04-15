@@ -18,6 +18,7 @@ import { Router } from 'src/routes';
 
 import Avatar from 'src/components/Photo/Avatar';
 import GroupStar from 'src/components/Flight/Card/GroupStar';
+import IconDeparture from 'src/components/Photo/IconDeparture';
 
 import { logoutRequest } from 'src/redux/actions/auth';
 import { toggleUserInfoModal } from 'src/redux/actions/modal';
@@ -123,6 +124,15 @@ const AvatarBtn = ({ store, action, classes }) => {
 							<Icon type="setting" />
 							<span> Cài đặt </span>
 						</div>
+				}
+			</div>
+			<Divider className={classes.divider} />
+			<div className={classes.itemWrapper}>
+				{
+					<div className={classes.item} onClick={() => Router.pushRoute('/user-ticket-list')}>
+						<IconDeparture size={16} />
+						<span style={{ marginLeft: 15 }}>  Bài đăng của tôi </span>
+					</div>
 				}
 			</div>
 			<Divider className={classes.divider} />

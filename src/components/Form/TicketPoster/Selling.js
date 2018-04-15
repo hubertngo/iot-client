@@ -14,7 +14,7 @@ import moment from 'moment';
 
 import withStyles from 'src/theme/jss/withStyles';
 
-import { Form, Icon, Input, Button, Radio, Select, Row, Col, DatePicker, TimePicker, InputNumber } from 'antd';
+import { Form, Icon, Input, Button, Radio, Select, Row, Col, DatePicker, TimePicker, InputNumber, Upload } from 'antd';
 
 import { locationOptions, flightOptions } from 'src/constants/selectOption';
 import AuthStorage from 'src/utils/AuthStorage';
@@ -24,6 +24,7 @@ import IconDeparture from 'src/components/Photo/IconDeparture';
 import { createTicketSelling, getTicketSellingList } from 'src/redux/actions/ticket-selling';
 import { getTicketBuyingList } from 'src/redux/actions/ticket-buying';
 import { toggleTicketPosterModal } from 'src/redux/actions/modal';
+import { uploadFiles } from 'src/redux/actions/upload';
 
 import { getLabel } from 'src/utils';
 
@@ -37,6 +38,16 @@ const styleSheet = (/* theme */) => ({
 		position: 'relative',
 		textAlign: 'left',
 		padding: 20,
+
+		'& .ant-upload.ant-upload-select-picture-card': {
+			width: 70,
+			height: 70,
+		},
+
+		'& .ant-upload-list-picture-card .ant-upload-list-item': {
+			width: 70,
+			height: 70,
+		},
 	},
 	header: {
 		textTransform: 'uppercase',
@@ -83,6 +94,7 @@ const mapDispatchToProps = (dispatch) => {
 			getTicketBuyingList,
 			createTicketSelling,
 			toggleTicketPosterModal,
+			uploadFiles,
 		}, dispatch),
 	};
 };
@@ -102,6 +114,7 @@ export default class TicketPosterForm extends Component {
 			getTicketBuyingList: PropTypes.func.isRequired,
 			createTicketSelling: PropTypes.func,
 			toggleTicketPosterModal: PropTypes.func,
+			uploadFiles: PropTypes.func,
 		}).isRequired,
 	}
 
@@ -110,6 +123,7 @@ export default class TicketPosterForm extends Component {
 
 	state = {
 		loading: false,
+		fileList: [],
 	}
 
 	filter = {
@@ -131,6 +145,8 @@ export default class TicketPosterForm extends Component {
 			status: 'open',
 		},
 	}
+
+	handleChange = ({ fileList }) => this.setState({ fileList })
 
 	handleSubmit = (e) => {
 		e.preventDefault();
@@ -171,34 +187,38 @@ export default class TicketPosterForm extends Component {
 					loading: true,
 				});
 
-				this.props.action.createTicketSelling(dataSend, () => {
-					this.setState({
-						loading: false,
+				this.props.action.uploadFiles({ files: this.state.fileList }, (imageList = []) => {
+					dataSend.images = imageList;
+
+					this.props.action.createTicketSelling(dataSend, () => {
+						this.setState({
+							loading: false,
+						}, () => {
+							this.props.action.toggleTicketPosterModal({ open: false });
+							this.props.form.resetFields();
+							const p1 = new Promise((resolve) => {
+								this.props.action.getTicketSellingList({ filter: this.filter, firstLoad: true }, () => {
+									resolve();
+								});
+							});
+
+							const p2 = new Promise((resolve) => {
+								this.props.action.getTicketBuyingList({ filter: this.filter, firstLoad: true }, () => {
+									resolve();
+								});
+							});
+
+							Promise.all([
+								p1,
+								p2,
+							]).then(() => {
+								this.setState({ loading: false });
+							});
+						});
 					}, () => {
-						this.props.action.toggleTicketPosterModal({ open: false });
-						this.props.form.resetFields();
-						const p1 = new Promise((resolve) => {
-							this.props.action.getTicketSellingList({ filter: this.filter, firstLoad: true }, () => {
-								resolve();
-							});
+						this.setState({
+							loading: false,
 						});
-
-						const p2 = new Promise((resolve) => {
-							this.props.action.getTicketBuyingList({ filter: this.filter, firstLoad: true }, () => {
-								resolve();
-							});
-						});
-
-						Promise.all([
-							p1,
-							p2,
-						]).then(() => {
-							this.setState({ loading: false });
-						});
-					});
-				}, () => {
-					this.setState({
-						loading: false,
 					});
 				});
 			}
@@ -244,7 +264,7 @@ export default class TicketPosterForm extends Component {
 						<div className={classes.formItem}>
 							<Col span={3} className={classes.formLabel}> Số vé </Col>
 							<Col span={21}>
-								{getFieldDecorator('stock', {
+								{getFieldDecorator('seatCount', {
 									initialValue: 1,
 								})(
 									<InputNumber size="default" style={{ width: 70 }} />,
@@ -320,7 +340,7 @@ export default class TicketPosterForm extends Component {
 										{getFieldDecorator('trip.startDate', {
 											rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày xuất phát' }],
 										})(
-											<DatePicker format="DD/MM/YYY" />,
+											<DatePicker format="DD/MM/YYYY" />,
 										)}
 									</Form.Item>
 									<Form.Item>
@@ -448,11 +468,19 @@ export default class TicketPosterForm extends Component {
 						</Row>
 					</Form.Item>
 					<Row className={classes.formItem} type="flex">
-						<span>
+						{/* <span>
 							<Button type="primary" style={{ background: '#E6EAED', border: 'solid 1px #F0F4F7', width: 70, height: 70 }}>
 								<Icon type="plus" style={{ color: '#BACAD6', fontSize: 20 }} />
 							</Button>
-						</span>
+						</span> */}
+						<Upload
+							// action="//jsonplaceholder.typicode.com/posts/"
+							listType="picture-card"
+							fileList={this.state.fileList}
+							onChange={this.handleChange}
+						>
+							{this.state.fileList.length >= 3 ? null : <Icon type="plus" style={{ color: '#BACAD6', fontSize: 20 }} />}
+						</Upload>
 						<span style={{ lineHeight: '65px', marginLeft: '15px' }} >
 							Đính kèm ảnh sản phẩm
 						</span>

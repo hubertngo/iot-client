@@ -81,7 +81,7 @@ export default class FlightModal extends Component {
 						{
 							relation: 'creator',
 							scope: {
-								fields: ['id', 'username', 'avatar', 'fullName'],
+								fields: ['id', 'username', 'avatar', 'fullName', 'ratingsCount'],
 							},
 						},
 						{
