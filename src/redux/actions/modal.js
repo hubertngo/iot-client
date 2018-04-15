@@ -47,3 +47,24 @@ export function toggleEditUserInfoModal(payload) {
 		payload,
 	};
 }
+
+export function toggleRatingModal(payload) {
+	return {
+		type: 'TOGGLE_RATING_MODAL',
+		payload,
+	};
+}
+
+export function toggleEditBuyingModal(payload) {
+	return {
+		type: 'TOGGLE_EDIT_BUYING_MODAL',
+		payload,
+	};
+}
+
+export function toggleEditSellingModal(payload) {
+	return {
+		type: 'TOGGLE_EDIT_SELLING_MODAL',
+		payload,
+	};
+}

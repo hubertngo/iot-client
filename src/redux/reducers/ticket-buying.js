@@ -18,6 +18,13 @@ export const initialState = fromJS({
 		data: [],
 		loading: true,
 	},
+	userTicketList: {
+		total: 0,
+		skip: 0,
+		limit: 12,
+		data: [],
+		loading: true,
+	},
 	view: {
 		loading: true,
 	},
@@ -41,6 +48,21 @@ export default (state = initialState, action) => {
 
 		case 'GET_TICKET_BUYING_LIST_SUCCESS': {
 			return state.update('list', (list) => {
+				return {
+					...action.payload,
+					data: [...list.data, ...action.payload.data],
+					loading: false,
+				};
+			});
+		}
+
+		case 'GET_USER_TICKET_BUYING_LIST_REQUEST':
+			return state.update('userTicketList', () => {
+				return initialState.get('userTicketList').toJS();
+			});
+
+		case 'GET_USER_TICKET_BUYING_LIST_SUCCESS': {
+			return state.update('userTicketList', (list) => {
 				return {
 					...action.payload,
 					data: [...list.data, ...action.payload.data],

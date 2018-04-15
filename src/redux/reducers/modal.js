@@ -36,6 +36,18 @@ export const initialState = fromJS({
 		open: false,
 		closable: false,
 	},
+	rating: {
+		open: false,
+		closable: false,
+	},
+	editBuying: {
+		open: false,
+		closable: false,
+	},
+	editSelling: {
+		open: false,
+		closable: false,
+	},
 });
 
 export default (state = initialState, action) => {
@@ -87,6 +99,24 @@ export default (state = initialState, action) => {
 					open: !!action.payload.open,
 					closable: !!action.payload.closable,
 				};
+			});
+
+		case 'TOGGLE_RATING_MODAL':
+			return state.update('rating', () => {
+				return {
+					open: !!action.payload.open,
+					closable: !!action.payload.closable,
+				};
+			});
+
+		case 'TOGGLE_EDIT_BUYING_MODAL':
+			return state.update('editBuying', (editBuying) => {
+				return { ...editBuying, ...action.payload };
+			});
+
+		case 'TOGGLE_EDIT_SELLING_MODAL':
+			return state.update('editSelling', (editSelling) => {
+				return { ...editSelling, ...action.payload };
 			});
 
 		default:
