@@ -18,6 +18,7 @@ import { Form, Icon, Input, Button } from 'antd';
 
 import BtnFbLogin from 'src/components/Form/BtnFbLogin';
 import BtnGgLogin from 'src/components/Form/BtnGgLogin';
+import BtnZaloLogin from 'src/components/Form/BtnZaloLogin';
 
 import AuthStorage from 'src/utils/AuthStorage';
 
@@ -222,6 +223,7 @@ export default class LoginForm extends Component {
 					<div className="text-center">
 						<BtnFbLogin />
 						<BtnGgLogin />
+						<BtnZaloLogin />
 					</div>
 				</Form>
 			</div>

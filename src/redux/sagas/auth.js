@@ -130,6 +130,48 @@ function* loginFacebookFlow() {
 	}
 }
 
+function* loginZaloFlow() {
+	const INFINITE = true;
+
+	while (INFINITE) {
+		const { payload, next, nextErr } = yield take('LOGIN_ZALO');
+
+		const response = yield call(fetchApi, {
+			uri: 'users/login-zalo',
+			params: payload,
+			opt: { method: 'POST' },
+		});
+		if (response && !response.error) {
+			if (response.user && response.user.email) {
+				const data = {
+					token: response.id,
+					userId: response.userId,
+					role: response.user.role,
+				};
+				AuthStorage.value = data;
+
+				yield put({
+					type: 'LOGIN_SUCCESS',
+					payload: response.user,
+				});
+			} else {
+				yield put({
+					type: 'LOGIN_SUCCESS',
+					payload: response,
+				});
+			}
+
+			if (typeof next === 'function') {
+				next(response);
+			}
+		} else {
+			if (typeof nextErr === 'function') {
+				nextErr();
+			}
+		}
+	}
+}
+
 function* logoutFlow() {
 	const INFINITE = true;
 
@@ -164,7 +206,6 @@ function* signUpFlow() {
 		});
 
 		if (response && !response.error) {
-
 			const authorizeTask = yield fork(authorize, payload, next, nextErr);
 			const action = yield take(['LOGOUT_REQUEST', 'LOGIN_FAILED', REQUEST_ERROR]);
 
@@ -183,6 +224,7 @@ export default function* authFlow() {
 	yield fork(loginFlow);
 	yield fork(loginGoogleFlow);
 	yield fork(loginFacebookFlow);
+	yield fork(loginZaloFlow);
 	yield fork(logoutFlow);
 	yield fork(signUpFlow);
 }
