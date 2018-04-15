@@ -6,7 +6,7 @@
 * Created: 2018-01-09 17:44:33
 *------------------------------------------------------- */
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -115,16 +115,18 @@ const AvatarBtn = ({ store, action, classes }) => {
 					<span> Thông tin cá nhân </span>
 				</div>
 			</div>
-			<Divider className={classes.divider} />
-			<div className={classes.itemWrapper}>
-				{
-					store.auth && store.auth.loginType === 'email' &&
+			{
+				store.auth && store.auth.loginType === 'email' &&
+				<Fragment>
+					<Divider className={classes.divider} />
+					<div className={classes.itemWrapper}>
 						<div className={classes.item} onClick={() => Router.pushRoute('/change-password')}>
 							<Icon type="setting" />
-							<span> Cài đặt </span>
+							<span>Đổi mật khẩu</span>
 						</div>
-				}
-			</div>
+					</div>
+				</Fragment>
+			}
 			<Divider className={classes.divider} />
 			<div className={classes.itemWrapper}>
 				<div className={classes.item} onClick={logout}>

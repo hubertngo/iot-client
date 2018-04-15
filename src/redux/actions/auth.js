@@ -51,6 +51,14 @@ export function loginFacebook(payload, next) {
 	};
 }
 
+export function loginZalo(payload, next) {
+	return {
+		type: 'LOGIN_ZALO',
+		payload,
+		next,
+	};
+}
+
 export function signUpRequest(payload, next, nextErr) {
 	return {
 		type: 'SIGN_UP_REQUEST',

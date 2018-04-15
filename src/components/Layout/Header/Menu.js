@@ -144,17 +144,17 @@ export default class Menu extends Component {
 			<div className={classes.root}>
 				<nav className={classes.menu}>
 					<ul>
-						<li className={isAtCurrentRoute('/', router) && classes.chosenTab}>
+						<li className={isAtCurrentRoute('/', router) ? classes.chosenTab : ''}>
 							<Link href="/">
 								<a>Tìm kiếm vé</a>
 							</Link>
 						</li>
-						<li className={isAtCurrentRoute('/about-us', router) && classes.chosenTab}>
+						<li className={isAtCurrentRoute('/about-us', router) ? classes.chosenTab : ''}>
 							<Link href="/about-us">
 								<a>Về chúng tôi</a>
 							</Link>
 						</li>
-						<li className={isAtCurrentRoute('/blog', router) && classes.chosenTab}>
+						<li className={isAtCurrentRoute('/blog', router) ? classes.chosenTab : ''}>
 							<Link href="/blog">
 								<a>Blog</a>
 							</Link>
