@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { Input, Menu, Dropdown, Select, Form, DatePicker, Button, Row, Col } from 'antd';
+import { Input, Menu, Dropdown, Select, Form, DatePicker, Button, Row, Col, notification } from 'antd';
 
 import IconDeparture from 'src/components/Photo/IconDeparture';
 import IconDestination from 'src/components/Photo/IconDestination';
@@ -159,6 +159,14 @@ export default class SearchBar extends Component {
 					filter['trip.destination'] = destination;
 				}
 
+				if (departure && destination && departure === destination) {
+					notification.error({
+						message: 'Lỗi',
+						description: 'Vui lòng nhập điểm xuất phát và điểm đến khác nhau',
+					});
+					return;
+				}
+
 				if (startDate) {
 					filter['trip.startDate'] = {
 						gte: moment(startDate).startOf('day'),
@@ -175,6 +183,14 @@ export default class SearchBar extends Component {
 							lte: moment(endDate).endOf('day'),
 						};
 					}
+				}
+
+				if (startDate && endDate && startDate.isAfter(endDate)) {
+					notification.error({
+						message: 'Lỗi',
+						description: 'Vui lòng nhập ngày đi trước ngày về',
+					});
+					return;
 				}
 
 				this.props.onSearch(filter);
