@@ -15,6 +15,7 @@ import { Button, Col, Row } from 'antd';
 
 import withStyles from 'src/theme/jss/withStyles';
 import SearchBar from 'src/components/Form/SearchBar';
+import CheckLogin from 'src/components/Form/CheckLogin';
 
 import { getTicketSellingList } from 'src/redux/actions/ticket-selling';
 import { getTicketBuyingList } from 'src/redux/actions/ticket-buying';
@@ -243,13 +244,17 @@ export default class FlightList extends Component {
 				<Row gutter={20} className={classes.wrapperContent}>
 					<div className={classes.border} />
 					<Col span={12}>
-						<Button type="primary" className={classes.btn} onClick={() => action.toggleTicketPosterModal({ open: true, type: 'buying' })}>Tìm mua</Button>
+						<CheckLogin onClick={() => action.toggleTicketPosterModal({ open: true, type: 'buying' })}>
+							<Button type="primary" className={classes.btn} >Tìm mua</Button>
+						</CheckLogin>
 						{
 							ticketBuyingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="buying" />)
 						}
 					</Col>
 					<Col span={12}>
-						<Button type="primary" className={classes.btn} onClick={() => action.toggleTicketPosterModal({ open: true, type: 'selling' })}>Đăng bán</Button>
+						<CheckLogin onClick={() => action.toggleTicketPosterModal({ open: true, type: 'selling' })}>
+							<Button type="primary" className={classes.btn} >Đăng bán</Button>
+						</CheckLogin>
 						{
 							ticketSellingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="selling" />)
 						}

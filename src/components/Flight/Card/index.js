@@ -283,6 +283,8 @@ export default class FlightCard extends Component {
 		const { classes, flightData = {}, loading } = this.props;
 		const { creator = {}, fbFeed = {} } = flightData;
 
+		const { author = { picture: { data: {} } } } = fbFeed;
+
 		if (loading) {
 			return (
 				<div className={classes.root}>
@@ -318,12 +320,12 @@ export default class FlightCard extends Component {
 						{
 							flightData.dataType === 'fb' ? // eslint-disable-line
 								AuthStorage.loggedIn ?
-									<a className={classes.author} href={'https://facebook.com/' + fbFeed.author.id} target="_blank" rel="noopener noreferrer">
-										{fbFeed.author.name}
+									<a className={classes.author} href={'https://facebook.com/' + author.id} target="_blank" rel="noopener noreferrer">
+										{author.name}
 									</a> :
 									<CheckLogin style={{ display: 'inline' }}>
 										<a className={classes.author}>
-											{fbFeed.author.name}
+											{author.name}
 										</a>
 									</CheckLogin> :
 								<CheckLogin onClick={this.handleClickAvatar} style={{ display: 'inline' }}>
@@ -348,11 +350,11 @@ export default class FlightCard extends Component {
 						{
 							flightData.dataType === 'fb' ? // eslint-disable-line
 								AuthStorage.loggedIn ?
-									<a href={'https://facebook.com/' + fbFeed.author.id} target="_blank" rel="noopener noreferrer">
-										<Avatar style={{ marginBottom: 5 }} size={40} src={fbFeed.author.picture.data.url} name={fbFeed.author.name} />
+									<a href={'https://facebook.com/' + author.id} target="_blank" rel="noopener noreferrer">
+										<Avatar style={{ marginBottom: 5 }} size={40} src={author.picture.data.url} name={author.name} />
 									</a> :
 									<CheckLogin>
-										<Avatar style={{ marginBottom: 5 }} size={40} src={fbFeed.author.picture.data.url} name={fbFeed.author.name} />
+										<Avatar style={{ marginBottom: 5 }} size={40} src={author.picture.data.url} name={author.name} />
 									</CheckLogin> :
 								<CheckLogin onClick={this.handleClickAvatar}>
 									<Avatar style={{ marginBottom: 5, cursor: 'pointer' }} size={40} src={creator.avatar} name={creator.fullName} />
