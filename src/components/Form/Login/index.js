@@ -20,13 +20,13 @@ import BtnFbLogin from 'src/components/Form/BtnFbLogin';
 import BtnGgLogin from 'src/components/Form/BtnGgLogin';
 import BtnZaloLogin from 'src/components/Form/BtnZaloLogin';
 
+import { validEmail } from 'src/utils';
+
 import AuthStorage from 'src/utils/AuthStorage';
 
 import withStyles from 'src/theme/jss/withStyles';
 
-import { validEmail } from 'src/utils';
-
-import { loginRequest } from 'src/redux/actions/auth';
+import { loginRequest, checkUserExist } from 'src/redux/actions/auth';
 import { toggleSignUpModal, toggleLoginModal } from 'src/redux/actions/modal';
 
 const styleSheet = (theme) => ({
@@ -82,6 +82,24 @@ const styleSheet = (theme) => ({
 		marginBottom: 15,
 		textAlign: 'center',
 	},
+	formWrapper: {
+		overflow: 'hidden',
+		position: 'relative',
+		padding: '2px',
+	},
+	nextPage: {
+		position: 'absolute',
+		zIndex: 9,
+		padding: '2px',
+		top: '0',
+		right: -1000,
+		background: '#fff',
+		width: '100%',
+		transition: 'all .3s ease',
+	},
+	open: {
+		right: 0,
+	},
 });
 
 function mapStateToProps(state) {
@@ -97,6 +115,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		action: bindActionCreators({
 			loginRequest,
+			checkUserExist,
 			toggleSignUpModal,
 			toggleLoginModal,
 		}, dispatch),
@@ -122,6 +141,7 @@ export default class LoginForm extends Component {
 			loginRequest: PropTypes.func.isRequired,
 			toggleLoginModal: PropTypes.func.isRequired,
 			toggleSignUpModal: PropTypes.func.isRequired,
+			checkUserExist: PropTypes.func.isRequired,
 		}).isRequired,
 	}
 
@@ -132,6 +152,8 @@ export default class LoginForm extends Component {
 
 	state = {
 		loading: false,
+		nextPage: false,
+		error: '',
 	}
 
 	componentDidMount() {
@@ -146,30 +168,46 @@ export default class LoginForm extends Component {
 			if (!err) {
 				this.setState({
 					loading: true,
+					error: '',
 				});
 				const { email, password } = values;
 
-				const auth = { password };
-
-				if (validEmail(email)) {
-					auth.email = email;
-				} else {
-					auth.username = email;
-				}
-
-				this.props.action.loginRequest(auth, () => {
-					if (AuthStorage.loggedIn && this.props.store.auth.id) {
-						if (this.props.isLoginPage) {
-							Router.push('/');
-						} else {
-							this.props.action.toggleLoginModal({ open: false });
+				if (!this.state.nextPage) {
+					this.props.action.checkUserExist(email, (res) => {
+						this.setState({
+							nextPage: res.count > 0,
+							loading: false,
+						});
+						if (res.count === 0) {
+							// ko có
+							this.setState({
+								error: 'Tài khoản không tồn tại',
+							});
 						}
-					}
-				}, () => {
-					this.setState({
-						loading: false,
 					});
-				});
+				} else {
+					const auth = { password };
+
+					if (validEmail(email)) {
+						auth.email = email;
+					} else {
+						auth.username = email;
+					}
+
+					this.props.action.loginRequest(auth, () => {
+						if (AuthStorage.loggedIn && this.props.store.auth.id) {
+							if (this.props.isLoginPage) {
+								Router.push('/');
+							} else {
+								this.props.action.toggleLoginModal({ open: false });
+							}
+						}
+					}, () => {
+						this.setState({
+							loading: false,
+						});
+					});
+				}
 			}
 		});
 	}
@@ -191,21 +229,31 @@ export default class LoginForm extends Component {
 					<img src="/static/assets/images/logo/1x.png" alt="chove.vn" />
 				</div>
 				<Form onSubmit={this.handleSubmit} className={classes.form}>
-					<Form.Item label="Tên đăng nhập hoặc email" style={{ marginBottom: 0 }}>
-						{getFieldDecorator('email', {
-							rules: [{ required: true, message: 'Làm ơn nhập tài khoản hoặc email của bạn!' }],
-						})(
-							<Input className="radius-large" size="large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Tên đăng nhập hoặc email" />,
-						)}
-					</Form.Item>
-					<Form.Item label="Mật khẩu">
-						{getFieldDecorator('password', {
-							rules: [{ required: true, message: 'Làm ơn nhập mật khẩu!' }, { min: 5 }],
-						})(
-							<Input size="large" className="radius-large" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Mật khẩu" />,
-						)}
-					</Form.Item>
-					<Button type="primary" htmlType="submit" size="large" className="radius-large" style={{ width: '100%' }} loading={this.state.loading}>
+					<div className={classes.formWrapper}>
+						<Form.Item label="Tên đăng nhập hoặc email" style={{ marginBottom: 0 }}>
+							{getFieldDecorator('email', {
+								rules: [{ required: true, message: 'Làm ơn nhập tài khoản hoặc email của bạn!' }],
+							})(
+								<Input autoFocus className="radius-large" size="large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Tên đăng nhập hoặc email" />,
+							)}
+						</Form.Item>
+						<Form.Item label="Mật khẩu" className={classes.nextPage + ' ' + (this.state.nextPage ? classes.open : '')}>
+							{
+								this.state.nextPage && getFieldDecorator('password', {
+									rules: [{ required: true, message: 'Làm ơn nhập mật khẩu!' }, { min: 5 }],
+								})(
+									<Input autoFocus size="large" className="radius-large" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Mật khẩu" />,
+								)
+							}
+						</Form.Item>
+					</div>
+					{
+						this.state.error &&
+						<div className="ant-form-item-control has-error">
+							<div className="ant-form-explain">{this.state.error}</div>
+						</div>
+					}
+					<Button type="primary" htmlType="submit" size="large" className="radius-large" style={{ width: '100%', marginTop: 20 }} loading={this.state.loading}>
 						Đăng nhập
 					</Button>
 					<Form.Item>

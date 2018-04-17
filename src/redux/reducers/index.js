@@ -10,7 +10,6 @@ import loading, { initialState as initialLoading } from './loading';
 import modal, { initialState as initialModal } from './modal';
 
 import user, { initialState as initialUser } from './user';
-import flight, { initialState as initialFlight } from './flight';
 import ticketSelling, { initialState as initialTicketSelling } from './ticket-selling';
 import ticketBuying, { initialState as initialTicketBuying } from './ticket-buying';
 
@@ -19,7 +18,6 @@ export const initialState = {
 	loading: initialLoading,
 	modal: initialModal,
 	user: initialUser,
-	flight: initialFlight,
 	ticketSelling: initialTicketSelling,
 	ticketBuying: initialTicketBuying,
 };
@@ -29,7 +27,6 @@ export default {
 	loading,
 	modal,
 	user,
-	flight,
 	ticketSelling,
 	ticketBuying,
 };

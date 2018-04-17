@@ -132,10 +132,12 @@ export default class SearchBar extends Component {
 			validateFields: PropTypes.func,
 			setFieldsValue: PropTypes.func,
 		}).isRequired,
-		onSearch: PropTypes.func.isRequired,
+		onSearch: PropTypes.func,
 	}
 
-	static defaultProps = {}
+	static defaultProps = {
+		onSearch: f => f,
+	}
 
 	state = {
 	}
@@ -292,7 +294,7 @@ export default class SearchBar extends Component {
 						</Form.Item>
 					</Col>
 					<Col span={3}>
-						<Button type="secondary" className={classes.btnSearch} htmlType="submit" size="large">Search</Button>
+						<Button type="secondary" className={classes.btnSearch} htmlType="submit" size="large">Tìm kiếm</Button>
 					</Col>
 				</Row>
 			</Form>

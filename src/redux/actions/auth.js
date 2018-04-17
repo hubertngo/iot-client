@@ -137,3 +137,23 @@ export const changePassword = (payload, next, nextError) => {
 	};
 };
 
+export const checkUserExist = (payload = '', next) => {
+	if (payload) {
+		const where = {
+			or: [
+				{ email: payload },
+				{ username: payload },
+			],
+			loginType: 'email',
+		};
+		return {
+			type: SINGLE_API,
+			payload: {
+				uri: `users/count?where=${JSON.stringify(where)}`,
+				afterSuccess: (res) => {
+					next(res);
+				},
+			},
+		};
+	}
+};
