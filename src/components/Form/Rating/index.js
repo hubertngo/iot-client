@@ -132,7 +132,7 @@ export default class LoginForm extends Component {
 				<Form className={classes.root} onSubmit={this.handleSubmit}>
 					<Icon type="close" className={classes.closeBtn} onClick={this.state.loading ? f => f : () => action.toggleRatingModal({ open: false })} />
 					<div className={classes.header}>
-						Nhập thông tin bán vé
+						Đánh giá người dùng
 					</div>
 					<div className={classes.body}>
 						<GroupStar rate={this.rate} />
@@ -146,7 +146,7 @@ export default class LoginForm extends Component {
 			<Form className={classes.root} onSubmit={this.handleSubmit}>
 				<Icon type="close" className={classes.closeBtn} onClick={this.state.loading ? f => f : () => action.toggleRatingModal({ open: false })} />
 				<div className={classes.header}>
-					Nhập thông tin bán vé
+					Đánh giá người dùng
 				</div>
 				<div className={classes.body}>
 					<GroupStar rating onChange={this.handleChangeRate} />

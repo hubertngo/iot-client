@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 
 import withStyles from 'src/theme/jss/withStyles';
 
-import { Row, Col } from 'antd';
+import { Row, Col, Icon } from 'antd';
 
 import Container from 'src/components/Layout/Container';
 
@@ -25,6 +25,27 @@ const styles = (/* theme */) => ({
 	logo: {
 		height: '30px',
 		marginBottom: '20px',
+	},
+	phoneWrapper: {
+		position: 'fixed',
+		zIndex: 99999,
+		width: 60,
+		height: 60,
+		right: 80,
+		bottom: 20,
+		borderRadius: '50%',
+		background: 'green',
+	},
+	phone: {
+		width: 60,
+		height: 60,
+		bottom: 15,
+		right: 95,
+		position: 'fixed',
+		background: '#4CAD2A url(/static/assets/images/call.png) no-repeat center center',
+		borderRadius: '100%',
+		border: '2px solid transparent',
+		zIndex: 99999,
 	},
 });
 
@@ -47,6 +68,9 @@ const Footer = (props) => {
 					</Col>
 				</Row>
 			</Container>
+			<a href="tel:12345">
+				<div className={classes.phone} />
+			</a>
 		</footer>
 	);
 };

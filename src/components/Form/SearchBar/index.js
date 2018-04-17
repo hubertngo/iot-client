@@ -259,6 +259,7 @@ export default class SearchBar extends Component {
 									className={classes.datePicker}
 									size="large"
 									placeholder="Thời gian đi"
+									format="DD/MM/YYYY"
 								/>,
 							)}
 
@@ -272,6 +273,7 @@ export default class SearchBar extends Component {
 									className={classes.datePicker}
 									size="large"
 									placeholder="Thời gian đến"
+									format="DD/MM/YYYY"
 								/>,
 							)}
 						</Form.Item>

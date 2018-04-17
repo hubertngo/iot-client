@@ -352,6 +352,25 @@ export default class TicketPosterForm extends Component {
 									</Form.Item>
 								</div>
 							</div>
+							<div className={classes.formItem}>
+								<div className={classes.formLabel}> Thời gian hạ cánh </div>
+								<div style={{ display: 'flex' }}>
+									<Form.Item>
+										{getFieldDecorator('trip.endDate', {
+											rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày hạ cánh' }],
+										})(
+											<DatePicker format="DD/MM/YYYY" />,
+										)}
+									</Form.Item>
+									<Form.Item>
+										{getFieldDecorator('trip.endTime', {
+											rules: [{ type: 'object', required: true, message: 'Làm ơn chọn giờ hạ cánh' }],
+										})(
+											<TimePicker format="HH:mm" style={{ marginLeft: 20 }} />,
+										)}
+									</Form.Item>
+								</div>
+							</div>
 						</Col>
 					</Row>
 					{
@@ -414,6 +433,25 @@ export default class TicketPosterForm extends Component {
 											<Form.Item>
 												{getFieldDecorator('tripBack.startTime', {
 													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn giờ xuất phát' }],
+												})(
+													<TimePicker format="HH:mm" style={{ marginLeft: 20 }} />,
+												)}
+											</Form.Item>
+										</div>
+									</div>
+									<div className={classes.formItem}>
+										<div className={classes.formLabel}> Thời gian hạ cánh </div>
+										<div style={{ display: 'flex' }}>
+											<Form.Item>
+												{getFieldDecorator('tripBack.endDate', {
+													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày hạ cánh' }],
+												})(
+													<DatePicker format="DD/MM/YYY" />,
+												)}
+											</Form.Item>
+											<Form.Item>
+												{getFieldDecorator('tripBack.endTime', {
+													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn giờ hạ cánh' }],
 												})(
 													<TimePicker format="HH:mm" style={{ marginLeft: 20 }} />,
 												)}

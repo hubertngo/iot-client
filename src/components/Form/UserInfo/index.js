@@ -269,9 +269,6 @@ export default class UserInfoForm extends Component {
 					</Col>
 					<Col span={7} className={classes.rightCol}>
 						<GroupStar rate={userView.ratingsCount} key={userView.ratingsCount} />
-						{
-							AuthStorage.userId !== userView.id && <a onClick={this.handleRating}>Đánh giá</a>
-						}
 						<div className={classes.infoRow}>
 							<div> Ngày tham gia </div>
 							<div> {moment(userView.createdAt).format('DD/MM/YYYY')} </div>
