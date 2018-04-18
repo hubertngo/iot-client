@@ -69,6 +69,7 @@ const mapStateToProps = (state) => {
 			ticketSellingList: state.getIn(['ticketSelling', 'list']),
 			ticketBuyingList: state.getIn(['ticketBuying', 'list']),
 		},
+		ticketBuyingList: state.get('ticketBuying').toJS().list,
 	};
 };
 
@@ -211,7 +212,8 @@ export default class FlightList extends Component {
 	}
 
 	render() {
-		const { classes, action, store: { ticketBuyingList, ticketSellingList } } = this.props;
+		const { classes, action, store: { ticketSellingList } } = this.props;
+		const ticketBuyingList = this.props.ticketBuyingList;
 
 		if (this.state.loading || ticketBuyingList.loading || ticketSellingList.loading) {
 			return (
@@ -237,7 +239,7 @@ export default class FlightList extends Component {
 		}
 
 		const isShowMore = (ticketBuyingList.data.length < ticketBuyingList.total) || (ticketSellingList.data.length < ticketSellingList.total);
-
+		console.log('this.props', this.props);
 		return (
 			<Fragment>
 				<SearchBar onSearch={this.handleSearch} />

@@ -84,9 +84,6 @@ export default class FlightModal extends Component {
 								fields: ['id', 'username', 'avatar', 'fullName', 'ratingsCount'],
 							},
 						},
-						{
-							relation: 'fbFeed',
-						},
 					],
 				},
 			};

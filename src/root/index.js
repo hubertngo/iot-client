@@ -28,6 +28,9 @@ import RatingModal from 'src/components/Modals/Rating';
 import EditBuyingModal from 'src/components/Modals/EditBuying';
 import EditSellingModal from 'src/components/Modals/EditSelling';
 
+import { addTicketBuyingListener } from 'src/redux/actions/ticket-buying';
+import { addTicketSellingListener } from 'src/redux/actions/ticket-selling';
+
 Router.onRouteChangeStart = (/* url */) => {
 	NProgress.start();
 };
@@ -56,6 +59,13 @@ const withRoot = (Child) => {
 			}
 
 			return {};
+		}
+
+		componentDidMount() {
+			if (AuthStorage.loggedIn) {
+				addTicketBuyingListener(this.props.dispatch); // eslint-disable-line
+				addTicketSellingListener(this.props.dispatch); // eslint-disable-line
+			}
 		}
 
 		render() {

@@ -92,12 +92,14 @@ export default (state = initialState, action) => {
 					return row.id === id;
 				});
 
-				if (status === 'open') {
-					list.data[index] = { ...list.data[index], ...action.payload }; // eslint-disable-line
-				} else {
-					spliceOne(list.data, index);
-					list.total = list.total - 1; // eslint-disable-line
-					list.skip = list.skip - 1; // eslint-disable-line
+				if (index >= 0) {
+					if (status === 'open') {
+						list.data[index] = { ...list.data[index], ...action.payload }; // eslint-disable-line
+					} else {
+						spliceOne(list.data, index);
+						list.total = list.total - 1; // eslint-disable-line
+						list.skip = list.skip - 1; // eslint-disable-line
+					}
 				}
 				return list;
 			});

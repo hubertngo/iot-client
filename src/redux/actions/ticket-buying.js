@@ -10,6 +10,9 @@ import { SINGLE_API } from 'src/redux/actions/type';
 // import AuthStorage from 'src/utils/AuthStorage';
 
 import { applyURIFilter } from 'src/utils';
+import api from 'src/constants/api';
+
+const { BASE_URL } = api;
 
 export const createTicketBuying = (payload, next, nextError) => {
 	return {
@@ -99,4 +102,37 @@ export const deleteTicketBuying = (payload, next) => {
 			afterSuccess: next,
 		},
 	};
+};
+
+let connected = false;
+
+export const addTicketBuyingListener = (dispatch) => {
+	if (!connected) {
+		if (typeof (EventSource) !== 'undefined') {
+			const urlToChangeStream = BASE_URL + 'ticket-buyings/change-stream?_format=event-stream';
+			const src = new EventSource(urlToChangeStream); // eslint-disable-line
+
+			src.addEventListener('data', (msg) => {
+				const data = JSON.parse(msg.data);
+				// console.log('data', data);
+				dispatch({
+					type: 'START_LOADING',
+				});
+
+				setTimeout(() => {
+					dispatch({
+						type: 'UPDATE_TICKET_BUYING_SUCCESS',
+						payload: data.data,
+					});
+					dispatch({
+						type: 'STOP_LOADING',
+					});
+				}, 1000);
+			});
+
+			connected = true;
+		} else {
+			alert('Sorry, your browser does not support server-sent events...'); // eslint-disable-line
+		}
+	}
 };
