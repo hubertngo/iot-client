@@ -6,6 +6,7 @@
  * Created: 2018-02-10 23:45:35
  *-------------------------------------------------------*/
 import { fromJS } from 'immutable';
+import { increaseRating } from 'src/utils/rating';
 
 export const initialState = fromJS({
 	list: {
@@ -57,6 +58,18 @@ export default (state = initialState, action) => {
 					loading: false,
 				};
 			});
+
+		case 'CREATE_RATING_SUCCESS': {
+			return state.update('view', (view) => {
+				const { star, receiverId } = action.payload;
+
+				if (view.id && view.id === receiverId) {
+					return { ...view, ...increaseRating(star, view) };
+				}
+
+				return view;
+			});
+		}
 
 		default:
 			return state;
