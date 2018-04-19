@@ -45,6 +45,53 @@ const styleSheet = (theme) => ({
 			boxShadow: '0px 0px 20px 0px rgba(0, 0, 0, 0.35)',
 		},
 	},
+	badgePending: {
+		top: '0',
+		left: '0',
+		width: '0',
+		height: '0',
+		position: 'absolute',
+		borderTop: '30px solid #faad14',
+		borderRight: '30px solid transparent',
+		borderLeft: '30px solid #faad14',
+		borderRadius: '8px 0 0 0',
+		borderBottom: '30px solid transparent',
+
+		'& > span': {
+			top: '-25px',
+			left: '-24px',
+			color: '#FFF',
+			position: 'absolute',
+			fontSize: '9px',
+			transform: 'rotate(-45deg)',
+			fontWeight: '600',
+			textTransform: 'uppercase',
+		},
+	},
+	badgeClose: {
+		top: '0',
+		left: '0',
+		width: '0',
+		height: '0',
+		position: 'absolute',
+		borderTop: '30px solid red',
+		borderRight: '30px solid transparent',
+		borderLeft: '30px solid red',
+		borderRadius: '8px 0 0 0',
+		borderBottom: '30px solid transparent',
+
+		'& > span': {
+			top: '-20px',
+			left: '-29px',
+			color: '#FFF',
+			position: 'absolute',
+			fontSize: '9px',
+			transform: 'rotate(-45deg)',
+			fontWeight: '600',
+			width: '50px',
+			textTransform: 'uppercase',
+		},
+	},
 	header: {
 		borderBottom: `1px solid ${theme.palette.text.divider}`,
 		padding: 15,
@@ -192,14 +239,12 @@ export default class FlightCard extends Component {
 			toggleEditBuyingModal: PropTypes.func,
 			toggleEditSellingModal: PropTypes.func,
 		}).isRequired,
-		editable: PropTypes.bool,
 	}
 
 	static defaultProps = {
 		flightData: {},
 		loading: false,
 		type: 'buying',
-		editable: false,
 	}
 
 	state = {
@@ -224,19 +269,31 @@ export default class FlightCard extends Component {
 	}
 
 	_renderBodyRight = () => {
-		const { type, flightData, editable } = this.props;
+		const { type, flightData } = this.props;
 
-		if (type === 'buying') {
-			if (editable) {
+		if (AuthStorage.userId === flightData.creatorId) {
+			if (type === 'buying') {
 				return (
 					<Fragment>
 						<p>{flightData.seatCount} vé</p>
 						<CheckLogin onClick={this.handleEditBuying}>
-							<Button type="primary">Chỉnh sửa</Button>
+							<Button>Sửa</Button>
 						</CheckLogin>
 					</Fragment>
 				);
 			}
+
+			return (
+				<Fragment>
+					<p><Price price={flightData.price} type="primary" /></p>
+					<CheckLogin onClick={this.handleEditSelling} >
+						<Button>Sửa</Button>
+					</CheckLogin>
+				</Fragment>
+			);
+		}
+
+		if (type === 'buying') {
 			return (
 				<Fragment>
 					<p>{flightData.seatCount} vé</p>
@@ -251,17 +308,6 @@ export default class FlightCard extends Component {
 					<Fragment>
 						<BidBlock isStart price={flightData.startingPrice} />
 						<BidBlock price={flightData.price} />
-					</Fragment>
-				);
-			}
-
-			if (editable) {
-				return (
-					<Fragment>
-						<p><Price price={flightData.price} type="primary" /></p>
-						<CheckLogin onClick={this.handleEditSelling} >
-							<Button type="primary">Chỉnh sửa</Button>
-						</CheckLogin>
 					</Fragment>
 				);
 			}
@@ -315,6 +361,20 @@ export default class FlightCard extends Component {
 		}
 		return (
 			<div className={classes.root}>
+				{
+					flightData.status === 'pending' &&
+					<div className={classes.badgePending}>
+						<span>Đang xử lý</span>
+					</div>
+				}
+
+				{
+					flightData.status === 'closed' &&
+					<div className={classes.badgeClose}>
+						<span>Đã giao</span>
+					</div>
+				}
+
 				<Row type="flex" className={classes.header}>
 					<Col span={18}>
 						{

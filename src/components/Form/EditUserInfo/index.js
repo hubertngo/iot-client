@@ -87,7 +87,7 @@ export default class EditUserInfoForm extends Component {
 	static propTypes = {
 		form: PropTypes.object.isRequired,
 		classes: PropTypes.object.isRequired,
-		style: PropTypes.object.isRequired,
+		style: PropTypes.object,
 		// store
 		store: PropTypes.shape({
 			auth: PropTypes.object.isRequired,
@@ -103,6 +103,7 @@ export default class EditUserInfoForm extends Component {
 	}
 
 	static defaultProps = {
+		style: {},
 	}
 
 	state = {

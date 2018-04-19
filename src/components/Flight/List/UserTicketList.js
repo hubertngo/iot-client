@@ -148,7 +148,6 @@ export default class FlightList extends Component {
 			// },
 		],
 		where: {
-			status: 'open',
 			creatorId: AuthStorage.userId,
 		},
 	}
@@ -248,13 +247,13 @@ export default class FlightList extends Component {
 					<Col span={12}>
 						<Button type="primary" className={classes.btn} onClick={() => action.toggleTicketPosterModal({ open: true, type: 'buying' })}>Tìm mua</Button>
 						{
-							ticketBuyingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="buying" editable />)
+							ticketBuyingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="buying" />)
 						}
 					</Col>
 					<Col span={12}>
 						<Button type="primary" className={classes.btn} onClick={() => action.toggleTicketPosterModal({ open: true, type: 'selling' })}>Đăng bán</Button>
 						{
-							ticketSellingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="selling" editable />)
+							ticketSellingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="selling" />)
 						}
 					</Col>
 					{

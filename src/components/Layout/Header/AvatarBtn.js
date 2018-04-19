@@ -40,6 +40,7 @@ const styles = (/* theme */) => ({
 		background: '#eeeeeea6',
 		zIndex: '1',
 		position: 'relative',
+		borderRadius: '5px 5px 0 0',
 	},
 	info: {
 		marginLeft: '10px',
@@ -104,7 +105,7 @@ const AvatarBtn = ({ store, action, classes }) => {
 	const content = (
 		<div className={classes.content}>
 			<div className={classes.itemWrapper}>
-				<div className={classes.item}>
+				<div className={classes.item} onClick={() => action.toggleUserInfoModal({ open: true, id: store.auth.id })}>
 					<Icon type="clock-circle-o" />
 					<span> Lịch sử giao dịch cá nhân </span>
 				</div>
@@ -152,7 +153,7 @@ const AvatarBtn = ({ store, action, classes }) => {
 			<Avatar size={40} src={store.auth.avatar} name={store.auth.fullName} />
 			<div className={classes.info}>
 				<h4>{store.auth.fullName}</h4>
-				<i>{store.auth.email}</i>
+				{/* <i>{store.auth.email}</i> */}
 				<GroupStar ratingsStats={store.auth.ratingsStats} ratingsCount={store.auth.ratingsCount} userId={store.auth.id} />
 			</div>
 		</div>
