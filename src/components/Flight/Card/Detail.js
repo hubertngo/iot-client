@@ -342,16 +342,16 @@ export default class FlightDetail extends Component {
 					<Fragment>
 						<Row>
 							<Col span={6} offset={4}>
-								<BidBlock isStart price={1200000} />
+								<BidBlock isStart price={flightData.startingPrice} />
 							</Col>
 							<Col span={6}>
-								<BidBlock price={1300000} />
+								<BidBlock price={flightData.price} />
 							</Col>
 							<Col span={8}>
 								<div>
 									<div style={{ marginRight: 25 }}>
 										<div>Thời gian còn lại</div>
-										<div className={classes.remainingTimeInfo}>8 giờ 30 phút</div>
+										<div className={classes.remainingTimeInfo}>{moment(flightData.bidDueDate).fromNow()}</div>
 									</div>
 								</div>
 							</Col>

@@ -157,14 +157,14 @@ export default class TicketPosterForm extends Component {
 
 				dataSend.trip = {
 					...trip,
-					startDate: trip.startDate.format('DD/MM/YYYY'),
+					startDate: trip.startDate,
 					startTime: trip.startTime.format('HH:mm'),
 				};
 
 				if (tripBack) {
 					dataSend.tripBack = {
 						...tripBack,
-						startDate: tripBack.startDate.format('DD/MM/YYYY'),
+						startDate: tripBack.startDate,
 						startTime: tripBack.startTime.format('HH:mm'),
 					};
 				}
