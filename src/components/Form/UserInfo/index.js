@@ -144,12 +144,12 @@ export default class UserInfoForm extends Component {
 		action.toggleEditUserInfoModal({ open: true, id: this.props.store.userView.id });
 	}
 
-	handleRating = (e) => {
-		e.preventDefault();
-		const { action } = this.props;
-		action.toggleUserInfoModal({ open: false });
-		action.toggleRatingModal({ open: true });
-	}
+	// handleRating = (e) => {
+	// 	e.preventDefault();
+	// 	const { action } = this.props;
+	// 	action.toggleUserInfoModal({ open: false });
+	// 	action.toggleRatingModal({ open: true, receiverId: this.props });
+	// }
 
 	renderLogItem = (log) => {
 		const { classes } = this.props;
