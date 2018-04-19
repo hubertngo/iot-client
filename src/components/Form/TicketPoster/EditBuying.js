@@ -143,9 +143,6 @@ export default class TicketPosterForm extends Component {
 							fields: ['id', 'username', 'avatar', 'fullName', 'ratingsCount'],
 						},
 					},
-					{
-						relation: 'fbFeed',
-					},
 				],
 			},
 		});
@@ -161,9 +158,6 @@ export default class TicketPosterForm extends Component {
 				scope: {
 					fields: ['id', 'username', 'avatar', 'fullName'],
 				},
-			},
-			{
-				relation: 'fbFeed',
 			},
 		],
 		where: {

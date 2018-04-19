@@ -28,7 +28,7 @@ export default class MyList extends PureComponent {
 		return (
 			<MainLayout>
 				<Head>
-					<title>Chove.vn - Blog</title>
+					<title>Chove.vn - Bài đăng của tôi</title>
 				</Head>
 				<Container>
 					<UserTicketList />

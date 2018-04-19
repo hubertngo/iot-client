@@ -140,7 +140,7 @@ export default class FlightList extends Component {
 			{
 				relation: 'creator',
 				scope: {
-					fields: ['id', 'username', 'avatar', 'fullName', 'ratingsCount'],
+					fields: ['id', 'username', 'avatar', 'fullName', 'ratingsCount', 'ratingsStats'],
 				},
 			},
 			// {

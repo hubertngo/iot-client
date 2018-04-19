@@ -153,7 +153,7 @@ const AvatarBtn = ({ store, action, classes }) => {
 			<div className={classes.info}>
 				<h4>{store.auth.fullName}</h4>
 				<i>{store.auth.email}</i>
-				<GroupStar rate={store.auth.ratingsCount} userId={store.auth.id} />
+				<GroupStar ratingsStats={store.auth.ratingsStats} ratingsCount={store.auth.ratingsCount} userId={store.auth.id} />
 			</div>
 		</div>
 	);

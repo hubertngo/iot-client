@@ -361,7 +361,7 @@ export default class FlightCard extends Component {
 								</CheckLogin>
 						}
 
-						<GroupStar rate={creator.ratingsCount} userId={creator.id} />
+						<GroupStar ratingsStats={creator.ratingsStats} ratingsCount={creator.ratingsCount} userId={creator.id} />
 					</Col>
 				</Row>
 

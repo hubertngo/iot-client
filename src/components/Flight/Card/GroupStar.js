@@ -1,11 +1,30 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Icon } from 'antd';
 import { bindActionCreators } from 'redux';
+
+import { Rate } from 'antd';
+
+import withStyles from 'src/theme/jss/withStyles';
+
+import FaStar from 'react-icons/lib/fa/star';
+
 import { toggleRatingModal } from 'src/redux/actions/modal';
+
 import CheckLogin from 'src/components/Form/CheckLogin';
 import AuthStorage from 'src/utils/AuthStorage';
+
+const styleSheet = (/* theme */) => ({
+	rate: {
+		lineHeight: '1',
+		'& li': {
+			color: '#FF7B1F',
+			marginRight: '0 !important',
+			fontSize: 16,
+			cursor: 'pointer !important',
+		},
+	},
+});
 
 function mapStateToProps(state) {
 	return {
@@ -25,42 +44,28 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 @connect(mapStateToProps, mapDispatchToProps)
+@withStyles(styleSheet)
 export default class GroupStar extends Component {
 	static propTypes = {
-		rating: PropTypes.bool,
-		rate: PropTypes.number,
-		onChange: PropTypes.func,
+		classes: PropTypes.object.isRequired,
+		ratingsStats: PropTypes.object,
 		action: PropTypes.shape({
-			toggleRatingModal: PropTypes.func,
+			toggleRatingModal: PropTypes.func.isRequired,
 		}).isRequired,
 		userId: PropTypes.string,
 	}
 
 	static defaultProps = {
-		rating: false,
-		rate: 0,
-		onChange: null,
+		ratingsStats: {
+			star: 0,
+		},
 		userId: '',
 	}
 
-	state = {
-		rate: this.props.rate,
-	}
-
-	handleClick = (index) => {
-		this.setState({
-			rate: index + 1,
-		}, () => {
-			if (this.props.onChange) {
-				this.props.onChange(this.state.rate);
-			}
-		});
-	}
-
 	handleToggleRatingModal = () => {
-		const { rating, userId } = this.props;
+		const { userId } = this.props;
 
-		if (rating || userId === AuthStorage.userId) {
+		if (userId === AuthStorage.userId) {
 			console.log('doing nothing');
 		} else {
 			this.props.action.toggleRatingModal({ open: true, receiverId: this.props.userId });
@@ -68,34 +73,19 @@ export default class GroupStar extends Component {
 	}
 
 	render() {
-		const { rate } = this.state;
-		const { rating } = this.props;
+		const { ratingsStats, classes } = this.props;
 
 		return (
 			<CheckLogin onClick={this.handleToggleRatingModal}>
-				<div>
-					{
-						[0, 0, 0, 0, 0].map((item, index) => (
-							<Icon
-								type="star"
-								key={index}
-								style={{ color: rate > index ? '#FFB74D' : '#95A2AB', cursor: 'pointer' }}
-								onClick={rating ? this.handleClick.bind(this, index) : null}
-							/>
-						))
-					}
-				</div>
+				<Rate
+					disabled
+					character={<FaStar />}
+					defaultValue={ratingsStats.star}
+					allowHalf
+					className={classes.rate}
+				/>
 			</CheckLogin>
 
 		);
 	}
 }
-
-// GroupStar.propTypes = {
-// 	rate: PropTypes.number,
-// };
-
-// GroupStar.defaultProps = {
-// 	rate: 0,
-// };
-

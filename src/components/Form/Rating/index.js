@@ -11,12 +11,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, Rate } from 'antd';
 
-import GroupStar from 'src/components/Flight/Card/GroupStar';
 import AuthStorage from 'src/utils/AuthStorage';
 
 import withStyles from 'src/theme/jss/withStyles';
+
+import FaStar from 'react-icons/lib/fa/star';
 
 import { createRating } from 'src/redux/actions/rating';
 import { toggleRatingModal } from 'src/redux/actions/modal';
@@ -47,6 +48,7 @@ const styleSheet = (/* theme */) => ({
 	},
 	note: {
 		fontSize: 14,
+		margin: '20px 0',
 	},
 	footer: {
 		textAlign: 'right',
@@ -101,19 +103,12 @@ export default class LoginForm extends Component {
 		loading: false,
 	}
 
-	rate = 0
-
-	handleChangeRate = (rate) => {
-		this.rate = rate;
-	}
-
 	handleSubmit = (e) => {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				const dataSend = {
 					...values,
-					star: this.rate,
 					receiverId: this.props.store.modal.rating.receiverId,
 					creatorId: AuthStorage.userId,
 				};
@@ -127,7 +122,7 @@ export default class LoginForm extends Component {
 	}
 
 	render() {
-		const { classes, action, form: { getFieldDecorator } } = this.props;
+		const { classes, action, form: { getFieldDecorator, getFieldValue } } = this.props;
 
 		if (this.state.isVoted) {
 			return (
@@ -136,8 +131,7 @@ export default class LoginForm extends Component {
 					<div className={classes.header}>
 						Đánh giá người dùng
 					</div>
-					<div className={classes.body}>
-						<GroupStar rate={this.rate} />
+					<div className={classes.body + ' text-center'}>
 						<p className={classes.note}><b>Cảm ơn bạn</b> đã vote cho tôi</p>
 					</div>
 					<div className={classes.footer}>
@@ -154,13 +148,21 @@ export default class LoginForm extends Component {
 					Đánh giá người dùng
 				</div>
 				<div className={classes.body}>
-					<GroupStar rating onChange={this.handleChangeRate} />
+					<Form.Item>
+						{getFieldDecorator('star', {
+							rules: [{ required: true, message: 'Vui lòng chấm điểm!' }],
+						})(
+							<Rate character={<FaStar />} style={{ color: '#FF7B1F', marginRight: 5, fontSize: 24 }} />,
+						)}
+						{getFieldValue('star') || 0}/5 điểm
+					</Form.Item>
+
 					<p className={classes.note}><b>Bạn</b> chưa hài lòng ở điểm nào, vui lòng để lại bình luận bằng cách nhập nội dung vào ô dưới đây</p>
 					<Form.Item>
 						{getFieldDecorator('comment', {
 							rules: [{ required: true, message: 'Vui lòng nhập đánh giá của bạn!' }],
 						})(
-							<Input.TextArea placeholder="Nhập nội dung bình luận..." />,
+							<Input.TextArea placeholder="Nhập nội dung bình luận..." rows={6} />,
 						)}
 					</Form.Item>
 				</div>

@@ -119,7 +119,7 @@ const mapDispatchToProps = (dispatch) => {
 export default class UserInfoForm extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
-		style: PropTypes.object.isRequired,
+		style: PropTypes.object,
 		// store
 		store: PropTypes.shape({
 			auth: PropTypes.object.isRequired,
@@ -132,6 +132,10 @@ export default class UserInfoForm extends Component {
 			toggleUserInfoModal: PropTypes.func,
 			getUserData: PropTypes.func,
 		}).isRequired,
+	}
+
+	static defaultProps = {
+		style: {},
 	}
 
 	componentDidMount() {
@@ -272,8 +276,8 @@ export default class UserInfoForm extends Component {
 						</div>
 					</Col>
 					<Col span={7} className={classes.rightCol}>
-						<GroupStar rate={userView.ratingsCount} key={userView.ratingsCount} />
-						<div className={classes.infoRow}>
+						<GroupStar ratingsStats={userView.ratingsStats} ratingsCount={userView.ratingsCount} userId={userView.id} />
+						<div className={classes.infoRow} style={{ marginTop: 10 }}>
 							<div> Ngày tham gia </div>
 							<div> {moment(userView.createdAt).format('DD/MM/YYYY')} </div>
 						</div>
