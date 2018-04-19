@@ -106,6 +106,7 @@ export default (state = initialState, action) => {
 				return {
 					open: !!action.payload.open,
 					closable: !!action.payload.closable,
+					receiverId: action.payload.receiverId,
 				};
 			});
 

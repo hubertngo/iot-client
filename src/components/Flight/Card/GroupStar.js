@@ -57,16 +57,22 @@ export default class GroupStar extends Component {
 		});
 	}
 
-	handleRate = () => {
-		this.props.action.toggleRatingModal({ open: true });
+	handleToggleRatingModal = () => {
+		const { rating, userId } = this.props;
+
+		if (rating || userId === AuthStorage.userId) {
+			console.log('doing nothing');
+		} else {
+			this.props.action.toggleRatingModal({ open: true, receiverId: this.props.userId });
+		}
 	}
 
 	render() {
 		const { rate } = this.state;
-		const { rating, userId } = this.props;
+		const { rating } = this.props;
 
 		return (
-			<CheckLogin onClick={(rating || userId === AuthStorage.userId) ? null : this.handleRate}>
+			<CheckLogin onClick={this.handleToggleRatingModal}>
 				<div>
 					{
 						[0, 0, 0, 0, 0].map((item, index) => (

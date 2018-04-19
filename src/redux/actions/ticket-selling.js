@@ -130,19 +130,21 @@ export const addTicketSellingListener = (dispatch) => {
 			src.addEventListener('data', (msg) => {
 				const data = JSON.parse(msg.data);
 				// console.log('data', data);
-				dispatch({
-					type: 'START_LOADING',
-				});
+				if (data.type === 'update') {
+					dispatch({
+						type: 'START_LOADING',
+					});
 
-				setTimeout(() => {
-					dispatch({
-						type: 'UPDATE_TICKET_SELLING_SUCCESS',
-						payload: data.data,
-					});
-					dispatch({
-						type: 'STOP_LOADING',
-					});
-				}, 1000);
+					setTimeout(() => {
+						dispatch({
+							type: 'UPDATE_TICKET_BUYING_SUCCESS',
+							payload: data.data,
+						});
+						dispatch({
+							type: 'STOP_LOADING',
+						});
+					}, 1000);
+				}
 			});
 
 			connected = true;

@@ -20,6 +20,7 @@ import withStyles from 'src/theme/jss/withStyles';
 
 import { createRating } from 'src/redux/actions/rating';
 import { toggleRatingModal } from 'src/redux/actions/modal';
+import { startLoader, stopLoader } from 'src/redux/actions/loading';
 
 const styleSheet = (/* theme */) => ({
 	root: {
@@ -56,7 +57,7 @@ const styleSheet = (/* theme */) => ({
 function mapStateToProps(state) {
 	return {
 		store: {
-			auth: state.get('auth').toJS(),
+			// auth: state.get('auth').toJS(),
 			modal: state.get('modal').toJS(),
 			userView: state.getIn(['user', 'view']),
 		},
@@ -68,6 +69,8 @@ const mapDispatchToProps = (dispatch) => {
 		action: bindActionCreators({
 			toggleRatingModal,
 			createRating,
+			startLoader,
+			stopLoader,
 		}, dispatch),
 	};
 };
@@ -82,6 +85,7 @@ export default class LoginForm extends Component {
 		// store
 		store: PropTypes.shape({
 			userView: PropTypes.object,
+			modal: PropTypes.object,
 		}).isRequired,
 		// action
 		action: PropTypes.shape({
@@ -100,19 +104,17 @@ export default class LoginForm extends Component {
 	rate = 0
 
 	handleChangeRate = (rate) => {
-		console.log('rate', rate);
 		this.rate = rate;
 	}
 
 	handleSubmit = (e) => {
 		e.preventDefault();
-
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				const dataSend = {
 					...values,
 					star: this.rate,
-					receiverId: this.props.store.userView.id,
+					receiverId: this.props.store.modal.rating.receiverId,
 					creatorId: AuthStorage.userId,
 				};
 
@@ -137,6 +139,9 @@ export default class LoginForm extends Component {
 					<div className={classes.body}>
 						<GroupStar rate={this.rate} />
 						<p className={classes.note}><b>Cảm ơn bạn</b> đã vote cho tôi</p>
+					</div>
+					<div className={classes.footer}>
+						<Button onClick={() => action.toggleRatingModal({ open: false })} type="primary" className={classes.btn}>Đóng</Button>
 					</div>
 				</Form>
 			);

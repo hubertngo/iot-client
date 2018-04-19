@@ -121,6 +121,23 @@ export default (state = initialState, action) => {
 			});
 		}
 
+		case 'CREATE_RATING_SUCCESS': {
+			// return state;
+			return state.update('list', (list) => {
+				const { userStar, receiverId } = action.payload;
+
+				const data = list.data.map(row => {
+					if (row.creator.id === receiverId) {
+						row.creator.ratingsCount = userStar; // eslint-disable-line
+					}
+					return row;
+				});
+
+				list.data = data; // eslint-disable-line
+
+				return list;
+			});
+		}
 		default:
 			return state;
 	}
