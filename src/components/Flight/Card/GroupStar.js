@@ -80,7 +80,7 @@ export default class GroupStar extends Component {
 				<Rate
 					disabled
 					character={<FaStar />}
-					defaultValue={ratingsStats.star}
+					value={ratingsStats.star}
 					allowHalf
 					className={classes.rate}
 				/>

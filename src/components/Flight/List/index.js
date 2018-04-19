@@ -65,8 +65,7 @@ const styleSheet = (/* theme */) => ({
 const mapStateToProps = (state) => {
 	return {
 		store: {
-			auth: state.get('auth'),
-			ticketSellingList: state.getIn(['ticketSelling', 'list']),
+			ticketSellingList: state.get('ticketSelling').toJS().list,
 			ticketBuyingList: state.getIn(['ticketBuying', 'list']),
 		},
 	};
@@ -89,7 +88,6 @@ export default class FlightList extends Component {
 		classes: PropTypes.object.isRequired,
 		// store
 		store: PropTypes.shape({
-			auth: PropTypes.object.isRequired,
 			ticketSellingList: PropTypes.object.isRequired,
 			ticketBuyingList: PropTypes.object.isRequired,
 		}).isRequired,
@@ -237,7 +235,7 @@ export default class FlightList extends Component {
 		}
 
 		const isShowMore = (ticketBuyingList.data.length < ticketBuyingList.total) || (ticketSellingList.data.length < ticketSellingList.total);
-		console.log('this.props', this.props);
+
 		return (
 			<Fragment>
 				<SearchBar onSearch={this.handleSearch} />

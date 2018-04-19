@@ -7,6 +7,7 @@
  *-------------------------------------------------------*/
 
 import { spliceOne } from 'src/utils';
+import { increaseRating } from 'src/utils/rating';
 
 import { fromJS } from 'immutable';
 
@@ -136,20 +137,17 @@ export default (state = initialState, action) => {
 		}
 
 		case 'CREATE_RATING_SUCCESS': {
-			// return state;
 			return state.update('list', (list) => {
-				const { userStar, receiverId } = action.payload;
+				const { star, receiverId } = action.payload;
 
 				const data = list.data.map(row => {
-					if (row.creator.id === receiverId) {
-						row.creator.ratingsCount = userStar; // eslint-disable-line
+					if (row.creator && row.creator.id === receiverId) {
+						row.creator = { ...row.creator, ...increaseRating(star, row.creator) }; // eslint-disable-line
 					}
-					return row;
+					return { ...row };
 				});
 
-				list.data = data; // eslint-disable-line
-
-				return list;
+				return { ...list, data };
 			});
 		}
 
