@@ -215,10 +215,10 @@ export default class UserInfoForm extends Component {
 						</div>
 					</Col>
 				</Row>
-				<div className={`${classes.rightCol} ${classes.link}`}>
+				{/* <div className={`${classes.rightCol} ${classes.link}`}>
 					<span onClick={() => this.chooseToEditInfo()}> <Icon type="edit" /> </span>
 					<span onClick={() => this.chooseToEditInfo()}> Chỉnh sửa </span>
-				</div>
+				</div> */}
 				<Divider className={classes.divider} />
 				<div className={classes.hisTitle}> Lịch sử giao dịch (2) </div>
 				<div className={classes.hisRow}>
@@ -254,10 +254,14 @@ export default class UserInfoForm extends Component {
 					</Col>
 					<Col span={13}>
 						<h4>{userView.fullName}</h4>
-						<div className={classes.infoRow}>
-							<span> <Icon type="gift" /> </span>
-							<span> {userView.birthday || ''}</span>
-						</div>
+						{
+							userView.birthday &&
+							<div className={classes.infoRow}>
+								<span> <Icon type="gift" /> </span>
+								<span> {moment(userView.birthday).format('DD/MM/YYYY')}</span>
+							</div>
+						}
+
 						<div className={classes.infoRow}>
 							<span> <Icon type="mail" /> </span>
 							<span> {userView.email} </span>

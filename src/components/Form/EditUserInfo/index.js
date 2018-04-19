@@ -22,7 +22,7 @@ import moment from 'moment';
 
 const styleSheet = (/* theme */) => ({
 	root: {
-		minWidth: 393,
+		width: 500,
 		position: 'relative',
 		textAlign: 'left',
 		padding: 20,

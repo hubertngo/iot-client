@@ -59,7 +59,7 @@ const UserInfoModal = (props) => {
 			bodyStyle={{ padding: 0 }}
 			className={classes.root}
 			wrapClassName={classes.wrap}
-			width="auto"
+			// width="auto"
 			destroyOnClose
 			onCancel={userInfo.closable ? f => f : () => props.action.toggleUserInfoModal({ open: false })}
 		>

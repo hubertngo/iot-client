@@ -29,6 +29,8 @@ import { updateTicketSelling, createTicketSellingBid } from 'src/redux/actions/t
 import AuthStorage from 'src/utils/AuthStorage';
 
 import CheckLogin from 'src/components/Form/CheckLogin';
+import ImageLightBox from 'src/components/Photo/LightBox';
+
 import BidBlock from './BidBlock';
 import TripBlock from './TripBlock';
 
@@ -74,6 +76,7 @@ const styleSheet = (theme) => ({
 		fontWeight: 600,
 		textTransform: 'uppercase',
 		marginBottom: 5,
+		marginRight: 10,
 	},
 
 	footer: {
@@ -153,6 +156,21 @@ const styleSheet = (theme) => ({
 			position: 'relative',
 			textShadow: '0 0 12px #4368C4',
 			display: 'block',
+		},
+	},
+	bodyItem: {
+		marginTop: 10,
+	},
+	imgWrapper: {
+		overflowX: 'auto',
+		marginTop: 10,
+	},
+	img: {
+		display: 'flex',
+		'& img': {
+			height: 100,
+			width: 'auto',
+			marginRight: 3,
 		},
 	},
 });
@@ -385,7 +403,7 @@ export default class FlightDetail extends Component {
 				</div>
 
 				<div className={classes.body} style={{ paddingBottom: 30 }}>
-					<div className={classes.title}>Nội dung</div>
+					<div className="loading-block" />
 					<div className="loading-block" />
 					<div className="loading-block" />
 					<div className="loading-block" />
@@ -400,7 +418,7 @@ export default class FlightDetail extends Component {
 		);
 	}
 	render() {
-		const { classes, flightData = {}, action } = this.props;
+		const { classes, flightData = {}, action, type } = this.props;
 
 		const { creator = {}, fbFeed = {} } = flightData;
 
@@ -436,14 +454,10 @@ export default class FlightDetail extends Component {
 				</div>
 
 				<div className={classes.body}>
-					<div className={classes.title}>Nội dung</div>
-					<div className="pre-wrap">
-						<div>{flightData.content}</div>
-						<div>
-							<b>Số vé: </b><span>{flightData.seatCount}</span>
-						</div>
-						<div>
-							<b>Giá vé: </b><span>{formatNumber(flightData.price)} VNĐ</span>
+					<div>
+						<div className={classes.title}>Nội dung:</div>
+						<div className="pre-wrap">
+							{flightData.content}
 						</div>
 					</div>
 					{
@@ -454,6 +468,28 @@ export default class FlightDetail extends Component {
 								<a href={'https://facebook.com/' + fbFeed.id} target="_blank" rel="noopener noreferrer">https://facebook.com/{fbFeed.id}</a>
 							</CheckLogin>
 						</span>
+					}
+
+					<div className={classes.bodyItem}>
+						<span className={classes.title}>Số vé:</span>
+						<span>{flightData.seatCount || 1}</span>
+					</div>
+					{
+						type === 'selling' &&
+						<div className={classes.bodyItem}>
+							<span className={classes.title}>Giá vé:</span>
+							<span>{formatNumber(flightData.price)} VNĐ</span>
+						</div>
+					}
+					{
+						flightData.images && flightData.images.length > 0 &&
+						<div className={classes.imgWrapper}>
+							<div className={classes.title}>Hình ảnh đính kèm:</div>
+							<ImageLightBox
+								className={classes.img}
+								images={flightData.images}
+							/>
+						</div>
 					}
 
 					<div style={{ marginTop: 50, paddingRight: 80 }}>
