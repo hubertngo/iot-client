@@ -76,7 +76,7 @@ const BtnTicketPoster = (props) => {
 
 BtnTicketPoster.propTypes = {
 	classes: PropTypes.object.isRequired,
-	children: PropTypes.node.isRequired,
+	children: PropTypes.node,
 	// store
 	// store: PropTypes.shape({
 	// 	modal: PropTypes.object.isRequired,
@@ -88,7 +88,7 @@ BtnTicketPoster.propTypes = {
 };
 
 BtnTicketPoster.defaultProps = {
-	// classes: {},
+	children: undefined,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(BtnTicketPoster));

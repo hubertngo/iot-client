@@ -50,7 +50,6 @@ const mapDispatchToProps = (dispatch) => {
 
 const EditSellingModal = (props) => {
 	const { classes, store: { modal: { editSelling } } } = props;
-	console.log('asdasdasd', editSelling);
 	return (
 		<Modal
 			// title="Basic Modal"

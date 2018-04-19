@@ -146,7 +146,6 @@ export default class SearchBar extends Component {
 		e.preventDefault();
 
 		this.props.form.validateFields((err, values) => {
-			console.log('values', values);
 			if (!err) {
 				const { startDate, endDate, departure, destination, flightType } = values;
 				const filter = {};
@@ -229,7 +228,7 @@ export default class SearchBar extends Component {
 									{getFieldDecorator('departure')(
 										<Input
 											addonAfter={<IconDeparture extended />}
-											className={[classes.dropdownInput, classes.firstChild]}
+											className={classes.dropdownInput + ' ' + classes.firstChild}
 											size="large"
 											placeholder="Nơi xuất phát"
 										/>,
