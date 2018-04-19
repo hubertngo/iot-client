@@ -33,6 +33,7 @@ const styles = (/* theme */) => ({
 		cursor: 'pointer',
 	},
 	title: {
+		minWidth: 220,
 		display: 'flex',
 		alignItems: 'center',
 		padding: '15px',
@@ -104,13 +105,13 @@ const AvatarBtn = ({ store, action, classes }) => {
 
 	const content = (
 		<div className={classes.content}>
-			<div className={classes.itemWrapper}>
+			{/* <div className={classes.itemWrapper}>
 				<div className={classes.item} onClick={() => action.toggleUserInfoModal({ open: true, id: store.auth.id })}>
 					<Icon type="clock-circle-o" />
 					<span> Lịch sử giao dịch cá nhân </span>
 				</div>
 			</div>
-			<Divider className={classes.divider} />
+			<Divider className={classes.divider} /> */}
 			<div className={classes.itemWrapper}>
 				<div className={classes.item} onClick={() => action.toggleUserInfoModal({ open: true, id: store.auth.id })}>
 					<Icon type="user" />
@@ -150,7 +151,7 @@ const AvatarBtn = ({ store, action, classes }) => {
 
 	const title = (
 		<div className={classes.title}>
-			<Avatar size={40} src={store.auth.avatar} name={store.auth.fullName} />
+			<Avatar size={50} src={store.auth.avatar} name={store.auth.fullName} />
 			<div className={classes.info}>
 				<h4>{store.auth.fullName}</h4>
 				{/* <i>{store.auth.email}</i> */}

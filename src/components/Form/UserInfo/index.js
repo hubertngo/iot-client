@@ -90,6 +90,15 @@ const styleSheet = (theme) => ({
 			pointer: 'cursor',
 		},
 	},
+	logBadge: {
+		background: '#DCE5EB',
+		borderRadius: '3px',
+		display: 'inline-block',
+		fontSize: '12px',
+		padding: '2px 10px',
+		marginLeft: '10px',
+		color: '#728593',
+	},
 });
 
 function mapStateToProps(state) {
@@ -169,7 +178,12 @@ export default class UserInfoForm extends Component {
 
 		return (
 			<div className={classes.hisRow}>
-				<span className={classes.note}>{moment(log.createdAt).format('DD/MM/YYYY HH:mm')}</span>
+				<div>
+					<span className={classes.note}>{moment(log.createdAt).format('DD/MM/YYYY HH:mm')}</span>
+					<div className={classes.logBadge}>
+						{log.action === 'buy' ? 'Giao dịch Mua' : 'Giao dịch Bán'}
+					</div>
+				</div>
 				<div>{content}</div>
 				{
 					!!link && (
@@ -224,7 +238,7 @@ export default class UserInfoForm extends Component {
 					<span onClick={() => this.chooseToEditInfo()}> Chỉnh sửa </span>
 				</div> */}
 				<Divider className={classes.divider} />
-				<div className={classes.hisTitle}> Lịch sử giao dịch (2) </div>
+				<div className={classes.hisTitle}> Lịch sử giao dịch </div>
 				<div className={classes.hisRow}>
 					<div style={{ width: 150 }} className="loading-block" />
 					<div className="loading-block" />
