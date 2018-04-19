@@ -229,7 +229,7 @@ export default class FlightDetail extends Component {
 				btnLoading: true,
 			});
 			this.props.action.updateTicketBuying({
-				status: 'pending',
+				status: 'closed',
 				updatedAt: new Date(),
 				id: this.props.flightData.id,
 				contactId: AuthStorage.userId,
