@@ -351,7 +351,7 @@ export default class FlightDetail extends Component {
 								<div>
 									<div style={{ marginRight: 25 }}>
 										<div>Thời gian còn lại</div>
-										<div className={classes.remainingTimeInfo}>{moment(flightData.bidDueDate).fromNow()}</div>
+										<div className={classes.remainingTimeInfo}>{moment(flightData.dueDate).fromNow()}</div>
 									</div>
 								</div>
 							</Col>
@@ -374,7 +374,7 @@ export default class FlightDetail extends Component {
 			return (
 				<div className={classes.examine}>
 					{
-						flightData.dataType === 'fb' &&
+						flightData.approved &&
 						<Fragment>
 							<IconMedal />
 							<span style={{ marginRight: 10, marginLeft: 5 }}>Kiểm định bởi chove.vn</span>

@@ -146,6 +146,9 @@ export default class FlightList extends Component {
 		],
 		where: {
 			status: 'open',
+			dueDate: {
+				gte: new Date(),
+			},
 		},
 	}
 

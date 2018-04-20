@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import withStyles from 'src/theme/jss/withStyles';
+import moment from 'moment';
 
 import { Form, Icon, Input, Button, Radio, Select, Row, Col, DatePicker, TimePicker, InputNumber, Upload } from 'antd';
 
@@ -140,6 +141,9 @@ export default class TicketPosterForm extends Component {
 		],
 		where: {
 			status: 'open',
+			dueDate: {
+				gte: new Date(),
+			},
 		},
 	}
 
@@ -154,6 +158,8 @@ export default class TicketPosterForm extends Component {
 				dataSend.isBid = type === 'bid';
 
 				dataSend.packageWeight = packageWeight !== -1 ? packageWeight : ~~packageWeightOther;
+
+				dataSend.dueDate = moment(trip.startDate).hours(trip.startTime.hours(), trip.startTime.minutes());
 
 				dataSend.trip = {
 					...trip,

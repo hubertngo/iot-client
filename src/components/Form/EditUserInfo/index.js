@@ -123,6 +123,14 @@ export default class EditUserInfoForm extends Component {
 		reader.readAsDataURL(info.file.originFileObj);
 	}
 
+	checkBirthday = (rule, value, callback) => {
+		if (moment().diff(value, 'years') < 10 || moment().isBefore(value)) {
+			callback('Vui lòng nhập đúng năm sinh');
+		} else {
+			callback();
+		}
+	}
+
 	handleSubmit = (e) => {
 		e.preventDefault();
 
@@ -193,7 +201,10 @@ export default class EditUserInfoForm extends Component {
 							<div className={classes.formLabel}> Ngày tháng năm sinh </div>
 							{getFieldDecorator('birthday', {
 								initialValue: auth.birthday ? moment(auth.birthday) : '',
-								rules: [{ required: true, message: 'Làm ơn nhập ngày sinh của bạn!' }],
+								rules: [
+									{ required: true, message: 'Làm ơn nhập ngày sinh của bạn!' },
+									{ validator: this.checkBirthday },
+								],
 							})(
 								<DatePicker placeholder="dd/mm/yyyy" />,
 							)}

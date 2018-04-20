@@ -140,6 +140,9 @@ export default class TicketPosterForm extends Component {
 		],
 		where: {
 			status: 'open',
+			dueDate: {
+				gte: new Date(),
+			},
 		},
 	}
 
@@ -155,6 +158,8 @@ export default class TicketPosterForm extends Component {
 
 				dataSend.packageWeight = packageWeight !== -1 ? packageWeight : ~~packageWeightOther;
 
+				dataSend.dueDate = moment(trip.startDate).hours(trip.startTime.hours(), trip.startTime.minutes());
+
 				dataSend.trip = {
 					...trip,
 					startDate: trip.startDate,
@@ -162,7 +167,7 @@ export default class TicketPosterForm extends Component {
 				};
 
 				if (dataSend.isBid) {
-					dataSend.bidDueDate = moment(trip.startDate)
+					dataSend.dueDate = moment(trip.startDate)
 						.hours(trip.startTime.hours())
 						.minute(trip.startTime.minute())
 						.subtract(1, 'day');

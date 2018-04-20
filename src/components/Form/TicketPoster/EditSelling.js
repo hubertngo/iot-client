@@ -172,13 +172,13 @@ export default class TicketPosterForm extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				console.log('values', values);
 				const { packageWeight, packageWeightOther, type, trip, tripBack, ...dataSend } = values;
 
 				dataSend.id = this.props.store.modal.editSelling.id;
 				dataSend.isBid = type === 'bid';
 
 				dataSend.packageWeight = packageWeight !== -1 ? packageWeight : ~~packageWeightOther;
+				dataSend.dueDate = moment(trip.startDate).hours(trip.startTime.hours(), trip.startTime.minutes());
 
 				dataSend.trip = {
 					...trip,

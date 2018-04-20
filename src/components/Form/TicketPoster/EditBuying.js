@@ -179,6 +179,7 @@ export default class TicketPosterForm extends Component {
 				dataSend.isBid = type === 'bid';
 
 				dataSend.packageWeight = packageWeight !== -1 ? packageWeight : ~~packageWeightOther;
+				dataSend.dueDate = moment(trip.startDate).hours(trip.startTime.hours(), trip.startTime.minutes());
 
 				dataSend.trip = {
 					...trip,

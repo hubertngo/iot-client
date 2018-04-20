@@ -439,7 +439,7 @@ export default class FlightCard extends Component {
 						<div className={classes.footer}>
 							<div style={{ marginRight: 25 }}>
 								<div className={classes.footerTitle}>Thời gian còn lại</div>
-								<div className={classes.footerInfo}>{moment(flightData.bidDueDate).fromNow()}</div>
+								<div className={classes.footerInfo}>{moment(flightData.dueDate).fromNow()}</div>
 							</div>
 							<CheckLogin onClick={this.handleClickFlight}>
 								<Button type="primary">Đấu giá</Button>
