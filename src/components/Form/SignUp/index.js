@@ -188,7 +188,7 @@ export default class LoginForm extends Component {
 						{getFieldDecorator('username', {
 							rules: [{ required: true, message: 'Làm ơn nhập tên tài khoản của bạn!' }],
 						})(
-							<Input size="large" className="radius-large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Email" />,
+							<Input size="large" className="radius-large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Tên đăng nhập" />,
 						)}
 					</Form.Item>
 					<Form.Item label="Mật khẩu" style={{ marginBottom: 0 }}>
