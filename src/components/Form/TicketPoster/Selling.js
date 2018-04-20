@@ -146,6 +146,14 @@ export default class TicketPosterForm extends Component {
 		},
 	}
 
+	validateStartDate = (rule, value, callback) => {
+		if (moment().isAfter(value)) {
+			callback('Vui lòng chọn ngày bay trong tương lai');
+		} else {
+			callback();
+		}
+	}
+
 	handleChange = ({ fileList }) => this.setState({ fileList })
 
 	handleSubmit = (e) => {
@@ -340,7 +348,7 @@ export default class TicketPosterForm extends Component {
 								<div style={{ display: 'flex' }}>
 									<Form.Item>
 										{getFieldDecorator('trip.startDate', {
-											rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày xuất phát' }],
+											rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày xuất phát' }, { validator: this.validateStartDate }],
 										})(
 											<DatePicker format="DD/MM/YYYY" />,
 										)}
@@ -427,7 +435,7 @@ export default class TicketPosterForm extends Component {
 										<div style={{ display: 'flex' }}>
 											<Form.Item>
 												{getFieldDecorator('tripBack.startDate', {
-													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày xuất phát' }],
+													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày xuất phát' }, { validator: this.validateStartDate }],
 												})(
 													<DatePicker format="DD/MM/YYY" />,
 												)}
