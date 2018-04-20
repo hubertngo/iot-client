@@ -293,7 +293,7 @@ export default class SearchBar extends Component {
 						</Form.Item>
 					</Col>
 					<Col span={3}>
-						<Button type="secondary" className={classes.btnSearch} htmlType="submit" size="large">Tìm kiếm</Button>
+						<Button type="secondary" className={classes.btnSearch} htmlType="submit" size="large">Tìm vé</Button>
 					</Col>
 				</Row>
 			</Form>

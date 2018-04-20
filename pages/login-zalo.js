@@ -118,7 +118,7 @@ export default class ZaloLogin extends PureComponent {
 									{getFieldDecorator('username', {
 										rules: [{ required: true, message: 'Làm ơn nhập tên tài khoản của bạn!' }],
 									})(
-										<Input size="large" className="radius-large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Email" />,
+										<Input size="large" className="radius-large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Tên đăng nhập" />,
 									)}
 								</Form.Item>
 								<Button type="primary" className="radius-large" htmlType="submit" size="large" style={{ width: '100%', marginTop: 20 }} loading={this.state.loading}>
