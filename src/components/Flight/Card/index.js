@@ -12,13 +12,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 
-import { Row, Col, Icon, Button } from 'antd';
+import { Row, Col, Icon, Button, Modal } from 'antd';
 
 import withStyles from 'src/theme/jss/withStyles';
 import Avatar from 'src/components/Photo/Avatar';
 import Price from 'src/components/Stuff/Price';
 
 import { toggleFlightModal, toggleUserInfoModal, toggleEditBuyingModal, toggleEditSellingModal } from 'src/redux/actions/modal';
+import { deleteTicketBuying } from 'src/redux/actions/ticket-buying';
+import { deleteTicketSelling } from 'src/redux/actions/ticket-selling';
 
 import AuthStorage from 'src/utils/AuthStorage';
 
@@ -27,6 +29,7 @@ import CheckLogin from 'src/components/Form/CheckLogin';
 import GroupStar from './GroupStar';
 import BidBlock from './BidBlock';
 import FlightBlock from './FlightBlock';
+
 
 moment.locale('vi');
 
@@ -216,6 +219,8 @@ const mapDispatchToProps = (dispatch) => {
 			toggleUserInfoModal,
 			toggleEditBuyingModal,
 			toggleEditSellingModal,
+			deleteTicketBuying,
+			deleteTicketSelling,
 		}, dispatch),
 	};
 };
@@ -268,6 +273,24 @@ export default class FlightCard extends Component {
 		this.props.action.toggleEditSellingModal({ open: true, id: this.props.flightData.id });
 	}
 
+	handleDeleteBuying = () => {
+		Modal.confirm({
+			title: 'Bạn có chắc muốn xóa vé này không?',
+			onOk: () => {
+				this.props.action.deleteTicketBuying({ id: this.props.flightData.id });
+			},
+		});
+	}
+
+	handleDeleteSelling = () => {
+		Modal.confirm({
+			title: 'Bạn có chắc muốn xóa vé này không?',
+			onOk: () => {
+				this.props.action.deleteTicketSelling({ id: this.props.flightData.id });
+			},
+		});
+	}
+
 	_renderBodyRight = () => {
 		const { type, flightData } = this.props;
 
@@ -276,9 +299,14 @@ export default class FlightCard extends Component {
 				return (
 					<Fragment>
 						<p>{flightData.seatCount} vé</p>
-						<CheckLogin onClick={this.handleEditBuying}>
-							<Button>Sửa</Button>
-						</CheckLogin>
+						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+							<CheckLogin onClick={this.handleEditBuying}>
+								<Button>Sửa</Button>
+							</CheckLogin>
+							<CheckLogin onClick={this.handleDeleteBuying}>
+								<Button>Xóa</Button>
+							</CheckLogin>
+						</div>
 					</Fragment>
 				);
 			}
@@ -286,9 +314,14 @@ export default class FlightCard extends Component {
 			return (
 				<Fragment>
 					<p><Price price={flightData.price} type="primary" /></p>
-					<CheckLogin onClick={this.handleEditSelling} >
-						<Button>Sửa</Button>
-					</CheckLogin>
+					<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+						<CheckLogin onClick={this.handleEditSelling} >
+							<Button>Sửa</Button>
+						</CheckLogin>
+						<CheckLogin onClick={this.handleDeleteSelling}>
+							<Button>Xóa</Button>
+						</CheckLogin>
+					</div>
 				</Fragment>
 			);
 		}

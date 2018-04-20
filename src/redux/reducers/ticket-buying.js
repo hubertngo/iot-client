@@ -118,7 +118,7 @@ export default (state = initialState, action) => {
 				list.total = list.total - 1; // eslint-disable-line
 				list.skip = list.skip - 1; // eslint-disable-line
 
-				return list;
+				return { ...list, data: [...list.data] };
 			});
 		}
 
