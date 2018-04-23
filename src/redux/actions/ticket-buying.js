@@ -118,18 +118,9 @@ export const addTicketBuyingListener = (dispatch) => {
 
 				if (data.type === 'update') {
 					dispatch({
-						type: 'START_LOADING',
+						type: 'UPDATE_TICKET_BUYING_SUCCESS',
+						payload: data.data,
 					});
-
-					setTimeout(() => {
-						dispatch({
-							type: 'UPDATE_TICKET_BUYING_SUCCESS',
-							payload: data.data,
-						});
-						dispatch({
-							type: 'STOP_LOADING',
-						});
-					}, 1000);
 				}
 			});
 
