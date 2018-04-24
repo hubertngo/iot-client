@@ -15,7 +15,7 @@ import { REQUEST_ERROR } from 'src/redux/actions/type';
 
 function* authorize(payload, next, nextErr) {
 	const response = yield call(fetchApi, {
-		uri: 'users/login?include=user',
+		uri: '/users/login?include=user',
 		params: payload,
 		opt: { method: 'POST' },
 		loading: false,
@@ -68,7 +68,7 @@ function* loginGoogleFlow() {
 		const { payload, next, nextErr } = yield take('LOGIN_GOOGLE');
 
 		const response = yield call(fetchApi, {
-			uri: 'users/login-google',
+			uri: '/users/login-google',
 			params: payload,
 			opt: { method: 'POST' },
 		});
@@ -103,7 +103,7 @@ function* loginFacebookFlow() {
 		const { payload, next, nextErr } = yield take('LOGIN_FACEBOOK');
 
 		const response = yield call(fetchApi, {
-			uri: 'users/login-facebook',
+			uri: '/users/login-facebook',
 			params: payload,
 			opt: { method: 'POST' },
 		});
@@ -137,7 +137,7 @@ function* loginZaloFlow() {
 		const { payload, next, nextErr } = yield take('LOGIN_ZALO');
 
 		const response = yield call(fetchApi, {
-			uri: 'users/login-zalo',
+			uri: '/users/login-zalo',
 			params: payload,
 			opt: { method: 'POST' },
 		});
@@ -179,7 +179,7 @@ function* logoutFlow() {
 		const { next } = yield take('LOGOUT_REQUEST');
 
 		const response = yield call(fetchApi, {
-			uri: 'users/logout',
+			uri: '/users/logout',
 			opt: { method: 'POST' },
 		});
 
@@ -199,7 +199,7 @@ function* signUpFlow() {
 		const { payload, next, nextErr } = yield take('SIGN_UP_REQUEST');
 
 		const response = yield call(fetchApi, {
-			uri: 'users',
+			uri: '/users',
 			params: payload,
 			opt: { method: 'POST' },
 			loading: false,
