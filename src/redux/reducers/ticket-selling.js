@@ -132,7 +132,7 @@ export default (state = initialState, action) => {
 					list.data[index] = { ...list.data[index], price }; // eslint-disable-line
 				}
 
-				return list;
+				return { ...list, data: [...list.data] };
 			});
 		}
 
