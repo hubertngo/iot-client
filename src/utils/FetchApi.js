@@ -16,9 +16,9 @@ import ENV from 'src/constants/env';
 import AuthStorage from 'src/utils/AuthStorage';
 import { REQUEST_ERROR } from 'src/redux/actions/type';
 
-const { BASE_URL } = API;
+const { API_URL } = API;
 
-const fetching = (url, options) => fetch(BASE_URL + url, options)
+const fetching = (url, options) => fetch(API_URL + url, options)
 	.then(response => {
 		return response.status === 204 || response.statusText === 'No Content' ? {} : response.json();
 	})
@@ -93,7 +93,7 @@ export default function* ({ uri, params = {}, opt = {}, loading = true, uploadFi
 	let response;
 	try {
 		if (ENV !== 'production') {
-			console.info('====> Call /api/v1/' + url, ', options=', options);
+			console.info('====> Call ' + API_URL + url, ', options=', options);
 		}
 
 		response = yield call(fetching, url, options);

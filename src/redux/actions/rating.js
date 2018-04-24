@@ -5,7 +5,7 @@ export const createRating = (payload, next, nextError) => {
 	return {
 		type: SINGLE_API,
 		payload: {
-			uri: 'ratings',
+			uri: '/ratings',
 			params: payload,
 			opt: { method: 'POST' },
 			successType: 'CREATE_RATING_SUCCESS',

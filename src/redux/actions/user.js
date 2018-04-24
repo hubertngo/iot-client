@@ -16,7 +16,7 @@ export const getUserList = (payload, next, nextError) => {
 	return {
 		type: SINGLE_API,
 		payload: {
-			uri: `users${applyURIFilter(filter)}`,
+			uri: `/users${applyURIFilter(filter)}`,
 			beforeCallType: firstLoad ? 'GET_USER_LIST_REQUEST' : '',
 			successType: 'GET_USER_LIST_SUCCESS',
 			afterSuccess: next,
@@ -31,7 +31,7 @@ export const getUserData = (payload, next, nextError) => {
 	return {
 		type: SINGLE_API,
 		payload: {
-			uri: `users/${id}${applyURIFilter(filter)}`,
+			uri: `/users/${id}${applyURIFilter(filter)}`,
 			beforeCallType: 'GET_USER_DATA_REQUEST',
 			successType: 'GET_USER_DATA_SUCCESS',
 			afterSuccess: next,
@@ -46,7 +46,7 @@ export const updateUser = (payload, next, nextError) => {
 	return {
 		type: SINGLE_API,
 		payload: {
-			uri: 'users/' + id,
+			uri: '/users/' + id,
 			params: user,
 			opt: { method: 'PATCH' },
 			successType: 'UPDATE_USER_SUCCESS',
