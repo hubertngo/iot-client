@@ -368,7 +368,15 @@ export default class TicketPosterForm extends Component {
 											rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày xuất phát' }, { validator: this.validateStartDate }],
 											initialValue: moment(trip.startDate),
 										})(
-											<DatePicker format="DD/MM/YYYY" />,
+											<DatePicker
+												format="DD/MM/YYYY"
+												disabledDate={
+													(current) => {
+														// Can not select days before today and today
+														return current && current < moment().endOf('day');
+													}
+												}
+											/>,
 										)}
 									</Form.Item>
 									<Form.Item>
