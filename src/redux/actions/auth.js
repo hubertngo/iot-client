@@ -149,7 +149,7 @@ export const checkUserExist = (payload = '', next) => {
 		return {
 			type: SINGLE_API,
 			payload: {
-				uri: `users/count?where=${JSON.stringify(where)}`,
+				uri: `/users/count?where=${JSON.stringify(where)}`,
 				afterSuccess: (res) => {
 					next(res);
 				},
