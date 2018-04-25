@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 
-import { Icon, Button, InputNumber, notification, Row, Col, Tag } from 'antd';
+import { Icon, Button, InputNumber, notification, Row, Col, Tag, Tooltip } from 'antd';
 
 import { flightOptions } from 'src/constants/selectOption';
 import { getLabel, formatNumber } from 'src/utils';
@@ -325,10 +325,11 @@ export default class FlightDetail extends Component {
 				<div className={classes.examine}>
 					{
 						flightData.dataType === 'fb' &&
-						<Fragment>
-							<IconMedal />
-							<span style={{ marginRight: 10, marginLeft: 5 }}>Kiểm định bởi chove.vn</span>
-						</Fragment>
+						<Tooltip title="Kiểm định bởi chove.vn">
+							<span style={{ marginRight: 20, marginLeft: 5 }}>
+								<IconMedal />
+							</span>
+						</Tooltip>
 					}
 
 					<CheckLogin onClick={this.handleSell}>
@@ -375,10 +376,11 @@ export default class FlightDetail extends Component {
 				<div className={classes.examine}>
 					{
 						flightData.approved &&
-						<Fragment>
-							<IconMedal />
-							<span style={{ marginRight: 10, marginLeft: 5 }}>Kiểm định bởi chove.vn</span>
-						</Fragment>
+						<Tooltip title="Kiểm định bởi chove.vn">
+							<span style={{ marginRight: 20, marginLeft: 5 }}>
+								<IconMedal />
+							</span>
+						</Tooltip>
 					}
 					<CheckLogin onClick={this.handleBuy}>
 						<Button type="primary" loading={this.state.btnLoading}>Mua</Button>

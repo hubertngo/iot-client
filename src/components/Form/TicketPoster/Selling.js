@@ -471,7 +471,15 @@ export default class TicketPosterForm extends Component {
 										{getFieldDecorator('trip.startDate', {
 											rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày xuất phát' }, { validator: this.validateTripStartDate }],
 										})(
-											<DatePicker format="DD/MM/YYYY" />,
+											<DatePicker
+												format="DD/MM/YYYY"
+												disabledDate={
+													(current) => {
+														// Can not select days before today and today
+														return current && current < moment().endOf('day');
+													}
+												}
+											/>,
 										)}
 									</Form.Item>
 									<Form.Item>
@@ -490,7 +498,15 @@ export default class TicketPosterForm extends Component {
 										{getFieldDecorator('trip.endDate', {
 											rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày hạ cánh' }, { validator: this.validateTripEndDate }],
 										})(
-											<DatePicker format="DD/MM/YYYY" />,
+											<DatePicker
+												format="DD/MM/YYYY"
+												disabledDate={
+													(current) => {
+														// Can not select days before today and today
+														return current && current < moment().endOf('day');
+													}
+												}
+											/>,
 										)}
 									</Form.Item>
 									<Form.Item>
@@ -558,7 +574,15 @@ export default class TicketPosterForm extends Component {
 												{getFieldDecorator('tripBack.startDate', {
 													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày xuất phát' }, { validator: this.validateTripBackStartDate }],
 												})(
-													<DatePicker format="DD/MM/YYYY" />,
+													<DatePicker
+														format="DD/MM/YYYY"
+														disabledDate={
+															(current) => {
+																// Can not select days before today and today
+																return current && current < moment().endOf('day');
+															}
+														}
+													/>,
 												)}
 											</Form.Item>
 											<Form.Item>
@@ -577,7 +601,19 @@ export default class TicketPosterForm extends Component {
 												{getFieldDecorator('tripBack.endDate', {
 													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày hạ cánh' }, { validator: this.validateTripBackEndDate }],
 												})(
+<<<<<<< HEAD
 													<DatePicker format="DD/MM/YYYY" />,
+=======
+													<DatePicker
+														format="DD/MM/YYYY"
+														disabledDate={
+															(current) => {
+																// Can not select days before today and today
+																return current && current < moment().endOf('day');
+															}
+														}
+													/>,
+>>>>>>> 2eee0c1238fbc2ab8ad76bbdc7b05f6b2c621210
 												)}
 											</Form.Item>
 											<Form.Item>

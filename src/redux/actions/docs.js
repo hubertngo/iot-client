@@ -11,7 +11,7 @@ export const loginRequest = (payload, next) => {
 	return {
 		type: SINGLE_API,
 		payload: {
-			uri: 'users/login?include=user',
+			uri: '/users/login?include=user',
 			params: payload,
 			opt: { method: 'POST' },
 			loading: false,

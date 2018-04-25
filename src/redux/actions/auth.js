@@ -16,7 +16,7 @@ export const editProfile = (payload, next, nextError) => {
 	return {
 		type: SINGLE_API,
 		payload: {
-			uri: 'users/' + id,
+			uri: '/users/' + id,
 			params: user,
 			opt: { method: 'PATCH' },
 			successType: 'EDIT_PROFILE_SUCCESS',
@@ -81,7 +81,7 @@ export const getUserAuth = (payload = {}, next) => {
 	return {
 		type: SINGLE_API,
 		payload: {
-			uri: 'users/' + AuthStorage.userId + `?filter=${JSON.stringify(filter)}`,
+			uri: '/users/' + AuthStorage.userId + `?filter=${JSON.stringify(filter)}`,
 			successType: 'GET_USER_AUTH_SUCCESS',
 			afterSuccess: next,
 		},
@@ -92,7 +92,7 @@ export const resetPassword = (payload, next, nextError) => {
 	return {
 		type: SINGLE_API,
 		payload: {
-			uri: 'users/reset-password?access_token=' + payload.token,
+			uri: '/users/reset-password?access_token=' + payload.token,
 			params: { newPassword: payload.password },
 			opt: { method: 'POST' },
 			afterSuccess: next,
@@ -105,7 +105,7 @@ export const forgotPassword = (payload, next, nextError) => {
 	return {
 		type: SINGLE_API,
 		payload: {
-			uri: 'users/reset',
+			uri: '/users/reset',
 			params: { email: payload.email },
 			opt: { method: 'POST' },
 			afterSuccess: next,
@@ -128,7 +128,7 @@ export const changePassword = (payload, next, nextError) => {
 	return {
 		type: SINGLE_API,
 		payload: {
-			uri: 'users/change-password',
+			uri: '/users/change-password',
 			params: { oldPassword, newPassword },
 			opt: { method: 'POST' },
 			afterSuccess: next,
@@ -149,7 +149,7 @@ export const checkUserExist = (payload = '', next) => {
 		return {
 			type: SINGLE_API,
 			payload: {
-				uri: `users/count?where=${JSON.stringify(where)}`,
+				uri: `/users/count?where=${JSON.stringify(where)}`,
 				afterSuccess: (res) => {
 					next(res);
 				},
