@@ -88,7 +88,7 @@ export const formatNumber = (value, fixed = 2) => {
 	// 	return i && c !== '.' && ((a.length - i) % 3 === 0) ? ',' + c : c;
 	// });
 
-	return Number((+value).toFixed(fixed)).toLocaleString();
+	return Number((+value).toFixed(fixed)).toLocaleString('vi');
 };
 
 export const getCountry = () => {

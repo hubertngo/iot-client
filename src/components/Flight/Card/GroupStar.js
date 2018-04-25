@@ -52,24 +52,30 @@ export default class GroupStar extends Component {
 		action: PropTypes.shape({
 			toggleRatingModal: PropTypes.func.isRequired,
 		}).isRequired,
-		userId: PropTypes.string,
+		user: PropTypes.shape({
+			id: PropTypes.string,
+		}).isRequired,
 	}
 
 	static defaultProps = {
 		ratingsStats: {
 			star: 0,
 		},
-		userId: '',
+		// user: {},
 	}
 
 	handleToggleRatingModal = () => {
-		const { userId } = this.props;
+		const { user } = this.props;
 
-		if (userId === AuthStorage.userId) {
-			console.log('doing nothing');
-		} else {
-			this.props.action.toggleRatingModal({ open: true, receiverId: this.props.userId });
+		if (user.id === AuthStorage.userId) {
+			return;
 		}
+
+		if (user.ratings.some(rating => rating.creatorId === AuthStorage.userId)) {
+			return;
+		}
+
+		this.props.action.toggleRatingModal({ open: true, receiverId: this.props.user.id });
 	}
 
 	render() {

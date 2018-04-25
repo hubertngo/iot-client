@@ -290,7 +290,7 @@ export default class UserInfoForm extends Component {
 						</div>
 					</Col>
 					<Col span={7} className={classes.rightCol}>
-						<GroupStar ratingsStats={userView.ratingsStats} ratingsCount={userView.ratingsCount} userId={userView.id} />
+						<GroupStar ratingsStats={userView.ratingsStats} ratingsCount={userView.ratingsCount} user={userView} />
 						<div className={classes.infoRow} style={{ marginTop: 10 }}>
 							<div> Ngày tham gia </div>
 							<div> {moment(userView.createdAt).format('DD/MM/YYYY')} </div>

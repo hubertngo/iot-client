@@ -206,6 +206,7 @@ function* signUpFlow() {
 		});
 
 		if (response && !response.error) {
+			console.log('error signup 1');
 			const authorizeTask = yield fork(authorize, payload, next, nextErr);
 			const action = yield take(['LOGOUT_REQUEST', 'LOGIN_FAILED', REQUEST_ERROR]);
 
@@ -213,6 +214,7 @@ function* signUpFlow() {
 				yield cancel(authorizeTask);
 			}
 		} else {
+			console.log('error signup 2');
 			if (typeof nextErr === 'function') {
 				nextErr();
 			}

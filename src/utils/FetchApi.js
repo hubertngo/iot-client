@@ -120,6 +120,8 @@ export default function* ({ uri, params = {}, opt = {}, loading = true, uploadFi
 
 			yield put({ type: REQUEST_ERROR, payload: 'Account has been disabled' });
 			Router.push('/login');
+		} else if (error.statusCode === 422) {
+			yield put({ type: REQUEST_ERROR, payload: 'Email đã tồn tại trên hệ thống, Vui lòng nhập lại' });
 		} else {
 			yield put({ type: REQUEST_ERROR, payload: error.message || error });
 		}
