@@ -601,9 +601,6 @@ export default class TicketPosterForm extends Component {
 												{getFieldDecorator('tripBack.endDate', {
 													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày hạ cánh' }, { validator: this.validateTripBackEndDate }],
 												})(
-<<<<<<< HEAD
-													<DatePicker format="DD/MM/YYYY" />,
-=======
 													<DatePicker
 														format="DD/MM/YYYY"
 														disabledDate={
@@ -613,7 +610,6 @@ export default class TicketPosterForm extends Component {
 															}
 														}
 													/>,
->>>>>>> 2eee0c1238fbc2ab8ad76bbdc7b05f6b2c621210
 												)}
 											</Form.Item>
 											<Form.Item>
