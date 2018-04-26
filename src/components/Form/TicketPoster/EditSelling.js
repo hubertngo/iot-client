@@ -177,6 +177,17 @@ export default class TicketPosterForm extends Component {
 		}
 	}
 
+	validateDestination = (rule, destination, callback) => {
+		const { form } = this.props;
+		const departure = form.getFieldValue('trip.departure');
+
+		if (departure === destination) {
+			callback('Vui lòng chọn điểm đến khác điểm đi');
+		} else {
+			callback();
+		}
+	}
+
 	validateTripStartDate = (rule, tripStartDate, callback) => {
 		if (moment().isAfter(tripStartDate, 'day')) {
 			callback('Không được chọn ngày bay trong quá khứ');
@@ -186,11 +197,14 @@ export default class TicketPosterForm extends Component {
 	}
 
 	validateTripStartTime = (rule, tripStartTime, callback) => {
+		if (!tripStartTime) {
+			return callback();
+		}
 		const { form } = this.props;
 		const tripStartDate = form.getFieldValue('trip.startDate');
 		const tripStart = moment(tripStartDate).hours(tripStartTime.hours()).minutes(tripStartTime.minutes());
 
-		if (tripStart.isBefore(moment())) {
+		if (tripStart.isSameOrBefore(moment())) {
 			callback('Vui lòng chọn giờ bay trong tương lai');
 		} else {
 			callback();
@@ -198,6 +212,9 @@ export default class TicketPosterForm extends Component {
 	}
 
 	validateTripEndDate = (rule, tripEndDate, callback) => {
+		if (!tripEndDate) {
+			return callback();
+		}
 		const { form } = this.props;
 		const tripStartDate = form.getFieldValue('trip.startDate');
 
@@ -209,6 +226,9 @@ export default class TicketPosterForm extends Component {
 	}
 
 	validateTripEndTime = (rule, tripEndTime, callback) => {
+		if (!tripEndTime) {
+			return callback();
+		}
 		const { form } = this.props;
 		const tripStartDate = form.getFieldValue('trip.startDate');
 		const tripStartTime = form.getFieldValue('trip.startTime');
@@ -216,7 +236,7 @@ export default class TicketPosterForm extends Component {
 		const tripStart = moment(tripStartDate).hours(tripStartTime.hours()).minutes(tripStartTime.minutes());
 		const tripEnd = moment(tripEndDate).hours(tripEndTime.hours()).minutes(tripEndTime.minutes());
 
-		if (tripEnd.isBefore(tripStart)) {
+		if (tripEnd.isSameOrBefore(tripStart)) {
 			callback('Vui lòng chọn giờ đáp sau giờ bay');
 		} else {
 			callback();
@@ -224,6 +244,9 @@ export default class TicketPosterForm extends Component {
 	}
 
 	validateTripBackStartDate = (rule, tripBackStartDate, callback) => {
+		if (!tripBackStartDate) {
+			return callback();
+		}
 		const { form } = this.props;
 		const tripEndDate = form.getFieldValue('trip.endDate');
 		if (tripBackStartDate.isBefore(tripEndDate, 'day')) {
@@ -234,6 +257,9 @@ export default class TicketPosterForm extends Component {
 	}
 
 	validateTripBackStartTime = (rule, tripBackStartTime, callback) => {
+		if (!tripBackStartTime) {
+			return callback();
+		}
 		const { form } = this.props;
 		const tripEndDate = form.getFieldValue('trip.endDate');
 		const tripEndTime = form.getFieldValue('trip.endTime');
@@ -241,7 +267,7 @@ export default class TicketPosterForm extends Component {
 		const tripBackStartDate = form.getFieldValue('tripBack.startDate');
 		const tripBackStart = moment(tripBackStartDate).hours(tripBackStartTime.hours()).minutes(tripBackStartTime.minutes());
 
-		if (tripBackStart.isBefore(tripEnd)) {
+		if (tripBackStart.isSameOrBefore(tripEnd)) {
 			callback('Vui lòng chọn giờ về sau ngày xuất phát');
 		} else {
 			callback();
@@ -249,6 +275,9 @@ export default class TicketPosterForm extends Component {
 	}
 
 	validateTripBackEndDate = (rule, tripBackEndDate, callback) => {
+		if (!tripBackEndDate) {
+			return callback();
+		}
 		const { form } = this.props;
 		const tripBackStartDate = form.getFieldValue('tripBack.startDate');
 
@@ -260,6 +289,9 @@ export default class TicketPosterForm extends Component {
 	}
 
 	validateTripBackEndTime = (rule, tripBackEndTime, callback) => {
+		if (!tripBackEndTime) {
+			return callback();
+		}
 		const { form } = this.props;
 		const tripBackStartDate = form.getFieldValue('tripBack.startDate');
 		const tripBackStartTime = form.getFieldValue('tripBack.startTime');
@@ -267,7 +299,7 @@ export default class TicketPosterForm extends Component {
 		const tripBackStart = moment(tripBackStartDate).hours(tripBackStartTime.hours()).minutes(tripBackStartTime.minutes());
 		const tripBackEnd = moment(tripBackEndDate).hours(tripBackEndTime.hours()).minutes(tripBackEndTime.minutes());
 
-		if (tripBackEnd.isBefore(tripBackStart)) {
+		if (tripBackEnd.isSameOrBefore(tripBackStart)) {
 			callback('Vui lòng chọn giờ đáp sau giờ bay');
 		} else {
 			callback();
@@ -500,8 +532,9 @@ export default class TicketPosterForm extends Component {
 												format="DD/MM/YYYY"
 												disabledDate={
 													(current) => {
+														const tripStartDate = getFieldValue('trip.startDate');
 														// Can not select days before today and today
-														return current && current < moment().endOf('day');
+														return current && current.isBefore(tripStartDate, 'day');
 													}
 												}
 											/>,
@@ -578,8 +611,9 @@ export default class TicketPosterForm extends Component {
 														format="DD/MM/YYYY"
 														disabledDate={
 															(current) => {
+																const tripEndDate = getFieldValue('trip.endDate');
 																// Can not select days before today and today
-																return current && current < moment().endOf('day');
+																return current && current.isBefore(tripEndDate, 'day');
 															}
 														}
 													/>,
@@ -607,8 +641,9 @@ export default class TicketPosterForm extends Component {
 														format="DD/MM/YYYY"
 														disabledDate={
 															(current) => {
+																const tripBackStartDate = getFieldValue('tripBack.startDate');
 																// Can not select days before today and today
-																return current && current < moment().endOf('day');
+																return current && current.isBefore(tripBackStartDate, 'day');
 															}
 														}
 													/>,

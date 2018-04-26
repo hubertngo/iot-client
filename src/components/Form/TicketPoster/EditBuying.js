@@ -178,6 +178,9 @@ export default class TicketPosterForm extends Component {
 	}
 
 	validateTripStartDate = (rule, tripStartDate, callback) => {
+		if (!tripStartDate) {
+			return callback();
+		}
 		if (moment().isAfter(tripStartDate, 'day')) {
 			callback('Không được chọn ngày bay trong quá khứ');
 		} else {
@@ -186,11 +189,45 @@ export default class TicketPosterForm extends Component {
 	}
 
 	validateTripStartTime = (rule, tripStartTime, callback) => {
+		if (!tripStartTime) {
+			return callback();
+		}
 		const { form } = this.props;
 		const tripStartDate = form.getFieldValue('trip.startDate');
 		const tripStart = moment(tripStartDate).hours(tripStartTime.hours()).minutes(tripStartTime.minutes());
 
 		if (tripStart.isBefore(moment())) {
+			callback('Vui lòng chọn giờ bay trong tương lai');
+		} else {
+			callback();
+		}
+	}
+
+	validateTripBackStartDate = (rule, tripBackStartDate, callback) => {
+		if (!tripBackStartDate) {
+			return callback();
+		}
+		const { form } = this.props;
+		const tripStartDate = form.getFieldValue('trip.startDate');
+		if (tripBackStartDate.isBefore(tripStartDate, 'day')) {
+			callback('Không được chọn ngày về trước ngày đi');
+		} else {
+			callback();
+		}
+	}
+
+	validateTripBackStartTime = (rule, tripBackStartTime, callback) => {
+		if (!tripBackStartTime) {
+			return callback();
+		}
+		const { form } = this.props;
+		const tripStartDate = form.getFieldValue('trip.startDate');
+		const tripStartTime = form.getFieldValue('trip.startTime');
+		const tripBackStartDay = form.getFieldValue('tripBack.startDate');
+		const tripStart = moment(tripStartDate).hours(tripStartTime.hours()).minutes(tripStartTime.minutes());
+		const tripBackStart = moment(tripBackStartDay).hours(tripBackStartTime.hours()).minutes(tripBackStartTime.minutes());
+
+		if (tripBackStart.isBefore(tripStart)) {
 			callback('Vui lòng chọn giờ bay trong tương lai');
 		} else {
 			callback();
@@ -466,15 +503,24 @@ export default class TicketPosterForm extends Component {
 										<div style={{ display: 'flex' }}>
 											<Form.Item>
 												{getFieldDecorator('tripBack.startDate', {
-													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày xuất phát' }, { validator: this.validateStartDate }],
+													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày xuất phát' }, { validator: this.validateTripBackStartDate }],
 													initialValue: moment(tripBack.startDate),
 												})(
-													<DatePicker format="DD/MM/YYY" />,
+													<DatePicker
+														format="DD/MM/YYYY"
+														disabledDate={
+															(current) => {
+																const tripStartDate = getFieldValue('trip.startDate');
+																// Can not select days before today and today
+																return current && current.isBefore(tripStartDate, 'day');
+															}
+														}
+													/>,
 												)}
 											</Form.Item>
 											<Form.Item>
 												{getFieldDecorator('tripBack.startTime', {
-													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn giờ xuất phát' }],
+													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn giờ xuất phát' }, { validator: this.validateTripBackStartTime }],
 													initialValue: moment(tripBack.startTime, 'HH:mm'),
 												})(
 													<TimePicker format="HH:mm" style={{ marginLeft: 20 }} />,

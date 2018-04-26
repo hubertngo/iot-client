@@ -26,7 +26,7 @@ import { getTicketBuyingList } from 'src/redux/actions/ticket-buying';
 import { toggleTicketPosterModal } from 'src/redux/actions/modal';
 import { uploadFiles } from 'src/redux/actions/upload';
 
-import { getLabel, formatNumber } from 'src/utils';
+import { getLabel } from 'src/utils';
 
 import PosterDivider from './PosterDivider';
 
@@ -173,7 +173,7 @@ export default class TicketPosterForm extends Component {
 		const tripStartDate = form.getFieldValue('trip.startDate');
 		const tripStart = moment(tripStartDate).hours(tripStartTime.hours()).minutes(tripStartTime.minutes());
 
-		if (tripStart.isBefore(moment())) {
+		if (tripStart.isSameOrBefore(moment())) {
 			callback('Vui lòng chọn giờ bay trong tương lai');
 		} else {
 			callback();
@@ -205,7 +205,7 @@ export default class TicketPosterForm extends Component {
 		const tripStart = moment(tripStartDate).hours(tripStartTime.hours()).minutes(tripStartTime.minutes());
 		const tripEnd = moment(tripEndDate).hours(tripEndTime.hours()).minutes(tripEndTime.minutes());
 
-		if (tripEnd.isBefore(tripStart)) {
+		if (tripEnd.isSameOrBefore(tripStart)) {
 			callback('Vui lòng chọn giờ đáp sau giờ bay');
 		} else {
 			callback();
@@ -236,7 +236,7 @@ export default class TicketPosterForm extends Component {
 		const tripBackStartDate = form.getFieldValue('tripBack.startDate');
 		const tripBackStart = moment(tripBackStartDate).hours(tripBackStartTime.hours()).minutes(tripBackStartTime.minutes());
 
-		if (tripBackStart.isBefore(tripEnd)) {
+		if (tripBackStart.isSameOrBefore(tripEnd)) {
 			callback('Vui lòng chọn giờ về sau ngày xuất phát');
 		} else {
 			callback();
@@ -268,7 +268,7 @@ export default class TicketPosterForm extends Component {
 		const tripBackStart = moment(tripBackStartDate).hours(tripBackStartTime.hours()).minutes(tripBackStartTime.minutes());
 		const tripBackEnd = moment(tripBackEndDate).hours(tripBackEndTime.hours()).minutes(tripBackEndTime.minutes());
 
-		if (tripBackEnd.isBefore(tripBackStart)) {
+		if (tripBackEnd.isSameOrBefore(tripBackStart)) {
 			callback('Vui lòng chọn giờ đáp sau giờ bay');
 		} else {
 			callback();
@@ -502,8 +502,9 @@ export default class TicketPosterForm extends Component {
 												format="DD/MM/YYYY"
 												disabledDate={
 													(current) => {
+														const tripStartDate = getFieldValue('trip.startDate');
 														// Can not select days before today and today
-														return current && current < moment().endOf('day');
+														return current && current.isBefore(tripStartDate, 'day');
 													}
 												}
 											/>,
@@ -578,8 +579,9 @@ export default class TicketPosterForm extends Component {
 														format="DD/MM/YYYY"
 														disabledDate={
 															(current) => {
+																const tripEndDate = getFieldValue('trip.endDate');
 																// Can not select days before today and today
-																return current && current < moment().endOf('day');
+																return current && current.isBefore(tripEndDate, 'day');
 															}
 														}
 													/>,
@@ -605,8 +607,9 @@ export default class TicketPosterForm extends Component {
 														format="DD/MM/YYYY"
 														disabledDate={
 															(current) => {
+																const tripBackStartDate = getFieldValue('tripBack.startDate');
 																// Can not select days before today and today
-																return current && current < moment().endOf('day');
+																return current && current.isBefore(tripBackStartDate, 'day');
 															}
 														}
 													/>,
