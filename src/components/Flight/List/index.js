@@ -22,6 +22,7 @@ import { getTicketBuyingList } from 'src/redux/actions/ticket-buying';
 import { toggleTicketPosterModal } from 'src/redux/actions/modal';
 
 import FlightCard from '../Card';
+import AuthStorage from '../../../utils/AuthStorage';
 
 const styleSheet = (/* theme */) => ({
 	wrapperContent: {
@@ -221,7 +222,8 @@ export default class FlightList extends Component {
 
 	render() {
 		const { classes, action, store: { ticketBuyingList, ticketSellingList } } = this.props;
-
+		console.log('renderList', ticketBuyingList);
+		console.log('autho', AuthStorage.userId);
 		if (this.state.loading || ticketBuyingList.loading || ticketSellingList.loading) {
 			return (
 				<Fragment>
@@ -257,7 +259,7 @@ export default class FlightList extends Component {
 							<Button type="primary" className={classes.btn} >Tìm mua</Button>
 						</CheckLogin>
 						{
-							ticketBuyingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="buying" />)
+							ticketBuyingList.data.map(flight => <FlightCard flightData={flight} key={`${flight.id}_${AuthStorage.userId}`} type="buying" />)
 						}
 					</Col>
 					<Col span={12}>
@@ -265,7 +267,7 @@ export default class FlightList extends Component {
 							<Button type="primary" className={classes.btn} >Đăng bán</Button>
 						</CheckLogin>
 						{
-							ticketSellingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="selling" />)
+							ticketSellingList.data.map(flight => <FlightCard flightData={flight} key={`${flight.id}_${AuthStorage.userId}`} type="selling" />)
 						}
 					</Col>
 					{
