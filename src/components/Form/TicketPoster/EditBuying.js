@@ -166,6 +166,14 @@ export default class TicketPosterForm extends Component {
 		},
 	}
 
+	validateSeatCount = (rule, seatCount, callback) => {
+		if (seatCount < 1) {
+			callback('Vui lòng chọn số ghế lớn hơn 0');
+		} else {
+			callback();
+		}
+	}
+
 	validateDestination = (rule, destination, callback) => {
 		const { form } = this.props;
 		const departure = form.getFieldValue('trip.departure');
@@ -351,8 +359,9 @@ export default class TicketPosterForm extends Component {
 							<Col span={21}>
 								{getFieldDecorator('seatCount', {
 									initialValue: ticketBuyingView.seatCount,
+									rules: [{ required: true, message: 'Làm ơn chọn số ghế' }, { validator: this.validateSeatCount }],
 								})(
-									<InputNumber size="default" style={{ width: 70 }} min={1} />,
+									<InputNumber size="default" style={{ width: 70 }} />,
 								)}
 							</Col>
 						</div>
