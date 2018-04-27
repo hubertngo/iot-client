@@ -484,8 +484,12 @@ export default class TicketPosterForm extends Component {
 												format="DD/MM/YYYY"
 												disabledDate={
 													(current) => {
+														const tripEndDate = getFieldValue('trip.endDate');
 														// Can not select days before today and today
-														return current && current < moment().endOf('day');
+														if (!tripEndDate) {
+															return current && current.isBefore(new Date(), 'day');
+														}
+														return current && (current.isAfter(tripEndDate, 'day') || current.isBefore(new Date(), 'day'));
 													}
 												}
 											/>,
@@ -588,9 +592,12 @@ export default class TicketPosterForm extends Component {
 														format="DD/MM/YYYY"
 														disabledDate={
 															(current) => {
-																const tripEndDate = getFieldValue('trip.endDate');
+																const tripEndDate = getFieldValue('tripBack.endDate');
 																// Can not select days before today and today
-																return current && current.isBefore(tripEndDate, 'day');
+																if (!tripEndDate) {
+																	return current && current.isBefore(new Date(), 'day');
+																}
+																return current && (current.isAfter(tripEndDate, 'day') || current.isBefore(new Date(), 'day'));
 															}
 														}
 													/>,
