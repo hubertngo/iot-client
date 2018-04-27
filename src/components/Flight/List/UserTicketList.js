@@ -143,9 +143,6 @@ export default class FlightList extends Component {
 					fields: ['id', 'username', 'avatar', 'fullName', 'ratingsCount', 'ratingsStats'],
 				},
 			},
-			// {
-			// 	relation: 'fbFeed',
-			// },
 		],
 		where: {
 			creatorId: AuthStorage.userId,

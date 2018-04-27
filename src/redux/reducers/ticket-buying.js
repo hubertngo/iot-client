@@ -130,7 +130,6 @@ export default (state = initialState, action) => {
 				const data = list.data.map(row => {
 					if (row.creator && row.creator.id === receiverId) {
 						row.creator = { ...row.creator, ...increaseRating(star, row.creator) }; // eslint-disable-line
-						row.creator.ratings.push({ creatorId: AuthStorage.userId, receiverId: row.creator.id });
 					}
 					return { ...row };
 				});

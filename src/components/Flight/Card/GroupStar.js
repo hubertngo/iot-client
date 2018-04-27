@@ -13,6 +13,7 @@ import { toggleRatingModal } from 'src/redux/actions/modal';
 
 import CheckLogin from 'src/components/Form/CheckLogin';
 import AuthStorage from 'src/utils/AuthStorage';
+import { fetchApi } from 'src/utils/FetchApi';
 
 const styleSheet = (/* theme */) => ({
 	rate: {
@@ -71,11 +72,21 @@ export default class GroupStar extends Component {
 			return;
 		}
 
-		if (user.ratings.some(rating => rating.creatorId === AuthStorage.userId)) {
-			return;
-		}
-
-		this.props.action.toggleRatingModal({ open: true, receiverId: this.props.user.id });
+		fetchApi({
+			uri: 'ratings',
+			params: {
+				filter: JSON.stringify({
+					where: {
+						receiverId: user.id,
+						creatorId: AuthStorage.userId,
+					},
+				}),
+			},
+		}).then(response => {
+			if (response.total === 0) {
+				this.props.action.toggleRatingModal({ open: true, receiverId: this.props.user.id });
+			}
+		});
 	}
 
 	render() {

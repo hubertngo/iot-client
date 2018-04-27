@@ -43,7 +43,49 @@ Params: {
 	uploadFile: ,
 }
 */
+export const fetchApi = ({ uri, params = {}, opt = {}, uploadFile = false }) => {
+	const defaultOptions = {
+		method: 'GET',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json',
+		},
+	};
 
+	if (!uri) {
+		return;
+	}
+
+	const options = merge(defaultOptions, opt);
+
+	if (uploadFile && params.files) {
+		options.headers = {};
+	}
+
+	// set token
+	if (AuthStorage.loggedIn) {
+		options.headers.Authorization = AuthStorage.token;
+	}
+
+	let url = uri;
+
+	if (params && Object.keys(params).length > 0) {
+		if (options && options.method === 'GET') {
+			url += '?' + Object.keys(params).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`).join('&');
+		} else if (uploadFile && params.files) {
+			const formData = new FormData();
+			params.files.forEach((img) => {
+				formData.append('files', img, img.renameFilename || img.name);
+			});
+
+			options.body = formData;
+		} else {
+			options.body = JSON.stringify(params);
+		}
+	}
+
+	return fetching(url, options);
+};
 
 export default function* ({ uri, params = {}, opt = {}, loading = true, uploadFile = false }) {
 	const defaultOptions = {
