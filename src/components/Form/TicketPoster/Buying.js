@@ -135,7 +135,15 @@ export default class TicketPosterForm extends Component {
 			{
 				relation: 'creator',
 				scope: {
-					fields: ['id', 'username', 'avatar', 'fullName'],
+					fields: ['id', 'username', 'avatar', 'fullName', 'ratingsCount', 'ratingsStats', 'ratings'],
+					include: [
+						{
+							relation: 'ratings',
+							scope: {
+								fields: ['creatorId'],
+							},
+						},
+					],
 				},
 			},
 		],
@@ -240,14 +248,14 @@ export default class TicketPosterForm extends Component {
 				dataSend.trip = {
 					...trip,
 					startDate: trip.startDate,
-					startTime: trip.startTime.format('HH:mm'),
+					startTime: trip.startTime && trip.startTime.format('HH:mm'),
 				};
 
 				if (tripBack) {
 					dataSend.tripBack = {
 						...tripBack,
 						startDate: tripBack.startDate,
-						startTime: tripBack.startTime.format('HH:mm'),
+						startTime: tripBack.startTime && tripBack.startTime.format('HH:mm'),
 					};
 				}
 

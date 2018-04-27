@@ -456,9 +456,7 @@ export default class FlightCard extends Component {
 									<Avatar style={{ marginBottom: 5, cursor: 'pointer' }} size={40} src={creator.avatar} name={creator.fullName} />
 								</CheckLogin>
 						}
-						{
-							creator.id !== AuthStorage.userId && <GroupStar ratingsStats={creator.ratingsStats} ratingsCount={creator.ratingsCount} user={creator} />
-						}
+						<GroupStar ratingsStats={creator.ratingsStats} ratingsCount={creator.ratingsCount} user={creator} />
 					</Col>
 				</Row>
 

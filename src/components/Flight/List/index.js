@@ -222,8 +222,7 @@ export default class FlightList extends Component {
 
 	render() {
 		const { classes, action, store: { ticketBuyingList, ticketSellingList } } = this.props;
-		console.log('renderList', ticketBuyingList);
-		console.log('autho', AuthStorage.userId);
+
 		if (this.state.loading || ticketBuyingList.loading || ticketSellingList.loading) {
 			return (
 				<Fragment>
