@@ -6,17 +6,14 @@
 * Created: 2018-03-15 15:06:09
 *------------------------------------------------------- */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux';
 
 import withStyles from 'src/theme/jss/withStyles';
-import { Button, Input, Select, DatePicker, Tabs, Row, Col } from 'antd';
-import FlightCard from 'src/components/Flight/Card';
 import FlightList from 'src/components/Flight/List';
 import FlightModal from 'src/components/Modals/Flight';
-import FlightDetail from 'src/components/Flight/Card/Detail';
 import Container from 'src/components/Layout/Container';
 
 const styleSheet = (theme) => ({

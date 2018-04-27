@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { Input, Menu, Dropdown, Select, Form, DatePicker, Button, Row, Col, notification } from 'antd';
+import { Input, Menu, Dropdown, Select, Form, Button, Row, Col, notification } from 'antd';
 
 import IconDeparture from 'src/components/Photo/IconDeparture';
 import IconDestination from 'src/components/Photo/IconDestination';
@@ -18,7 +18,7 @@ import IconDestination from 'src/components/Photo/IconDestination';
 import withStyles from 'src/theme/jss/withStyles';
 
 import { locationOptions } from 'src/constants/selectOption';
-
+import DatePicker from 'src/components/DatePickerLunar';
 import moment from 'moment';
 
 const styleSheet = (theme) => ({

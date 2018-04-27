@@ -20,9 +20,10 @@ import CheckLogin from 'src/components/Form/CheckLogin';
 import { getTicketSellingList } from 'src/redux/actions/ticket-selling';
 import { getTicketBuyingList } from 'src/redux/actions/ticket-buying';
 import { toggleTicketPosterModal } from 'src/redux/actions/modal';
-
+// import moment from 'moment-hijri';
 import FlightCard from '../Card';
 import AuthStorage from '../../../utils/AuthStorage';
+import moment from 'src/utils/moment';
 
 const styleSheet = (/* theme */) => ({
 	wrapperContent: {

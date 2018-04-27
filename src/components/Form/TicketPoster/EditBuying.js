@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import withStyles from 'src/theme/jss/withStyles';
 
-import { Form, Icon, Input, Button, Radio, Select, Row, Col, DatePicker, TimePicker, InputNumber, Upload } from 'antd';
+import { Form, Icon, Input, Button, Radio, Select, Row, Col, TimePicker, InputNumber, Upload } from 'antd';
 
 import { locationOptions, flightOptions } from 'src/constants/selectOption';
 import AuthStorage from 'src/utils/AuthStorage';
@@ -23,6 +23,7 @@ import { getUserTicketSellingList } from 'src/redux/actions/ticket-selling';
 import { getUserTicketBuyingList, getTicketBuyingData, updateTicketBuying } from 'src/redux/actions/ticket-buying';
 import { toggleEditBuyingModal } from 'src/redux/actions/modal';
 import { uploadFiles } from 'src/redux/actions/upload';
+import DatePicker from 'src/components/DatePickerLunar';
 
 import { getLabel } from 'src/utils';
 import moment from 'moment';

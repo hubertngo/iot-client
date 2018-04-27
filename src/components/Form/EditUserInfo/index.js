@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Form, Icon, Row, Col, Button, Input, Radio, DatePicker, Upload } from 'antd';
+import { Form, Icon, Row, Col, Button, Input, Radio, Upload } from 'antd';
 
 import withStyles from 'src/theme/jss/withStyles';
 
@@ -19,6 +19,7 @@ import { toggleEditUserInfoModal } from 'src/redux/actions/modal';
 import { editProfile } from 'src/redux/actions/auth';
 import { uploadFiles } from 'src/redux/actions/upload';
 import moment from 'moment';
+import DatePicker from 'src/components/DatePickerLunar';
 
 const styleSheet = (/* theme */) => ({
 	root: {

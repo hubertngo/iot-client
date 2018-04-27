@@ -13,7 +13,7 @@ import { bindActionCreators } from 'redux';
 import withStyles from 'src/theme/jss/withStyles';
 import moment from 'moment';
 
-import { Form, Icon, Input, Button, Radio, Select, Row, Col, DatePicker, TimePicker, InputNumber, Upload } from 'antd';
+import { Form, Icon, Input, Button, Radio, Select, Row, Col, TimePicker, InputNumber, Upload } from 'antd';
 
 import { locationOptions, flightOptions } from 'src/constants/selectOption';
 import AuthStorage from 'src/utils/AuthStorage';
@@ -26,6 +26,7 @@ import { toggleTicketPosterModal } from 'src/redux/actions/modal';
 import { uploadFiles } from 'src/redux/actions/upload';
 
 import { getLabel } from 'src/utils';
+import DatePicker from 'src/components/DatePickerLunar';
 
 import PosterDivider from './PosterDivider';
 
@@ -145,6 +146,17 @@ export default class TicketPosterForm extends Component {
 				gte: new Date(),
 			},
 		},
+	}
+
+	dateRender = (current) => {
+		console.log('current', current);
+
+		return (
+			<div className="ant-calendar-date">
+				<div className="text-left">{current.date()}</div>
+				<div className="text-right" style={{ lineHeight: 1.5, fontSize: 10, color: 'blue' }}>{current.date()}</div>
+			</div>
+		);
 	}
 
 	validateSeatCount = (rule, seatCount, callback) => {
@@ -298,6 +310,7 @@ export default class TicketPosterForm extends Component {
 
 	render() {
 		const { form: { getFieldDecorator, getFieldValue }, classes, action } = this.props;
+		window.moment = moment;
 
 		return (
 			<div className={classes.root}>
@@ -414,6 +427,7 @@ export default class TicketPosterForm extends Component {
 										})(
 											<DatePicker
 												format="DD/MM/YYYY"
+												// dateRender={this.dateRender}
 												disabledDate={
 													(current) => {
 														const tripEndDate = getFieldValue('tripBack.startDate');

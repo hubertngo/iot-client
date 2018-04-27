@@ -12,7 +12,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import withStyles from 'src/theme/jss/withStyles';
 
-import { Form, Icon, Input, Button, Radio, Select, Row, Col, DatePicker, TimePicker, InputNumber, Upload } from 'antd';
+import { Form, Icon, Input, Button, Radio, Select, Row, Col, TimePicker, InputNumber, Upload } from 'antd';
+import DatePicker from 'src/components/DatePickerLunar';
 
 import { locationOptions, flightOptions } from 'src/constants/selectOption';
 import AuthStorage from 'src/utils/AuthStorage';
