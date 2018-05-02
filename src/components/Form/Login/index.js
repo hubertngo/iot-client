@@ -14,7 +14,7 @@ import { bindActionCreators } from 'redux';
 import Router from 'next/router';
 import Link from 'next/link';
 
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, Popover } from 'antd';
 
 import BtnFbLogin from 'src/components/Form/BtnFbLogin';
 import BtnGgLogin from 'src/components/Form/BtnGgLogin';
@@ -100,6 +100,16 @@ const styleSheet = (theme) => ({
 	open: {
 		right: 0,
 	},
+	signUpNote: {
+		'& .ant-popover-inner-content': {
+			background: '#F5F5F5',
+			paddingTop: 25,
+			borderRadius: 5,
+		},
+		'& .ant-popover-arrow': {
+			background: '#F5F5F5',
+		}
+	}
 });
 
 function mapStateToProps(state) {
@@ -220,6 +230,15 @@ export default class LoginForm extends Component {
 		}, 100);
 	}
 
+	hide = () => {
+		this.setState({
+			visible: false,
+		});
+	}
+	handleVisibleChange = (visible) => {
+		this.setState({ visible });
+	}
+
 	render() {
 		const { form: { getFieldDecorator }, classes, style } = this.props;
 
@@ -258,7 +277,33 @@ export default class LoginForm extends Component {
 					</Button>
 					<Form.Item>
 						<div className={classes.buttonLogin}>
-							<a href="/sign-up" onClick={this.handleOpenSignUpDialog}>Đăng ký</a>
+							<div>
+								<a href="/sign-up" onClick={this.handleOpenSignUpDialog}>Đăng ký</a>
+								<Popover
+									content={
+										<div style={{ width: 400, color: '#000', fontSize: 14, position: 'relative' }}>
+											<Icon type="close-circle" style={{ position: 'absolute', top: 0, right: 0, fontSize: 22, color: '#E0E0E0' }} onClick={this.hide} />
+											<div style={{ fontWeight: 500 }}>Lợi ích khi là thành viên của Chove.vn</div>
+											<ol style={{ paddingLeft: 15, marginTop: 10, fontStyle: 'italic' }}>
+												<li>Thành viên tham gia nhóm phải kết bạn với face này để nhận được thông báo trên facebook.</li>
+												<li>Khi có thông báo yêu cầu học viên đổi Avatar của mình theo Avatar của chương trình, yêu cầu các học viên thực hiện đúng quy định.</li>
+												<li>Thành viên không được đăng link quảng cáo, các link giới thiệu về chương trình, sản phẩm khác, không đăng video, hình ảnh đồi trụy, vi phạm thuần phong mỹ tục của người Việt Nam và các thông tin về hoạt động của đội/nhóm khác trong group.</li>
+												<li>Thành viên giao tiếp trên Group lịch sự, có văn hóa, tôn trọng nhau, không nói tục, chửi bậy.</li>
+												<li>Thành viên đăng bài và bình luận phải viết Tiếng Việt có dấu, không bàn luận các vấn đề liên quan đến chính trị, đảng và nhà nước.</li>
+												<li>Thành viên Lưu Ý: Có những phần mềm hỗ trợ facebook là những phần mềm tự động đăng bài khi đăng nhập face của mình, Thành viên gỡ bỏ các phần mềm này ra để tránh vi phạm nội quy.</li>
+												<li>Thành viên tạo thói quen vào nhóm này hàng ngày để xem thông báo và giao lưu cùng nhau.</li>
+											</ol>
+										</div>
+									}
+									placement="bottom"
+									trigger="click"
+									visible={this.state.visible}
+									onVisibleChange={this.handleVisibleChange}
+									overlayClassName={classes.signUpNote}
+								>
+									<Icon type="question-circle" style={{ marginLeft: 5, color: '#4368C4' }} />
+								</Popover>
+							</div>
 							<Link href="/forgot-password">
 								<a className="login-form-forgot">Quên mật khẩu?</a>
 							</Link>
