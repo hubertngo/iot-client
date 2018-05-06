@@ -31,6 +31,12 @@ const styleSheet = (theme) => ({
 		display: 'inline-block',
 		background: '#fff',
 		textAlign: 'left',
+
+		'@media (max-width: 576px)': {
+			width: 'calc(100vw - 40px)',
+			minHeight: 'calc(100vh - 65px)',
+			padding: 10,
+		},
 	},
 	form: {
 		padding: '0 30px',

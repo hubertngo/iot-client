@@ -341,8 +341,8 @@ export default class TicketPosterForm extends Component {
 					</Form.Item>
 					<Form.Item>
 						<Row className={classes.formItem} type="flex">
-							<Col span={3} className={classes.formLabel}> Loại vé </Col>
-							<Col span={21}>
+							<Col md={3} xs={4} className={classes.formLabel}> Loại vé </Col>
+							<Col md={21} xs={20}>
 								{getFieldDecorator('flightType', {
 									initialValue: ticketBuyingView.flightType,
 								})(
@@ -356,8 +356,8 @@ export default class TicketPosterForm extends Component {
 					</Form.Item>
 					<Form.Item>
 						<div className={classes.formItem}>
-							<Col span={3} className={classes.formLabel}> Số vé </Col>
-							<Col span={21}>
+							<Col md={3} xs={4} className={classes.formLabel}> Số vé </Col>
+							<Col md={21} xs={20}>
 								{getFieldDecorator('seatCount', {
 									initialValue: ticketBuyingView.seatCount,
 									rules: [{ required: true, message: 'Làm ơn chọn số ghế' }, { validator: this.validateSeatCount }],
@@ -369,8 +369,8 @@ export default class TicketPosterForm extends Component {
 					</Form.Item>
 					<Form.Item>
 						<div className={classes.formItem}>
-							<Col span={3} className={classes.formLabel}> Hãng </Col>
-							<Col span={11}>
+							<Col md={3} xs={4} className={classes.formLabel}> Hãng </Col>
+							<Col md={21} xs={20}>
 								{getFieldDecorator('airline', {
 									initialValue: ticketBuyingView.airline,
 								})(

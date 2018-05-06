@@ -34,6 +34,10 @@ const styleSheet = (/* theme */) => ({
 			borderRadius: '50%',
 			borderStyle: 'solid',
 		},
+
+		'@media (max-width: 575.98px)': {
+			width: 'calc(100vw - 40px)',
+		},
 	},
 	header: {
 		textTransform: 'uppercase',

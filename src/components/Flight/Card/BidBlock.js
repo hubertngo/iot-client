@@ -7,9 +7,9 @@ import withStyles from 'src/theme/jss/withStyles';
 const styleSheet = () => ({
 });
 
-const BidBlock = ({ isStart, price }) => {
+const BidBlock = ({ isStart, price, style }) => {
 	return (
-		<div>
+		<div style={style}>
 			<div>{isStart ? 'Giá khởi điểm' : 'Giá được trả'}</div>
 			<p><Price price={price} type="primary" /></p>
 		</div>
@@ -17,11 +17,13 @@ const BidBlock = ({ isStart, price }) => {
 };
 
 BidBlock.propTypes = {
+	style: PropTypes.object,
 	isStart: PropTypes.bool,
 	price: PropTypes.number,
 };
 
 BidBlock.defaultProps = {
+	style: {},
 	isStart: false,
 	price: 1200000,
 };

@@ -82,6 +82,10 @@ const styleSheet = (theme) => ({
 	footer: {
 		textAlign: 'right',
 		padding: 20,
+
+		'@media (max-width: 576px)': {
+			paddingTop: 0,
+		},
 	},
 
 	remainingTimeInfo: {
@@ -171,6 +175,22 @@ const styleSheet = (theme) => ({
 			height: 100,
 			width: 'auto',
 			marginRight: 3,
+		},
+	},
+	wrapperTrip: {
+		marginTop: 50,
+		paddingRight: 80,
+
+		'@media (max-width: 576px)': {
+			marginTop: 20,
+			paddingRight: 20,
+		},
+	},
+	wrapperAirline: {
+		marginBottom: 30,
+
+		'@media (max-width: 576px)': {
+			marginBottom: 10,
 		},
 	},
 });
@@ -342,14 +362,22 @@ export default class FlightDetail extends Component {
 				return (
 					<Fragment>
 						<Row>
-							<Col span={6} offset={4}>
+							<Col md={4} xs={4} />
+							<Col md={6} xs={10}>
 								<BidBlock isStart price={flightData.startingPrice} />
 							</Col>
-							<Col span={6}>
+							<Col md={6} xs={10}>
 								<BidBlock price={flightData.price} />
 							</Col>
-							<Col span={8}>
-								<div>
+							<Col xs={14} />
+							<Col md={8} xs={10}>
+								<div className="hidden-sm-up">
+									<div style={{ marginBottom: 10 }}>
+										<div>Thời gian còn lại</div>
+										<div className={classes.remainingTimeInfo}>{moment(flightData.dueDate).fromNow()}</div>
+									</div>
+								</div>
+								<div className="hidden-sm-down">
 									<div style={{ marginRight: 25 }}>
 										<div>Thời gian còn lại</div>
 										<div className={classes.remainingTimeInfo}>{moment(flightData.dueDate).fromNow()}</div>
@@ -358,7 +386,7 @@ export default class FlightDetail extends Component {
 							</Col>
 						</Row>
 						<div className={classes.actionWrapper}>
-							<span>Mức giá của bạn</span>
+							<span className="hidden-sm-down">Mức giá của bạn</span>
 							<InputNumber
 								formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 								className="price"
@@ -494,7 +522,7 @@ export default class FlightDetail extends Component {
 						</div>
 					}
 
-					<div style={{ marginTop: 50, paddingRight: 80 }}>
+					<div className={classes.wrapperTrip}>
 						<TripBlock tripData={flightData.trip} />
 						{
 							flightData.tripBack &&
@@ -503,7 +531,7 @@ export default class FlightDetail extends Component {
 						<TripBlock tripData={flightData.tripBack} />
 					</div>
 
-					<Row type="flex" style={{ marginBottom: '30px' }}>
+					<Row type="flex" className={classes.wrapperAirline}>
 						<Col span={8} style={{ display: 'flex' }}>
 							{
 								getLabel(flightData.airline, flightOptions).value === 'all' ? (

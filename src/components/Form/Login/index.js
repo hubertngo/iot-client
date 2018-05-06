@@ -38,12 +38,23 @@ const styleSheet = (theme) => ({
 		background: '#fff',
 		textAlign: 'left',
 		borderRadius: theme.radius.default,
+		overflow: 'hidden',
+
+		'@media (max-width: 576px)': {
+			width: 'calc(100vw - 40px)',
+			minHeight: 'calc(100vh - 65px)',
+			padding: 10,
+		},
 	},
 	form: {
 		padding: '0 30px',
 	},
 	logo: {
 		marginBottom: '50px',
+
+		'@media (max-width: 576px)': {
+			textAlign: 'center',
+		},
 	},
 	buttonLogin: {
 		marginBottom: 30,
@@ -108,8 +119,27 @@ const styleSheet = (theme) => ({
 		},
 		'& .ant-popover-arrow': {
 			background: '#F5F5F5',
-		}
-	}
+
+			'@media (max-width: 576px)': {
+				left: '25% !important',
+			},
+		},
+
+		'@media (max-width: 576px)': {
+			left: '10px !important',
+		},
+	},
+	contentNote: {
+		width: 600,
+		color: '#000',
+		fontSize: 14,
+		position: 'relative',
+
+		'@media (max-width: 576px)': {
+			width: 'calc(100vw - 72px)',
+			textAlign: 'center',
+		},
+	},
 });
 
 function mapStateToProps(state) {
@@ -281,10 +311,10 @@ export default class LoginForm extends Component {
 								<a href="/sign-up" onClick={this.handleOpenSignUpDialog}>Đăng ký</a>
 								<Popover
 									content={
-										<div style={{ width: 400, color: '#000', fontSize: 14, position: 'relative' }}>
+										<div className={classes.contentNote}>
 											<Icon type="close-circle" style={{ position: 'absolute', top: 0, right: 0, fontSize: 22, color: '#E0E0E0' }} onClick={this.hide} />
 											<div style={{ fontWeight: 500 }}>Lợi ích khi là thành viên của Chove.vn</div>
-											<ol style={{ paddingLeft: 15, marginTop: 10, fontStyle: 'italic' }}>
+											<ol style={{ paddingLeft: 15, marginTop: 10, fontStyle: 'italic', textAlign: 'left' }}>
 												<li>Thành viên tham gia nhóm phải kết bạn với face này để nhận được thông báo trên facebook.</li>
 												<li>Khi có thông báo yêu cầu học viên đổi Avatar của mình theo Avatar của chương trình, yêu cầu các học viên thực hiện đúng quy định.</li>
 												<li>Thành viên không được đăng link quảng cáo, các link giới thiệu về chương trình, sản phẩm khác, không đăng video, hình ảnh đồi trụy, vi phạm thuần phong mỹ tục của người Việt Nam và các thông tin về hoạt động của đội/nhóm khác trong group.</li>
@@ -304,6 +334,7 @@ export default class LoginForm extends Component {
 									<Icon type="question-circle" style={{ marginLeft: 5, color: '#4368C4' }} />
 								</Popover>
 							</div>
+
 							<Link href="/forgot-password">
 								<a className="login-form-forgot">Quên mật khẩu?</a>
 							</Link>
@@ -312,7 +343,9 @@ export default class LoginForm extends Component {
 					<div className={classes.dividend}>
 						<span>Hoặc đăng nhập qua</span>
 					</div>
-
+					{
+						this.state.visible && <div style={{ height: 400 }} className="hidden-sm-up" />
+					}
 					<div className="text-center">
 						<BtnFbLogin />
 						<BtnGgLogin />

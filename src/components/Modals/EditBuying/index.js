@@ -29,6 +29,10 @@ const styleSheet = (/* theme */) => ({
 		'& .ant-modal-close': {
 			display: 'none',
 		},
+
+		'@media (max-width: 576px)': {
+			minWidth: 350,
+		},
 	},
 });
 

@@ -42,6 +42,10 @@ const styles = (/* theme */) => ({
 		zIndex: '1',
 		position: 'relative',
 		borderRadius: '5px 5px 0 0',
+
+		'@media (max-width: 576px)': {
+			background: '#FFF',
+		},
 	},
 	info: {
 		marginLeft: '10px',
@@ -77,6 +81,45 @@ const styles = (/* theme */) => ({
 	itemWrapper: {
 		padding: '5px 0',
 	},
+	rightSidebar: {
+		position: 'fixed',
+		top: 65,
+		right: 0,
+		width: 0,
+		height: 'calc(100vh - 65px)',
+		background: '#FFF',
+		display: 'flex',
+		flexDirection: 'column',
+		transition: 'width 300ms ease',
+		overflow: 'hidden',
+		zIndex: 10,
+
+		'&.active': {
+			width: 300,
+			paddingLeft: 15,
+		},
+
+		'& ul': {
+			listStyle: 'none',
+			padding: 0,
+			margin: 0,
+		},
+
+		// '& li': {
+		// 	padding: 20,
+		// 	borderBottom: '1px solid #F2F2F2',
+		// },
+	},
+	overlay: {
+		position: 'fixed',
+		width: '100vw',
+		height: '100vh',
+		background: '#000',
+		zIndex: 9,
+		opacity: 0.1,
+		top: 0,
+		left: 0,
+	},
 });
 
 function mapStateToProps(state) {
@@ -96,79 +139,110 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-const AvatarBtn = ({ store, action, classes }) => {
-	const logout = () => {
-		action.logoutRequest(() => {
+// const AvatarBtn = ({ store, action, classes, isMobile }) => {
+class AvatarBtn extends React.Component {
+
+	state = {}
+
+	logout = () => {
+		this.props.action.logoutRequest(() => {
 			Router.pushRoute('/');
 		});
-	};
+	}
 
-	const content = (
-		<div className={classes.content}>
-			{/* <div className={classes.itemWrapper}>
+	toggleRightSidebar = () => {
+		this.setState({ activeRightSideBar: !this.state.activeRightSideBar });
+	}
+
+	hideRightSideBar = () => {
+		this.setState({ activeRightSideBar: false });
+	}
+
+	render() {
+		const { classes, store, action, isMobile } = this.props;
+		const content = (
+			<div className={classes.content}>
+				{/* <div className={classes.itemWrapper}>
 				<div className={classes.item} onClick={() => action.toggleUserInfoModal({ open: true, id: store.auth.id })}>
 					<Icon type="clock-circle-o" />
 					<span> Lịch sử giao dịch cá nhân </span>
 				</div>
 			</div>
 			<Divider className={classes.divider} /> */}
-			<div className={classes.itemWrapper}>
-				<div className={classes.item} onClick={() => action.toggleUserInfoModal({ open: true, id: store.auth.id })}>
-					<Icon type="user" />
-					<span> Thông tin cá nhân </span>
-				</div>
-			</div>
-			{
-				store.auth && store.auth.loginType === 'email' &&
-				<Fragment>
-					<Divider className={classes.divider} />
-					<div className={classes.itemWrapper}>
-						<div className={classes.item} onClick={() => Router.pushRoute('/change-password')}>
-							<Icon type="setting" />
-							<span>Đổi mật khẩu</span>
-						</div>
+				<div className={classes.itemWrapper}>
+					<div className={classes.item} onClick={() => action.toggleUserInfoModal({ open: true, id: store.auth.id })}>
+						<Icon type="user" />
+						<span> Thông tin cá nhân </span>
 					</div>
-				</Fragment>
-			}
-			<Divider className={classes.divider} />
-			<div className={classes.itemWrapper}>
+				</div>
 				{
-					<div className={classes.item} onClick={() => Router.pushRoute('/user-ticket-list')}>
-						<IconDeparture size={16} />
-						<span style={{ marginLeft: 15 }}>  Bài đăng của tôi </span>
-					</div>
+					store.auth && store.auth.loginType === 'email' &&
+					<Fragment>
+						<Divider className={classes.divider} />
+						<div className={classes.itemWrapper}>
+							<div className={classes.item} onClick={() => Router.pushRoute('/change-password')}>
+								<Icon type="setting" />
+								<span>Đổi mật khẩu</span>
+							</div>
+						</div>
+					</Fragment>
 				}
-			</div>
-			<Divider className={classes.divider} />
-			<div className={classes.itemWrapper}>
-				<div className={classes.item} onClick={logout}>
-					<Icon type="logout" />
-					<span> Đăng xuất </span>
+				<Divider className={classes.divider} />
+				<div className={classes.itemWrapper}>
+					{
+						<div className={classes.item} onClick={() => Router.pushRoute('/user-ticket-list')}>
+							<IconDeparture size={16} />
+							<span style={{ marginLeft: 15 }}>  Bài đăng của tôi </span>
+						</div>
+					}
+				</div>
+				<Divider className={classes.divider} />
+				<div className={classes.itemWrapper}>
+					<div className={classes.item} onClick={this.logout}>
+						<Icon type="logout" />
+						<span> Đăng xuất </span>
+					</div>
 				</div>
 			</div>
-		</div>
-	);
-
-	const title = (
-		<div className={classes.title}>
-			<Avatar size={50} src={store.auth.avatar} name={store.auth.fullName} />
-			<div className={classes.info}>
-				<h4>{store.auth.fullName}</h4>
-				{/* <i>{store.auth.email}</i> */}
-				<GroupStar ratingsStats={store.auth.ratingsStats} ratingsCount={store.auth.ratingsCount} user={store.auth} />
+		);
+		const title = (
+			<div className={classes.title}>
+				<Avatar size={50} src={store.auth.avatar} name={store.auth.fullName} />
+				<div className={classes.info}>
+					<h4>{store.auth.fullName}</h4>
+					{/* <i>{store.auth.email}</i> */}
+					<GroupStar ratingsStats={store.auth.ratingsStats} ratingsCount={store.auth.ratingsCount} user={store.auth} />
+				</div>
 			</div>
-		</div>
-	);
+		);
 
-	return (
-		<Popover content={content} title={title} trigger="click" placement="bottomRight">
-			<div className={classes.root}>
-				<Avatar className={classes.avatar} name={store.auth.fullName} src={store.auth.avatar} />
-				<Icon type="down" style={{ marginLeft: '5px', fontWeight: 'bold', cursor: 'pointer' }} />
-			</div>
-		</Popover>
-	);
-};
+		if (isMobile) {
+			return (
+				<Fragment>
+					<Avatar className={classes.avatar} name={store.auth.fullName} src={store.auth.avatar} onClick={this.toggleRightSidebar} />
+					<div className={[classes.rightSidebar, this.state.activeRightSideBar ? 'active' : ''].join(' ')}>
+						{title}
+						<Divider style={{ marginBottom: 15, marginTop: 0, zIndex: 1 }} />
+						{content}
+					</div>
+					{
+						this.state.activeRightSideBar && <div className={classes.overlay} onClick={this.hideRightSideBar} />
+					}
+				</Fragment>
+			);
+		}
+
+		return (
+			<Popover content={content} title={title} trigger="click" placement="bottomRight">
+				<div className={classes.root}>
+					<Avatar className={classes.avatar} name={store.auth.fullName} src={store.auth.avatar} />
+					<Icon type="down" style={{ marginLeft: '5px', fontWeight: 'bold', cursor: 'pointer' }} className="hidden-sm-down" />
+				</div>
+			</Popover>
+		);
+	}
+}
+
 
 AvatarBtn.propTypes = {
 	classes: PropTypes.object.isRequired,

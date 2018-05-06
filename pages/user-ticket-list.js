@@ -14,6 +14,7 @@ import withRoot from 'src/root';
 import MainLayout from 'src/layout/Main';
 import Container from 'src/components/Layout/Container';
 import UserTicketList from 'src/components/Flight/List/UserTicketList';
+import MobileUserTicketList from 'src/components/Flight/List/MobileUserTicketList';
 
 @withRoot
 export default class MyList extends PureComponent {
@@ -25,13 +26,17 @@ export default class MyList extends PureComponent {
 	}
 
 	render() {
+		let isDesktop = true;
+		if (typeof window !== 'undefined') {
+			isDesktop = window.innerWidth > 768;
+		}
 		return (
 			<MainLayout>
 				<Head>
 					<title>Chove.vn - Bài đăng của tôi</title>
 				</Head>
 				<Container>
-					<UserTicketList />
+					{ isDesktop ? <UserTicketList/> : <MobileUserTicketList />}
 				</Container>
 			</MainLayout>
 		);

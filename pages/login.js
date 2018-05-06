@@ -26,6 +26,11 @@ const styleSheet = (/* theme */) => ({
 	content: {
 		display: 'inline-flex',
 		margin: '50px 0',
+
+		'@media (max-width: 576px)': {
+			display: 'block',
+			margin: 0,
+		},
 	},
 	img: {
 		borderRadius: '0 8px 8px 0',
@@ -73,7 +78,7 @@ export default class LoginPage extends PureComponent {
 				<div className={classes.root}>
 					<div className={classes.content}>
 						<LoginForm isLoginPage style={{ borderRadius: '8px 0 0 8px' }} />
-						<div className={classes.img} />
+						<div className={classes.img + ' hidden-sm-down'} />
 					</div>
 				</div>
 			</MainLayout>

@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 
 import withStyles from 'src/theme/jss/withStyles';
 import FlightList from 'src/components/Flight/List';
+import MobileFlightList from 'src/components/Flight/List/MobileList';
 import FlightModal from 'src/components/Modals/Flight';
 import Container from 'src/components/Layout/Container';
 
@@ -23,6 +24,10 @@ const styleSheet = (theme) => ({
 		background: '#FFF',
 		zIndex: 1,
 		paddingBottom: 20,
+
+		'@media (max-width: 576px)': {
+			background: 'none',
+		},
 	},
 
 	banner: {
@@ -143,19 +148,23 @@ export default class ClassName extends Component {
 
 	render() {
 		const { classes } = this.props;
+		let isDesktop = true;
+		if (typeof window !== 'undefined') {
+			isDesktop = window.innerWidth > 768;
+		}
 
 		return (
 			<div className={classes.root}>
-				<div className={classes.banner} />
+				{/* <div className={classes.banner} /> */}
 				<Container>
-					<div className={classes.title}>Sang nhượng vé rẻ khắp mọi nơi</div>
-					<div style={{ height: 60 }} />
+					{/* <div className={classes.title}>Sang nhượng vé rẻ khắp mọi nơi</div> */}
+					{/* <div style={{ height: 60 }} /> */}
 					{/* <Tabs defaultActiveKey="1" className={classes.tabs}>
 						<Tabs.TabPane tab="Vé máy bay" key="1" />
 						<Tabs.TabPane tab="Phòng khách sạn" key="2" />
 						<Tabs.TabPane tab="Voucher" key="3" />
 					</Tabs> */}
-					<FlightList />
+					{isDesktop ? <FlightList /> : <MobileFlightList />}
 				</Container>
 
 				<FlightModal />

@@ -30,6 +30,11 @@ const styleSheet = (theme) => ({
 		position: 'relative',
 		textAlign: 'left',
 		padding: 20,
+
+		'@media (max-width: 575.98px)': {
+			width: 'calc(100vw - 40px)',
+			minWidth: 'auto',
+		},
 	},
 	header: {
 		textTransform: 'uppercase',
@@ -48,6 +53,10 @@ const styleSheet = (theme) => ({
 		color: '#95A2AB',
 		'& span': {
 			marginRight: 10,
+		},
+
+		'@media (max-width: 575.98px)': {
+			wordBreak: 'break-all',
 		},
 	},
 	rightCol: {
@@ -80,9 +89,13 @@ const styleSheet = (theme) => ({
 		color: theme.palette.primary[500],
 		maxWidth: 350,
 		overflow: 'hidden',
-		textOverflow: 'ellipsic',
+		textOverflow: 'ellipsis',
 		'& > i': {
 			marginRight: 5,
+		},
+
+		'@media (max-width: 575.98px)': {
+			wordBreak: 'break-all',
 		},
 	},
 	rating: {

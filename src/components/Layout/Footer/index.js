@@ -21,6 +21,10 @@ const styles = (/* theme */) => ({
 		// marginTop: '24px',
 		background: '#ededed',
 		borderTop: '1px solid #e4e1e1',
+
+		'@media (max-width: 576px)': {
+			display: 'none',
+		},
 	},
 	logo: {
 		height: '30px',
