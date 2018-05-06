@@ -83,7 +83,7 @@ const styleSheet = (theme) => ({
 		textAlign: 'right',
 		padding: 20,
 
-		'@media (max-width: 576px)': {
+		'@media (max-width: 991.98px)': {
 			paddingTop: 0,
 		},
 	},
@@ -181,7 +181,7 @@ const styleSheet = (theme) => ({
 		marginTop: 50,
 		paddingRight: 80,
 
-		'@media (max-width: 576px)': {
+		'@media (max-width: 991.98px)': {
 			marginTop: 20,
 			paddingRight: 20,
 		},
@@ -189,7 +189,7 @@ const styleSheet = (theme) => ({
 	wrapperAirline: {
 		marginBottom: 30,
 
-		'@media (max-width: 576px)': {
+		'@media (max-width: 991.98px)': {
 			marginBottom: 10,
 		},
 	},

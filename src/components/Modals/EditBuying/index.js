@@ -30,7 +30,7 @@ const styleSheet = (/* theme */) => ({
 			display: 'none',
 		},
 
-		'@media (max-width: 576px)': {
+		'@media (max-width: 991.98px)': {
 			minWidth: 350,
 		},
 	},

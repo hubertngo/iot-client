@@ -40,7 +40,7 @@ const styleSheet = (theme) => ({
 		borderRadius: theme.radius.default,
 		overflow: 'hidden',
 
-		'@media (max-width: 576px)': {
+		'@media (max-width: 991.98px)': {
 			width: 'calc(100vw - 40px)',
 			minHeight: 'calc(100vh - 65px)',
 			padding: 10,
@@ -52,7 +52,7 @@ const styleSheet = (theme) => ({
 	logo: {
 		marginBottom: '50px',
 
-		'@media (max-width: 576px)': {
+		'@media (max-width: 991.98px)': {
 			textAlign: 'center',
 		},
 	},
@@ -120,12 +120,12 @@ const styleSheet = (theme) => ({
 		'& .ant-popover-arrow': {
 			background: '#F5F5F5',
 
-			'@media (max-width: 576px)': {
+			'@media (max-width: 991.98px)': {
 				left: '25% !important',
 			},
 		},
 
-		'@media (max-width: 576px)': {
+		'@media (max-width: 991.98px)': {
 			left: '10px !important',
 		},
 	},
@@ -135,7 +135,7 @@ const styleSheet = (theme) => ({
 		fontSize: 14,
 		position: 'relative',
 
-		'@media (max-width: 576px)': {
+		'@media (max-width: 991.98px)': {
 			width: 'calc(100vw - 72px)',
 			textAlign: 'center',
 		},

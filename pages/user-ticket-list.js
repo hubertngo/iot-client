@@ -28,7 +28,7 @@ export default class MyList extends PureComponent {
 	render() {
 		let isDesktop = true;
 		if (typeof window !== 'undefined') {
-			isDesktop = window.innerWidth > 768;
+			isDesktop = window.innerWidth >= 992;
 		}
 		return (
 			<MainLayout>
@@ -36,7 +36,7 @@ export default class MyList extends PureComponent {
 					<title>Chove.vn - Bài đăng của tôi</title>
 				</Head>
 				<Container>
-					{ isDesktop ? <UserTicketList/> : <MobileUserTicketList />}
+					{ isDesktop ? <UserTicketList /> : <MobileUserTicketList />}
 				</Container>
 			</MainLayout>
 		);

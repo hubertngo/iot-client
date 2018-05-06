@@ -27,7 +27,7 @@ const styleSheet = (/* theme */) => ({
 		display: 'inline-flex',
 		margin: '50px 0',
 
-		'@media (max-width: 576px)': {
+		'@media (max-width: 1200px)': {
 			display: 'block',
 			margin: 0,
 		},

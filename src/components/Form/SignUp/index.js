@@ -32,7 +32,7 @@ const styleSheet = (theme) => ({
 		background: '#fff',
 		textAlign: 'left',
 
-		'@media (max-width: 576px)': {
+		'@media (max-width: 991.98px)': {
 			width: 'calc(100vw - 40px)',
 			minHeight: 'calc(100vh - 65px)',
 			padding: 10,

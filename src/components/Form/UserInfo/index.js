@@ -31,7 +31,7 @@ const styleSheet = (theme) => ({
 		textAlign: 'left',
 		padding: 20,
 
-		'@media (max-width: 575.98px)': {
+		'@media (max-width: 991.98px)': {
 			width: 'calc(100vw - 40px)',
 			minWidth: 'auto',
 		},
@@ -55,7 +55,7 @@ const styleSheet = (theme) => ({
 			marginRight: 10,
 		},
 
-		'@media (max-width: 575.98px)': {
+		'@media (max-width: 991.98px)': {
 			wordBreak: 'break-all',
 		},
 	},
@@ -94,7 +94,7 @@ const styleSheet = (theme) => ({
 			marginRight: 5,
 		},
 
-		'@media (max-width: 575.98px)': {
+		'@media (max-width: 991.98px)': {
 			wordBreak: 'break-all',
 		},
 	},

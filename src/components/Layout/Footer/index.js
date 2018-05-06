@@ -21,10 +21,6 @@ const styles = (/* theme */) => ({
 		// marginTop: '24px',
 		background: '#ededed',
 		borderTop: '1px solid #e4e1e1',
-
-		'@media (max-width: 576px)': {
-			display: 'none',
-		},
 	},
 	logo: {
 		height: '30px',
@@ -57,7 +53,7 @@ const Footer = (props) => {
 	const { classes = {} } = props;
 
 	return (
-		<footer className={classes.root + ' text-center-xs-down'}>
+		<footer className={classes.root + ' text-center-xs-down hidden-md-down'}>
 			<Container>
 				<img className={classes.logo} src="/static/assets/images/logo/2x.png" alt="chove.vn" />
 				<Row type="flex">

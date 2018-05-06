@@ -9,6 +9,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Tabs } from 'antd';
 // import { bindActionCreators } from 'redux';
 
 import withStyles from 'src/theme/jss/withStyles';
@@ -25,7 +26,7 @@ const styleSheet = (theme) => ({
 		zIndex: 1,
 		paddingBottom: 20,
 
-		'@media (max-width: 576px)': {
+		'@media (max-width: 991.98px)': {
 			background: 'none',
 		},
 	},
@@ -150,25 +151,40 @@ export default class ClassName extends Component {
 		const { classes } = this.props;
 		let isDesktop = true;
 		if (typeof window !== 'undefined') {
-			isDesktop = window.innerWidth > 768;
+			isDesktop = window.innerWidth >= 992;
+		}
+
+		if (!isDesktop) {
+			return (
+				<div className={classes.root}>
+					<div className={classes.banner + ' hidden-md-down'} />
+					<Container>
+						<MobileFlightList />
+					</Container>
+
+					<FlightModal />
+				</div>
+			);
 		}
 
 		return (
 			<div className={classes.root}>
-				{/* <div className={classes.banner} /> */}
+				<div className={classes.banner + ' hidden-md-down'} />
 				<Container>
-					{/* <div className={classes.title}>Sang nhượng vé rẻ khắp mọi nơi</div> */}
-					{/* <div style={{ height: 60 }} /> */}
-					{/* <Tabs defaultActiveKey="1" className={classes.tabs}>
+					<div className={classes.title}>Sang nhượng vé rẻ khắp mọi nơi</div>
+					<div style={{ height: 60 }} />
+					<Tabs defaultActiveKey="1" className={classes.tabs}>
 						<Tabs.TabPane tab="Vé máy bay" key="1" />
 						<Tabs.TabPane tab="Phòng khách sạn" key="2" />
 						<Tabs.TabPane tab="Voucher" key="3" />
-					</Tabs> */}
+					</Tabs>
 					{isDesktop ? <FlightList /> : <MobileFlightList />}
 				</Container>
 
 				<FlightModal />
 			</div>
 		);
+
+
 	}
 }

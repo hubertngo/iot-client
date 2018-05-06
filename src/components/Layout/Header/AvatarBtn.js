@@ -43,7 +43,7 @@ const styles = (/* theme */) => ({
 		position: 'relative',
 		borderRadius: '5px 5px 0 0',
 
-		'@media (max-width: 576px)': {
+		'@media (max-width: 991.98px)': {
 			background: '#FFF',
 		},
 	},

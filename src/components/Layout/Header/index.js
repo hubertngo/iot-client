@@ -26,7 +26,7 @@ const styles = (theme) => ({
 	root: {
 		height: '45px',
 
-		'@media (max-width: 575.98px)': {
+		'@media (max-width: 991.98px)': {
 			height: '65px',
 		},
 	},
