@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
+import Router, { withRouter } from 'next/router';
 
 import { Row, Col, Icon, Button, Modal } from 'antd';
 
@@ -225,6 +226,7 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+@withRouter
 @connect(mapStateToProps, mapDispatchToProps)
 @withStyles(styleSheet)
 export default class FlightCard extends Component {
@@ -258,6 +260,7 @@ export default class FlightCard extends Component {
 	}
 
 	handleClickFlight = () => {
+		Router.push(`${this.props.router.pathname}?ticketId=${this.props.flightData.id}&type=${this.props.type}`)
 		this.props.action.toggleFlightModal({ open: true, type: this.props.type, id: this.props.flightData.id });
 	}
 

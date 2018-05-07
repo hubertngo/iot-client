@@ -231,6 +231,7 @@ export default class FlightDetail extends Component {
 			toggleFlightModal: PropTypes.func,
 			createTicketSellingBid: PropTypes.func,
 		}).isRequired,
+		onCancel: PropTypes.func.isRequired,
 	}
 
 	static defaultProps = {
@@ -261,12 +262,12 @@ export default class FlightDetail extends Component {
 					message: 'Chúc mừng!',
 					description: 'Bạn đã liên hệ thành công! Vui lòng kiểm tra hộp thư để nhận thông tin người mua.',
 				});
-				this.props.action.toggleFlightModal({ open: false });
+				this.props.onCancel();
 			}, () => {
 				this.setState({
 					btnLoading: false,
 				});
-				this.props.action.toggleFlightModal({ open: false });
+				this.props.onCancel();
 			});
 		}
 	}
@@ -289,12 +290,12 @@ export default class FlightDetail extends Component {
 					message: 'Chúc mừng!',
 					description: 'Bạn đã mua vé thành công! Vui lòng kiểm tra hộp thư.',
 				});
-				this.props.action.toggleFlightModal({ open: false });
+				this.props.onCancel();
 			}, () => {
 				this.setState({
 					btnLoading: false,
 				});
-				this.props.action.toggleFlightModal({ open: false });
+				this.props.onCancel();
 			});
 		}
 	}
@@ -317,12 +318,12 @@ export default class FlightDetail extends Component {
 					message: 'Chúc mừng!',
 					description: 'Bạn đã đấu giá thành công!',
 				});
-				this.props.action.toggleFlightModal({ open: false });
+				this.props.onCancel();
 			}, () => {
 				this.setState({
 					btnLoading: false,
 				});
-				this.props.action.toggleFlightModal({ open: false });
+				this.props.onCancel();
 			});
 		}
 	}
@@ -458,7 +459,7 @@ export default class FlightDetail extends Component {
 
 		return (
 			<div className={classes.root}>
-				<Icon type="close-circle" className={classes.closeBtn} onClick={this.state.loading ? f => f : () => action.toggleFlightModal({ open: false })} />
+				<Icon type="close-circle" className={classes.closeBtn} onClick={this.props.onCancel} />
 				<div className={classes.header}>
 					{
 						flightData.dataType === 'fb' ?

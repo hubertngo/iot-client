@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { withRouter } from 'next/router';
 
 import withStyles from 'src/theme/jss/withStyles';
 
@@ -53,6 +54,7 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+@withRouter
 @connect(mapStateToProps, mapDispatchToProps)
 @withStyles(styleSheet)
 export default class FlightModal extends Component {
@@ -68,6 +70,41 @@ export default class FlightModal extends Component {
 			getTicketSellingData: PropTypes.func.isRequired,
 			getTicketBuyingData: PropTypes.func.isRequired,
 		}).isRequired,
+		router: PropTypes.shape({
+			query: PropTypes.object,
+		}).isRequired,
+	}
+
+	constructor(props) {
+		super(props);
+
+		const { query } = props.router;
+
+		if (query && query.ticketId) {
+			const params = {
+				id: query.ticketId,
+				filter: {
+					include: [
+						{
+							relation: 'creator',
+							scope: {
+								fields: ['id', 'username', 'avatar', 'fullName', 'ratingsCount', 'ratingsStats'],
+							},
+						},
+					],
+				},
+			};
+
+			this.state = { active: true };
+
+			if (query.type === 'selling') {
+				this.props.action.getTicketSellingData(params);
+			} else {
+				this.props.action.getTicketBuyingData(params);
+			}
+		} else {
+			this.state = { active: false };
+		}
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -88,12 +125,19 @@ export default class FlightModal extends Component {
 				},
 			};
 
+			this.setState({ active: true });
+
 			if (flight.type === 'selling') {
 				nextProps.action.getTicketSellingData(params);
 			} else {
 				nextProps.action.getTicketBuyingData(params);
 			}
 		}
+	}
+
+	handleCancel = () => {
+		this.setState({ active: false });
+		this.props.action.toggleFlightModal({ open: false });
 	}
 
 	render() {
@@ -103,16 +147,17 @@ export default class FlightModal extends Component {
 		return (
 			<Modal
 				// title="Basic Modal"
-				visible={flight.open}
+				visible={this.state.active}
 				closable={flight.closable}
 				footer={null}
 				bodyStyle={{ padding: 0 }}
 				className={classes.root}
 				wrapClassName={classes.wrap}
 				destroyOnClose
-				onCancel={flight.closable ? f => f : () => action.toggleFlightModal({ open: false })}
+				onCancel={this.handleCancel}
+				// onCancel={flight.closable ? f => f : () => action.toggleFlightModal({ open: false })}
 			>
-				<FlightDetail flightData={flightData} type={flight.type} />
+				<FlightDetail flightData={flightData} type={flight.type} onCancel={this.handleCancel} />
 			</Modal>
 		);
 	}
