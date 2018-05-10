@@ -472,7 +472,7 @@ export default class FlightDetail extends Component {
 									alignItems: 'center',
 								}}
 							>
-								<Avatar style={{ marginBottom: 5, marginRight: 10 }} size={40} src={fbFeed.author.picture.data.url} name={fbFeed.author.name} />
+								<Avatar style={{ marginBottom: 5, marginRight: 10 }} size={40} src={fbFeed.author.picture} name={fbFeed.author.name} />
 								<span className={classes.author} onClick={this.handleClickAvatar}>{fbFeed.author.name}</span>
 							</a> :
 							<Fragment>

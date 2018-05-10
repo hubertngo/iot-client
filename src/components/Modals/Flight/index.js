@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'next/router';
+import Router, { withRouter } from 'next/router';
 
 import withStyles from 'src/theme/jss/withStyles';
 
@@ -81,6 +81,13 @@ export default class FlightModal extends Component {
 		const { query } = props.router;
 
 		if (query && query.ticketId) {
+
+			if (typeof window !== 'undefined') {
+				if (window.innerWidth < 992) {
+					Router.push(`/ticket-${query.type}/${query.ticketId}`);
+				}
+			}
+
 			const params = {
 				id: query.ticketId,
 				filter: {
@@ -102,6 +109,7 @@ export default class FlightModal extends Component {
 			} else {
 				this.props.action.getTicketBuyingData(params);
 			}
+			this._type = query.type;
 		} else {
 			this.state = { active: false };
 		}
@@ -132,8 +140,12 @@ export default class FlightModal extends Component {
 			} else {
 				nextProps.action.getTicketBuyingData(params);
 			}
+
+			this._type = flight.type;
 		}
 	}
+
+	_type = 'selling'
 
 	handleCancel = () => {
 		this.setState({ active: false });
@@ -142,7 +154,7 @@ export default class FlightModal extends Component {
 
 	render() {
 		const { classes, store: { modal: { flight }, ticketSellingView, ticketBuyingView }, action } = this.props;
-		const flightData = flight.type === 'selling' ? ticketSellingView : ticketBuyingView;
+		const flightData = this._type === 'selling' ? ticketSellingView : ticketBuyingView;
 
 		return (
 			<Modal

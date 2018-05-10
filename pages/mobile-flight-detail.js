@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 // import AuthStorage from 'src/utils/AuthStorage';
 import { bindActionCreators } from 'redux';
 import MainLayout from 'src/layout/Main';
+import Router from 'next/router';
 
 import SignUpForm from 'src/components/Form/SignUp';
 import MobileFlightDetail from 'src/components/Flight/Card/MobileDetail';
@@ -64,6 +65,14 @@ export default class MobileFlightDetailPage extends PureComponent {
 		type: PropTypes.string.isRequired,
 	}
 
+	constructor(props) {
+		super(props);
+		if (typeof window !== 'undefined') {
+			if (window.innerWidth >= 992) {
+				Router.push(`/?ticketId=${this.props.id}&type=${this.props.type}`);
+			}
+		}
+	}
 
 	componentDidMount() {
 		const { id, type } = this.props;

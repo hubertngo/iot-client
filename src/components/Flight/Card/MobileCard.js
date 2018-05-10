@@ -336,7 +336,7 @@ export default class FlightCard extends Component {
 			)
 		);
 
-		if (AuthStorage.userId === flightData.creatorId) {
+		if (AuthStorage.userId && AuthStorage.userId === flightData.creatorId) {
 			if (type === 'buying') {
 				return (
 					<div className={classes.footer}>
@@ -504,10 +504,10 @@ export default class FlightCard extends Component {
 								flightData.dataType === 'fb' ? // eslint-disable-line
 									AuthStorage.loggedIn ?
 										<a href={'https://facebook.com/' + author.id} target="_blank" rel="noopener noreferrer">
-											<Avatar style={{ marginBottom: 5 }} size={40} src={author.picture.data.url} name={author.name} />
+											<Avatar style={{ marginBottom: 5 }} size={40} src={author.picture} name={author.name} />
 										</a> :
 										<CheckLogin>
-											<Avatar style={{ marginBottom: 5 }} size={40} src={author.picture.data.url} name={author.name} />
+											<Avatar style={{ marginBottom: 5 }} size={40} src={author.picture} name={author.name} />
 										</CheckLogin> :
 									<CheckLogin onClick={this.handleClickAvatar}>
 										<Avatar style={{ marginBottom: 5, cursor: 'pointer' }} size={40} src={creator.avatar} name={creator.fullName} />

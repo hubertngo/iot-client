@@ -336,7 +336,6 @@ export default class FlightDetail extends Component {
 		const { classes, type, flightData } = this.props;
 
 		if (type === 'buying') {
-			console.log('asdasdasdasdasd');
 			return (
 				<div className={classes.examine}>
 
@@ -458,7 +457,7 @@ export default class FlightDetail extends Component {
 									alignItems: 'center',
 								}}
 							>
-								<Avatar style={{ marginBottom: 5, marginRight: 10 }} size={40} src={fbFeed.author.picture.data.url} name={fbFeed.author.name} />
+								<Avatar style={{ marginBottom: 5, marginRight: 10 }} size={40} src={fbFeed.author.picture} name={fbFeed.author.name} />
 								<span className={classes.author}>{fbFeed.author.name}</span>
 							</a> :
 							<div style={{ display: 'flex' }}>
