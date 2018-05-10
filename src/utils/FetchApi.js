@@ -43,7 +43,7 @@ Params: {
 	uploadFile: ,
 }
 */
-export const fetchApi = ({ uri, params = {}, opt = {}, uploadFile = false }) => {
+export const fetchApiWithoutSaga = ({ uri, params = {}, opt = {}, uploadFile = false }) => {
 	const defaultOptions = {
 		method: 'GET',
 		headers: {

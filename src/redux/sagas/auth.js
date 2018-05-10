@@ -15,7 +15,7 @@ import { REQUEST_ERROR } from 'src/redux/actions/type';
 
 function* authorize(payload, next, nextErr) {
 	const response = yield call(fetchApi, {
-		uri: '/users/login?include=user',
+		uri: '/users/login',
 		params: payload,
 		opt: { method: 'POST' },
 		loading: false,

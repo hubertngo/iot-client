@@ -13,7 +13,7 @@ import { toggleRatingModal } from 'src/redux/actions/modal';
 
 import CheckLogin from 'src/components/Form/CheckLogin';
 import AuthStorage from 'src/utils/AuthStorage';
-import { fetchApi } from 'src/utils/FetchApi';
+import { fetchApiWithoutSaga } from 'src/utils/FetchApi';
 
 const styleSheet = (/* theme */) => ({
 	rate: {
@@ -72,7 +72,7 @@ export default class GroupStar extends Component {
 			return;
 		}
 
-		fetchApi({
+		fetchApiWithoutSaga({
 			uri: 'ratings',
 			params: {
 				filter: JSON.stringify({
