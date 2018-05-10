@@ -45,6 +45,8 @@ const styles = (/* theme */) => ({
 
 		'@media (max-width: 991.98px)': {
 			background: '#FFF',
+			margin: 0,
+			borderBottom: '1px solid #e8e8e8',
 		},
 	},
 	info: {
@@ -60,6 +62,10 @@ const styles = (/* theme */) => ({
 	},
 	content: {
 		margin: '-12px -16px',
+
+		'@media (max-width: 991.98px)': {
+			margin: 0,
+		},
 	},
 	item: {
 		padding: '10px 16px',
@@ -72,6 +78,10 @@ const styles = (/* theme */) => ({
 		},
 		'&:hover': {
 			background: '#eee',
+		},
+
+		'@media (max-width: 991.98px)': {
+			fontWeight: 500,
 		},
 	},
 	divider: {
@@ -96,7 +106,6 @@ const styles = (/* theme */) => ({
 
 		'&.active': {
 			width: 300,
-			paddingLeft: 15,
 		},
 
 		'& ul': {
@@ -191,7 +200,7 @@ class AvatarBtn extends React.Component {
 				<div className={classes.itemWrapper}>
 					{
 						<div className={classes.item} onClick={() => Router.pushRoute('/user-ticket-list')}>
-							<IconDeparture size={16} />
+							{ isMobile ? <IconDeparture size={16} color="#000" /> : <IconDeparture size={16} /> }
 							<span style={{ marginLeft: 15 }}>  Bài đăng của tôi </span>
 						</div>
 					}
@@ -221,8 +230,14 @@ class AvatarBtn extends React.Component {
 				<Fragment>
 					<Avatar className={classes.avatar} name={store.auth.fullName} src={store.auth.avatar} onClick={this.toggleRightSidebar} />
 					<div className={[classes.rightSidebar, this.state.activeRightSideBar ? 'active' : ''].join(' ')}>
-						{title}
-						<Divider style={{ marginBottom: 15, marginTop: 0, zIndex: 1 }} />
+						<div className={classes.title}>
+							<Avatar size={35} src={store.auth.avatar} name={store.auth.fullName} />
+							<div className={classes.info}>
+								<h4>{store.auth.fullName}</h4>
+								{/* <i>{store.auth.email}</i> */}
+								<GroupStar ratingsStats={store.auth.ratingsStats} ratingsCount={store.auth.ratingsCount} user={store.auth} />
+							</div>
+						</div>
 						{content}
 					</div>
 					{

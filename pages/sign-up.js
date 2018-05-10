@@ -32,7 +32,8 @@ export default class SignUpPage extends PureComponent {
 				<Head>
 					<title>Chove.vn - Đăng ký</title>
 				</Head>
-				<div style={{ margin: '50px 0', textAlign: 'center' }}>
+				<div style={{ margin: '50px 0' }} className="hidden-md-down" />
+				<div style={{ textAlign: 'center' }}>
 					<SignUpForm isSingUpPage />
 				</div>
 			</MainLayout>

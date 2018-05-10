@@ -44,7 +44,7 @@ const styleSheet = (theme) => ({
 		},
 
 		'& li': {
-			padding: 20,
+			padding: '20px 30px',
 			borderBottom: '1px solid #F2F2F2',
 		},
 
@@ -57,6 +57,9 @@ const styleSheet = (theme) => ({
 		// borderBottom: `3px solid ${theme.palette.secondary[500]}`,
 		// fontWeight: 'bold',
 	},
+	bottomMenu: {
+		background: '#F6F8FD',
+	}
 });
 
 function mapStateToProps(state) {
@@ -118,7 +121,7 @@ export default class MenuMobile extends Component {
 						<li>Voucher</li>
 					</ul>
 				</div>
-				<div>
+				<div className={classes.bottomMenu}>
 					<ul>
 						<li className={this.isAtCurrentRoute('/about-us', router) ? classes.chosenTab : ''}>
 							<Link href="/about-us">

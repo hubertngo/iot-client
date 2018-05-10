@@ -6,7 +6,7 @@
 * Created: 2018-02-06 15:52:03
 *------------------------------------------------------- */
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -41,9 +41,11 @@ const styleSheet = (theme) => ({
 		overflow: 'hidden',
 
 		'@media (max-width: 991.98px)': {
-			width: 'calc(100vw - 40px)',
+			width: '100%',
 			minHeight: 'calc(100vh - 65px)',
 			padding: 10,
+			paddingTop: 75,
+			display: 'block',
 		},
 	},
 	form: {
@@ -53,21 +55,26 @@ const styleSheet = (theme) => ({
 		marginBottom: '50px',
 
 		'@media (max-width: 991.98px)': {
-			textAlign: 'center',
+			display: 'none',
 		},
 	},
 	buttonLogin: {
-		marginBottom: 30,
+		// marginBottom: 30,
 		marginTop: 10,
 		display: 'flex',
 		justifyContent: 'space-between',
 		alignItems: 'center',
+
+		'@media (max-width: 991.98px)': {
+			marginBottom: 0,
+		},
 	},
 	dividend: {
 		textAlign: 'center',
 		color: '#bdbdbd',
 		fontStyle: 'initial',
 		position: 'relative',
+		marginTop: 70,
 		marginBottom: 20,
 		textTransform: 'uppercase',
 		'&:before': {
@@ -129,15 +136,60 @@ const styleSheet = (theme) => ({
 			left: '10px !important',
 		},
 	},
-	contentNote: {
-		width: 600,
+	noteWrapper: {
 		color: '#000',
-		fontSize: 14,
 		position: 'relative',
+		fontStyle: 'italic',
+		fontSize: 13,
+		maxHeight: 0,
+		height: 'auto',
+		overflow: 'hidden',
+		marginLeft: -30,
+		marginRight: -30,
+		marginTop: -20,
+		background: '#F6F7F9',
+
+		'&:before': {
+			content: '""',
+			display: 'block',
+			width: 0,
+			height: 0,
+			borderLeft: '10px solid transparent',
+			borderRight: '10px solid transparent',
+			borderBottom: '10px solid #F6F7F9',
+			position: 'absolute',
+			top: -10,
+			left: 83,
+		},
 
 		'@media (max-width: 991.98px)': {
-			width: 'calc(100vw - 72px)',
-			textAlign: 'center',
+			// textAlign: 'center',
+			marginTop: -25,
+		},
+	},
+	noteWrapperActive: {
+		maxHeight: 500,
+	},
+	noteTitle: {
+		marginBottom: 10,
+		fontWeight: 500,
+		fontSize: 14,
+		padding: '20px 20px 0 20px',
+	},
+	noteContent: {
+		padding: '0 20px 20px 20px',
+	},
+	noteCancel: {
+		position: 'absolute',
+		top: 10,
+		right: 10,
+		color: '#DCE1E7',
+		fontSize: 22,
+	},
+	mobileLink: {
+		'@media (max-width: 991.98px)': {
+			fontStyle: 'italic',
+			color: '#7D8DAD',
 		},
 	},
 });
@@ -194,6 +246,7 @@ export default class LoginForm extends Component {
 		loading: false,
 		nextPage: false,
 		error: '',
+		activeNote: false,
 	}
 
 	componentDidMount() {
@@ -260,17 +313,16 @@ export default class LoginForm extends Component {
 		}, 100);
 	}
 
-	hide = () => {
-		this.setState({
-			visible: false,
-		});
+	toggleNote = () => {
+		this.setState({ activeNote: !this.state.activeNote });
 	}
-	handleVisibleChange = (visible) => {
-		this.setState({ visible });
+
+	hideNote = () => {
+		this.setState({ activeNote: false });
 	}
 
 	render() {
-		const { form: { getFieldDecorator }, classes, style } = this.props;
+		const { form: { getFieldDecorator }, classes, style, isLoginPage } = this.props;
 
 		return (
 			<div className={classes.root} style={style}>
@@ -308,49 +360,48 @@ export default class LoginForm extends Component {
 					<Form.Item>
 						<div className={classes.buttonLogin}>
 							<div>
-								<a href="/sign-up" onClick={this.handleOpenSignUpDialog}>Đăng ký</a>
-								<Popover
-									content={
-										<div className={classes.contentNote}>
-											<Icon type="close-circle" style={{ position: 'absolute', top: 0, right: 0, fontSize: 22, color: '#E0E0E0' }} onClick={this.hide} />
-											<div style={{ fontWeight: 500 }}>Lợi ích khi là thành viên của Chove.vn</div>
-											<ol style={{ paddingLeft: 15, marginTop: 10, fontStyle: 'italic', textAlign: 'left' }}>
-												<li>Thành viên tham gia nhóm phải kết bạn với face này để nhận được thông báo trên facebook.</li>
-												<li>Khi có thông báo yêu cầu học viên đổi Avatar của mình theo Avatar của chương trình, yêu cầu các học viên thực hiện đúng quy định.</li>
-												<li>Thành viên không được đăng link quảng cáo, các link giới thiệu về chương trình, sản phẩm khác, không đăng video, hình ảnh đồi trụy, vi phạm thuần phong mỹ tục của người Việt Nam và các thông tin về hoạt động của đội/nhóm khác trong group.</li>
-												<li>Thành viên giao tiếp trên Group lịch sự, có văn hóa, tôn trọng nhau, không nói tục, chửi bậy.</li>
-												<li>Thành viên đăng bài và bình luận phải viết Tiếng Việt có dấu, không bàn luận các vấn đề liên quan đến chính trị, đảng và nhà nước.</li>
-												<li>Thành viên Lưu Ý: Có những phần mềm hỗ trợ facebook là những phần mềm tự động đăng bài khi đăng nhập face của mình, Thành viên gỡ bỏ các phần mềm này ra để tránh vi phạm nội quy.</li>
-												<li>Thành viên tạo thói quen vào nhóm này hàng ngày để xem thông báo và giao lưu cùng nhau.</li>
-											</ol>
-										</div>
-									}
-									placement="bottom"
-									trigger="click"
-									visible={this.state.visible}
-									onVisibleChange={this.handleVisibleChange}
-									overlayClassName={classes.signUpNote}
-								>
-									<Icon type="question-circle" style={{ marginLeft: 5, color: '#4368C4' }} />
-								</Popover>
+								<a href="/sign-up" onClick={this.handleOpenSignUpDialog} className={classes.mobileLink}>Đăng ký</a>
+								{
+									!isLoginPage && <Icon type="question-circle" style={{ marginLeft: 5, color: '#4368C4' }} className="hidden-md-down" onClick={this.toggleNote} />
+								}
+								<Icon type="question-circle" style={{ marginLeft: 5, color: '#7D8DAD' }} className="hidden-md-up" onClick={this.toggleNote} />
 							</div>
 
 							<Link href="/forgot-password">
-								<a className="login-form-forgot">Quên mật khẩu?</a>
+								<a className={classes.mobileLink + ' login-form-forgot'}>Quên mật khẩu?</a>
 							</Link>
 						</div>
 					</Form.Item>
-					<div className={classes.dividend}>
-						<span>Hoặc đăng nhập qua</span>
+					<div className={classes.noteWrapper + ' ' + (this.state.activeNote ? classes.noteWrapperActive : '')} style={{ transition: 'max-height 500ms ease-in-out' }}>
+						<Icon type="close-circle" className={classes.noteCancel} onClick={this.hideNote} />
+						<div className={classes.noteTitle}>Lợi ích khi là thành viên của Chove.vn</div>
+						<div className={classes.noteContent}>
+							<div className={classes.noteRule}>1. Thành viên tham gia nhóm phải kết bạn với face này để nhận được thông báo trên facebook.</div>
+							<div className={classes.noteRule}>2. Khi có thông báo yêu cầu học viên đổi Avatar của mình theo Avatar của chương trình, yêu cầu các học viên thực hiện đúng quy định.</div>
+							<div className={classes.noteRule}>3. Thành viên không được đăng divnk quảng cáo, các divnk giới thiệu về chương trình, sản phẩm khác, không đăng video, hình ảnh đồi trụy, vi phạm thuần phong mỹ tục của người Việt Nam và các thông tin về hoạt động của đội/nhóm khác trong group.</div>
+							<div className={classes.noteRule}>4. Thành viên giao tiếp trên Group lịch sự, có văn hóa, tôn trọng nhau, không nói tục, chửi bậy.</div>
+							<div className={classes.noteRule}>5. Thành viên đăng bài và bình luận phải viết Tiếng Việt có dấu, không bàn luận các vấn đề divên quan đến chính trị, đảng và nhà nước.</div>
+							<div className={classes.noteRule}>6. Thành viên Lưu Ý: Có những phần mềm hỗ trợ facebook là những phần mềm tự động đăng bài khi đăng nhập face của mình, Thành viên gỡ bỏ các phần mềm này ra để tránh vi phạm nội quy.</div>
+							<div className={classes.noteRule}>7. Thành viên tạo thói quen vào nhóm này hàng ngày để xem thông báo và giao lưu cùng nhau.</div>
+						</div>
 					</div>
 					{
-						this.state.visible && <div style={{ height: 400 }} className="hidden-sm-up" />
+						!this.state.activeNote && (
+							<Fragment>
+								<div className={classes.dividend}>
+									<span>Hoặc đăng nhập qua</span>
+								</div>
+								{
+									this.state.visible && <div style={{ height: 400 }} className="hidden-sm-up" />
+								}
+								<div className="text-center">
+									<BtnFbLogin />
+									<BtnGgLogin />
+									<BtnZaloLogin />
+								</div>
+							</Fragment>
+						)
 					}
-					<div className="text-center">
-						<BtnFbLogin />
-						<BtnGgLogin />
-						<BtnZaloLogin />
-					</div>
 				</Form>
 			</div>
 		);

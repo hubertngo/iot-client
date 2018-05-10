@@ -11,8 +11,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
+import Router from 'next/router';
 
-import { Row, Col, Icon, Button, Modal, Tooltip } from 'antd';
+import { Row, Col, Icon, Button, Modal, Tooltip, Tag } from 'antd';
 
 import withStyles from 'src/theme/jss/withStyles';
 import Avatar from 'src/components/Photo/Avatar';
@@ -25,10 +26,13 @@ import IconMedal from 'src/components/Photo/IconMedal';
 import AuthStorage from 'src/utils/AuthStorage';
 
 import CheckLogin from 'src/components/Form/CheckLogin';
+import { flightOptions } from 'src/constants/selectOption';
+import { getLabel } from 'src/utils';
 
+import IconDeparture from 'src/components/Photo/IconDeparture';
 import GroupStar from './GroupStar';
 import BidBlock from './BidBlock';
-import FlightBlock from './FlightBlock';
+import TripBlock from './TripBlock';
 
 
 moment.locale('vi');
@@ -119,30 +123,33 @@ const styleSheet = (theme) => ({
 	body: {
 		paddingTop: 15,
 	},
-	bodyRight: {
-		textAlign: 'right',
-		display: 'flex',
-		alignItems: 'baseline',
-		justifyContent: 'flex-end',
-		marginTop: 15,
-		// borderLeft: `1px solid ${theme.palette.text.divider}`,
-		// paddingLeft: 20,
-
-		'& > p': {
-			fontWeight: '500',
-			marginBottom: 0,
-			fontSize: '16px',
-			textTransform: 'uppercase',
-			marginRight: 20,
-		},
-	},
 	footer: {
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'flex-end',
-		paddingBottom: 15,
-		textAlign: 'right',
+		justifyContent: 'space-between',
+		marginTop: 5,
 	},
+	footerText: {
+		fontWeight: '500',
+		fontSize: '16px',
+		textTransform: 'uppercase',
+	},
+	footerAction: {
+		display: 'flex',
+		alignItems: 'baseline',
+	},
+	footerActionBtn: {
+		display: 'flex',
+		alignItems: 'baseline',
+		marginLeft: 15,
+	},
+	// footer: {
+	// 	display: 'flex',
+	// 	alignItems: 'center',
+	// 	justifyContent: 'flex-end',
+	// 	paddingBottom: 15,
+	// 	textAlign: 'right',
+	// },
 	footerTitle: {
 		color: '#596A75',
 		fontSize: 12,
@@ -217,6 +224,13 @@ const styleSheet = (theme) => ({
 		right: 15,
 		top: 15,
 	},
+	bidGroup: {
+		textAlign: 'right',
+
+		'& p': {
+			marginBottom: 5,
+		},
+	},
 });
 
 function mapStateToProps(/* state */) {
@@ -273,7 +287,8 @@ export default class FlightCard extends Component {
 	}
 
 	handleClickFlight = () => {
-		this.props.action.toggleFlightModal({ open: true, type: this.props.type, id: this.props.flightData.id });
+		Router.push(`/ticket-${this.props.type}/${this.props.flightData.id}`);
+		// this.props.action.toggleFlightModal({ open: true, type: this.props.type, id: this.props.flightData.id });
 	}
 
 	handleClickAvatar = () => {
@@ -308,66 +323,114 @@ export default class FlightCard extends Component {
 		});
 	}
 
-	_renderBodyRight = () => {
-		const { type, flightData } = this.props;
+	_renderFooter = () => {
+		const { type, flightData, classes } = this.props;
+		const airlineComp = (
+			getLabel(flightData.airline, flightOptions).value === 'all' ? (
+				<Fragment>
+					<IconDeparture size={18} extended />
+					<span className={classes.note} style={{ marginLeft: 10 }}>Tất cả các hãng</span>
+				</Fragment>
+			) : (
+				<img src={getLabel(flightData.airline, flightOptions).logo} alt="" height={18} />
+			)
+		);
 
 		if (AuthStorage.userId === flightData.creatorId) {
 			if (type === 'buying') {
 				return (
-					<Fragment>
-						<p>{flightData.seatCount} vé</p>
-						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<CheckLogin onClick={this.handleEditBuying}>
+					<div className={classes.footer}>
+						<div className={classes.footerText}>{flightData.seatCount} vé</div>
+						<div style={{ display: 'flex' }}>
+							<CheckLogin onClick={this.handleEditBuying} style={{ marginRight: 10 }}>
 								<Button>Sửa</Button>
 							</CheckLogin>
 							<CheckLogin onClick={this.handleDeleteBuying}>
 								<Button>Xóa</Button>
 							</CheckLogin>
 						</div>
-					</Fragment>
+					</div>
 				);
 			}
 
 			return (
-				<Fragment>
-					<p><Price price={flightData.price} type="primary" /></p>
-					<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-						<CheckLogin onClick={this.handleEditSelling} >
+				<div className={classes.footer}>
+					<Price price={flightData.price} type="primary" />
+					<div style={{ display: 'flex' }}>
+						<CheckLogin onClick={this.handleEditSelling} style={{ marginRight: 10 }}>
 							<Button>Sửa</Button>
 						</CheckLogin>
 						<CheckLogin onClick={this.handleDeleteSelling}>
 							<Button>Xóa</Button>
 						</CheckLogin>
 					</div>
-				</Fragment>
+				</div>
 			);
 		}
 
 		if (type === 'buying') {
 			return (
 				<Fragment>
-					<p>{flightData.seatCount} vé</p>
-					<CheckLogin onClick={this.handleClickFlight}>
-						<Button type="primary">Liên hệ</Button>
-					</CheckLogin>
+					{airlineComp}
+					<div className={classes.footer}>
+						<div>
+							<Tag color="#95A2AB">{flightData.seatType}</Tag>
+							<Tag style={{ marginRight: 0, color: '#95A2AB' }} color="#EAEAEA">{flightData.packageWeight}Kg</Tag>
+						</div>
+						<div className={classes.footerAction}>
+							<span className={classes.footerText}>{flightData.seatCount} vé</span>
+							<CheckLogin onClick={this.handleClickFlight}>
+								<Button type="primary" className={classes.footerActionBtn}>Liên hệ</Button>
+							</CheckLogin>
+						</div>
+					</div>
 				</Fragment>
 			);
 		} else if (type === 'selling') {
 			if (flightData.isBid) {
 				return (
-					<Fragment>
-						<BidBlock isStart price={flightData.startingPrice} style={{ marginRight: 10 }} />
-						<BidBlock price={flightData.price} />
-					</Fragment>
+					<Row>
+						<Col span={12}>
+							{airlineComp}
+							<div style={{ marginTop: 5 }}>
+								<Tag color="#95A2AB">{flightData.seatType}</Tag>
+								<Tag style={{ marginRight: 0, color: '#95A2AB' }} color="#EAEAEA">{flightData.packageWeight}Kg</Tag>
+							</div>
+						</Col>
+						<Col span={12} className={classes.bidGroup}>
+							<BidBlock isStart price={flightData.startingPrice} />
+							<BidBlock price={flightData.price} />
+						</Col>
+						<Col span={24}>
+							<div className={classes.footer}>
+								<div>
+									<div className={classes.footerTitle}>Thời gian còn lại</div>
+									<div className={classes.footerInfo}>{moment(flightData.dueDate).fromNow()}</div>
+								</div>
+								<CheckLogin onClick={this.handleClickFlight}>
+									<Button type="primary">Đấu giá</Button>
+								</CheckLogin>
+							</div>
+						</Col>
+					</Row>
 				);
 			}
 
 			return (
 				<Fragment>
-					<p><Price price={flightData.price} type="primary" /></p>
-					<CheckLogin onClick={this.handleClickFlight} >
-						<Button type="primary">Mua</Button>
-					</CheckLogin>
+					{airlineComp}
+					<div className={classes.footer}>
+						<div>
+							<Tag color="#95A2AB">{flightData.seatType}</Tag>
+							<Tag style={{ marginRight: 0, color: '#95A2AB' }} color="#EAEAEA">{flightData.packageWeight}Kg</Tag>
+						</div>
+						<div className={classes.footerAction}>
+							<span><Price price={flightData.price} type="primary" /></span>
+							<CheckLogin onClick={this.handleClickFlight}>
+								<Button type="primary" className={classes.footerActionBtn}>Mua</Button>
+							</CheckLogin>
+						</div>
+					</div>
 				</Fragment>
 			);
 		}
@@ -399,7 +462,7 @@ export default class FlightCard extends Component {
 
 					<Row className={classes.body}>
 						<Col span={16}>
-							<FlightBlock loading />
+							<TripBlock loading />
 						</Col>
 						<Col span={7} offset={1} className={classes.bodyRight}>
 							<div className="loading-block" style={{ height: 20, marginBottom: 10, marginRight: 0 }} />
@@ -429,7 +492,7 @@ export default class FlightCard extends Component {
 				{
 					flightData.approved && (
 						<span className={classes.iconMedal}>
-							<IconMedal />
+							<IconMedal color="#2D9CDB" />
 						</span>
 					)
 				}
@@ -490,27 +553,24 @@ export default class FlightCard extends Component {
 				</div>
 
 
-				<Row className={classes.body}>
-					<Col span={24}>
-						<FlightBlock flightData={flightData} />
-					</Col>
-					<Col span={24} className={classes.bodyRight}>
-						{this._renderBodyRight()}
-					</Col>
-				</Row>
+				<div className={classes.body}>
+					<TripBlock tripData={flightData.trip} />
+				</div>
+
+				{this._renderFooter()}
 
 				{
-					flightData.isBid && (
-						<div className={classes.footer}>
-							<div style={{ marginRight: 25 }}>
-								<div className={classes.footerTitle}>Thời gian còn lại</div>
-								<div className={classes.footerInfo}>{moment(flightData.dueDate).fromNow()}</div>
-							</div>
-							<CheckLogin onClick={this.handleClickFlight}>
-								<Button type="primary">Đấu giá</Button>
-							</CheckLogin>
-						</div>
-					)
+					// flightData.isBid && (
+					// 	<div className={classes.footer}>
+					// 		<div style={{ marginRight: 25 }}>
+					// 			<div className={classes.footerTitle}>Thời gian còn lại</div>
+					// 			<div className={classes.footerInfo}>{moment(flightData.dueDate).fromNow()}</div>
+					// 		</div>
+					// 		<CheckLogin onClick={this.handleClickFlight}>
+					// 			<Button type="primary">Đấu giá</Button>
+					// 		</CheckLogin>
+					// 	</div>
+					// )
 				}
 
 				{

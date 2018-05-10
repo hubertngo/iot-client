@@ -25,7 +25,7 @@ import AuthStorage from '../../../utils/AuthStorage';
 
 const styleSheet = (/* theme */) => ({
 	root: {
-		marginBottom: 50,
+		marginBottom: 25,
 
 		'& .ant-tabs-tabpane': {
 			padding: 10,

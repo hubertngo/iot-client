@@ -11,7 +11,7 @@ const BidBlock = ({ isStart, price, style }) => {
 	return (
 		<div style={style}>
 			<div>{isStart ? 'Giá khởi điểm' : 'Giá được trả'}</div>
-			<p><Price price={price} type="primary" /></p>
+			<p><Price price={price} type={isStart ? '' : 'primary'} /></p>
 		</div>
 	);
 };

@@ -27,9 +27,9 @@ const styleSheet = (theme) => ({
 
 	},
 	root: {
-		marginTop: 20,
+		marginTop: 10,
 		background: '#FFF',
-		padding: 15,
+		padding: 20,
 		borderRadius: 8,
 		boxShadow: '0px 0px 16px 0px rgba(0, 0, 0, 0.15)',
 
@@ -58,6 +58,8 @@ const styleSheet = (theme) => ({
 	datePicker: {
 		display: 'flex',
 		width: '100%',
+		border: '2px solid #EBF0F6',
+
 		'& .ant-calendar-picker-icon': {
 			width: '22px',
 			height: '22px',
@@ -79,10 +81,11 @@ const styleSheet = (theme) => ({
 		},
 	},
 	btnSearch: {
-		height: '45px',
+		height: '35px',
 		display: 'block',
 		marginRight: 0,
 		marginLeft: 'auto',
+		marginTop: 20,
 	},
 	borderBottom: {
 		borderBottom: '1px solid #E1E7F0',
@@ -102,9 +105,13 @@ const styleSheet = (theme) => ({
 	},
 	select: {
 		backgroundColor: '#FFF',
+		border: '2px solid #EBF0F6',
+		borderRadius: 4,
+		marginBottom: 10,
+
 		'& .ant-select-selection': {
 			backgroundColor: '#FFF',
-			height: 45,
+			height: 40,
 			'&:focus': {
 				border: 0,
 				outline: 0,
@@ -112,11 +119,12 @@ const styleSheet = (theme) => ({
 			},
 		},
 		'& .ant-select-selection__rendered': {
-			lineHeight: '45px',
+			lineHeight: '40px',
 		},
 	},
 	floatingLabel: {
-		paddingLeft: 10,
+		// paddingLeft: 10,
+		marginBottom: 4,
 		fontSize: 12,
 		fontWeight: 500,
 		color: '#7D8DAD',
@@ -232,43 +240,28 @@ export default class SearchBar extends Component {
 		return (
 			<Form onSubmit={this.handleSubmit} className={classes.formWrapper}>
 				<Row className={classes.root} type="flex">
-					<Col span={24} className={classes.borderBottom}>
-						<Dropdown overlay={menuDeparture} trigger={['click']}>
-							<div>
-								<div className={classes.floatingLabel}>Xuất phát</div>
-								<Form.Item style={{ marginBottom: 0 }}>
-									{getFieldDecorator('departure')(
-										<Input
-											addonAfter={<IconDeparture extended />}
-											className={classes.dropdownInput + ' ' + classes.firstChild}
-											size="large"
-											placeholder="Nơi xuất phát"
-										/>,
-									)}
-								</Form.Item>
-							</div>
-						</Dropdown>
+					<Col span={24}>
+						<div className={classes.floatingLabel}>Xuất phát</div>
+						<Form.Item style={{ marginBottom: 0 }}>
+							{getFieldDecorator('departure')(
+								<Select className={classes.select} placeholder="Điểm xuất phát">
+									{locationOptions.map(location => <Select.Option value={location.value}>{location.label}</Select.Option>)}
+								</Select>,
+							)}
+						</Form.Item>
 					</Col>
-					<Col span={24} className={classes.borderBottom}>
-						<Dropdown overlay={menuDestination} trigger={['click']} >
-							<div>
-								<div className={classes.floatingLabel}>Điểm đến</div>
-								<Form.Item style={{ marginBottom: 0 }}>
-									{getFieldDecorator('destination')(
-										<Input
-											addonAfter={<IconDestination extended />}
-											className={classes.dropdownInput}
-											size="large"
-											placeholder="Nơi đến"
-										/>,
-									)}
-								</Form.Item>
-							</div>
-						</Dropdown>
+					<Col span={24}>
+						<div className={classes.floatingLabel}>Điểm đến</div>
+						<Form.Item style={{ marginBottom: 0 }}>
+							{getFieldDecorator('destination')(
+								<Select className={classes.select} placeholder="Điểm đến">
+									{locationOptions.map(location => <Select.Option value={location.value}>{location.label}</Select.Option>)}
+								</Select>,
+							)}
+						</Form.Item>
 					</Col>
-					<Col span={24} className={classes.borderBottom}>
-						<div className={classes.floatingLabel}>Loại vé</div>
-						<Form.Item style={{ marginBottom: 0, paddingLeft: 10 }}>
+					<Col span={24}>
+						<Form.Item style={{ marginBottom: 0 }}>
 							{getFieldDecorator('flightType', {
 								// initialValue: 'all',
 							})(
@@ -279,7 +272,7 @@ export default class SearchBar extends Component {
 							)}
 						</Form.Item>
 					</Col>
-					<Col span={12} className={classes.borderBottom}>
+					<Col span={12}>
 						<div className={classes.floatingLabel}>Thời gian</div>
 						<Form.Item style={{ marginBottom: 0 }}>
 							{getFieldDecorator('startDate')(
@@ -294,12 +287,13 @@ export default class SearchBar extends Component {
 						</Form.Item>
 
 					</Col>
-					<Col span={12} className={classes.borderBottom}>
-						<div>&nbsp;</div>
+					<Col span={12}>
+						<div className={classes.floatingLabel}>&nbsp;</div>
 						<Form.Item style={{ marginBottom: 0 }}>
 							{getFieldDecorator('endDate')(
 								<DatePicker
 									className={classes.datePicker}
+									style={{ borderLeft: 0 }}
 									size="large"
 									placeholder="Thời gian đến"
 									format="DD/MM/YYYY"

@@ -65,7 +65,7 @@ const styles = (theme) => ({
 	},
 	contentMobile: {
 		height: 65,
-		background: 'linear-gradient(#5C8AE2, #485ABB)',
+		background: 'linear-gradient(to left, #485ABB, #5C8AE2)',
 		display: 'flex',
 	},
 	headerMobile: {

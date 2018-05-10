@@ -33,9 +33,11 @@ const styleSheet = (theme) => ({
 		textAlign: 'left',
 
 		'@media (max-width: 991.98px)': {
-			width: 'calc(100vw - 40px)',
+			width: '100%',
 			minHeight: 'calc(100vh - 65px)',
 			padding: 10,
+			paddingTop: 75,
+			display: 'block',
 		},
 	},
 	form: {
@@ -172,7 +174,7 @@ export default class LoginForm extends Component {
 
 		return (
 			<div className={classes.root}>
-				<div className={classes.logo}>
+				<div className={classes.logo + ' hidden-md-down'}>
 					<img src="/static/assets/images/logo/1x.png" alt="chove.vn" />
 				</div>
 				<Form onSubmit={this.handleSubmit} className={classes.form}>
