@@ -95,18 +95,18 @@ const styles = (/* theme */) => ({
 	rightSidebar: {
 		position: 'fixed',
 		top: 65,
-		right: 0,
-		width: 0,
+		right: -300,
+		width: 300,
 		height: 'calc(100vh - 65px)',
 		background: '#FFF',
 		display: 'flex',
 		flexDirection: 'column',
-		transition: 'width 300ms ease',
+		transition: 'right 300ms ease',
 		overflow: 'hidden',
 		zIndex: 10,
 
 		'&.active': {
-			width: 300,
+			right: 0,
 		},
 
 		'& ul': {

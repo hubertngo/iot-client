@@ -11,9 +11,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
-import Router from 'next/router';
 import { injectIntl, intlShape } from 'react-intl';
-import { Row, Col, Icon, Button, Modal, Tooltip, Tag } from 'antd';
+import { Router } from 'src/routes';
+
+import { Row, Col, Icon, Button, Modal, Tag } from 'antd';
 
 import withStyles from 'src/theme/jss/withStyles';
 import Avatar from 'src/components/Photo/Avatar';
@@ -276,9 +277,7 @@ export default class FlightCard extends Component {
 			deleteTicketBuying: PropTypes.func,
 			deleteTicketSelling: PropTypes.func,
 		}).isRequired,
-		intl: PropTypes.shape({
-			formatMessage: PropTypes.func,
-		}).isRequired,
+		intl: intlShape.isRequired,
 	}
 
 	static defaultProps = {
@@ -291,7 +290,7 @@ export default class FlightCard extends Component {
 	}
 
 	handleClickFlight = () => {
-		Router.push(`/ticket-${this.props.type}/${this.props.flightData.id}`);
+		Router.pushRoute(`/ticket-${this.props.type}/${this.props.flightData.id}`);
 		// this.props.action.toggleFlightModal({ open: true, type: this.props.type, id: this.props.flightData.id });
 	}
 

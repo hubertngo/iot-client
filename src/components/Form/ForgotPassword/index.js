@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { injectIntl, intlShape } from 'react-intl';
 
-import Router from 'next/router';
+import { Router } from 'src/routes';
 
 import { Form, Icon, Input, Button } from 'antd';
 
@@ -78,9 +78,7 @@ export default class ForgotPassword extends Component {
 			forgotPassword: PropTypes.func.isRequired,
 			logoutRequest: PropTypes.func.isRequired,
 		}).isRequired,
-		intl: PropTypes.shape({
-			formatMessage: PropTypes.func,
-		}).isRequired,
+		intl: intlShape.isRequired,
 	}
 
 	static defaultProps = {}
@@ -124,7 +122,7 @@ export default class ForgotPassword extends Component {
 				<div className={classes.root}>
 					<div className={classes.form}>
 						<p>{formatMessage({ id: 'check_email' })}</p>
-						<Button size="large" type="primary" className={classes.btn} onClick={() => Router.push('/login')}>
+						<Button size="large" type="primary" className={classes.btn} onClick={() => Router.pushRoute('/login')}>
 							{formatMessage({ id: 'login' })}
 						</Button>
 					</div>

@@ -14,7 +14,7 @@ import withRoot from 'src/root';
 
 import { Form, Icon, Input, Button, Spin } from 'antd';
 
-import Router from 'next/router';
+import { Router } from 'src/routes';
 
 import AuthStorage from 'src/utils/AuthStorage';
 
@@ -41,7 +41,7 @@ export default class ZaloLogin extends PureComponent {
 
 	componentDidMount() {
 		if (AuthStorage.loggedIn) {
-			Router.push('/');
+			Router.pushRoute('/');
 		}
 		if (this.props.url.query.code) {  // eslint-disable-line
 			this.props.dispatch(loginZalo({ accessToken: this.props.url.query.code }, (res) => {
@@ -49,11 +49,11 @@ export default class ZaloLogin extends PureComponent {
 					add: res.code === 'additionalEmail',
 				});
 				if (AuthStorage.loggedIn) {
-					Router.push('/');
+					Router.pushRoute('/');
 				}
 			}));  // eslint-disable-line
 		} else {
-			Router.push('/');
+			Router.pushRoute('/');
 		}
 	}
 
@@ -68,7 +68,7 @@ export default class ZaloLogin extends PureComponent {
 
 				this.props.dispatch(loginZalo({ accessToken: this.props.url.query.code, email, username }, () => {
 					if (AuthStorage.loggedIn) {
-						Router.push('/');
+						Router.pushRoute('/');
 					}
 				}, () => {
 					this.setState({
