@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import Router from 'next/router';
-
+import { injectIntl, intlShape } from 'react-intl';
 import { Row, Col, Icon, Button, Modal, Tooltip, Tag } from 'antd';
 
 import withStyles from 'src/theme/jss/withStyles';
@@ -256,6 +256,7 @@ const mapDispatchToProps = (dispatch) => {
 
 @connect(mapStateToProps, mapDispatchToProps)
 @withStyles(styleSheet)
+@injectIntl
 export default class FlightCard extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
@@ -274,6 +275,9 @@ export default class FlightCard extends Component {
 			toggleEditSellingModal: PropTypes.func,
 			deleteTicketBuying: PropTypes.func,
 			deleteTicketSelling: PropTypes.func,
+		}).isRequired,
+		intl: PropTypes.shape({
+			formatMessage: PropTypes.func,
 		}).isRequired,
 	}
 
@@ -324,12 +328,12 @@ export default class FlightCard extends Component {
 	}
 
 	_renderFooter = () => {
-		const { type, flightData, classes } = this.props;
+		const { type, flightData, classes, intl: { formatMessage } } = this.props;
 		const airlineComp = (
 			getLabel(flightData.airline, flightOptions).value === 'all' ? (
 				<Fragment>
 					<IconDeparture size={18} extended />
-					<span className={classes.note} style={{ marginLeft: 10 }}>Tất cả các hãng</span>
+					<span className={classes.note} style={{ marginLeft: 10 }}>{formatMessage({ id: 'all_airline' })}</span>
 				</Fragment>
 			) : (
 				<img src={getLabel(flightData.airline, flightOptions).logo} alt="" height={18} />
@@ -340,13 +344,13 @@ export default class FlightCard extends Component {
 			if (type === 'buying') {
 				return (
 					<div className={classes.footer}>
-						<div className={classes.footerText}>{flightData.seatCount} vé</div>
+						<div className={classes.footerText}>{flightData.seatCount} {formatMessage({ id: 'ticket' })}</div>
 						<div style={{ display: 'flex' }}>
 							<CheckLogin onClick={this.handleEditBuying} style={{ marginRight: 10 }}>
-								<Button>Sửa</Button>
+								<Button>{formatMessage({ id: 'edit' })}</Button>
 							</CheckLogin>
 							<CheckLogin onClick={this.handleDeleteBuying}>
-								<Button>Xóa</Button>
+								<Button>{formatMessage({ id: 'delete' })}</Button>
 							</CheckLogin>
 						</div>
 					</div>
@@ -358,10 +362,10 @@ export default class FlightCard extends Component {
 					<Price price={flightData.price} type="primary" />
 					<div style={{ display: 'flex' }}>
 						<CheckLogin onClick={this.handleEditSelling} style={{ marginRight: 10 }}>
-							<Button>Sửa</Button>
+							<Button>{formatMessage({ id: 'edit' })}</Button>
 						</CheckLogin>
 						<CheckLogin onClick={this.handleDeleteSelling}>
-							<Button>Xóa</Button>
+							<Button>{formatMessage({ id: 'delete' })}</Button>
 						</CheckLogin>
 					</div>
 				</div>
@@ -378,9 +382,9 @@ export default class FlightCard extends Component {
 							<Tag style={{ marginRight: 0, color: '#95A2AB' }} color="#EAEAEA">{flightData.packageWeight}Kg</Tag>
 						</div>
 						<div className={classes.footerAction}>
-							<span className={classes.footerText}>{flightData.seatCount} vé</span>
+							<span className={classes.footerText}>{flightData.seatCount} {formatMessage({ id: 'ticket' })}</span>
 							<CheckLogin onClick={this.handleClickFlight}>
-								<Button type="primary" className={classes.footerActionBtn}>Liên hệ</Button>
+								<Button type="primary" className={classes.footerActionBtn}>{formatMessage({ id: 'contact' })}</Button>
 							</CheckLogin>
 						</div>
 					</div>
@@ -404,11 +408,11 @@ export default class FlightCard extends Component {
 						<Col span={24}>
 							<div className={classes.footer}>
 								<div>
-									<div className={classes.footerTitle}>Thời gian còn lại</div>
+									<div className={classes.footerTitle}>{formatMessage({ id: 'remaining_time' })}</div>
 									<div className={classes.footerInfo}>{moment(flightData.dueDate).fromNow()}</div>
 								</div>
 								<CheckLogin onClick={this.handleClickFlight}>
-									<Button type="primary">Đấu giá</Button>
+									<Button type="primary">{formatMessage({ id: 'bid' })}</Button>
 								</CheckLogin>
 							</div>
 						</Col>
@@ -427,7 +431,7 @@ export default class FlightCard extends Component {
 						<div className={classes.footerAction}>
 							<span><Price price={flightData.price} type="primary" /></span>
 							<CheckLogin onClick={this.handleClickFlight}>
-								<Button type="primary" className={classes.footerActionBtn}>Mua</Button>
+								<Button type="primary" className={classes.footerActionBtn}>{formatMessage({ id: 'buy' })}</Button>
 							</CheckLogin>
 						</div>
 					</div>
@@ -439,7 +443,7 @@ export default class FlightCard extends Component {
 	}
 
 	render() {
-		const { classes, flightData = {}, loading } = this.props;
+		const { classes, flightData = {}, loading, intl: { formatMessage } } = this.props;
 		const { creator = {}, fbFeed = {} } = flightData;
 
 		const { author = { picture: { data: {} } } } = fbFeed;
@@ -478,14 +482,14 @@ export default class FlightCard extends Component {
 				{
 					flightData.status === 'pending' &&
 					<div className={classes.badgePending}>
-						<span>Đang xử lý</span>
+						<span>{formatMessage({ id: 'in_progress' })}</span>
 					</div>
 				}
 
 				{
 					flightData.status === 'closed' &&
 					<div className={classes.badgeClose}>
-						<span>Đã giao</span>
+						<span>{formatMessage({ id: 'delivered' })}</span>
 					</div>
 				}
 

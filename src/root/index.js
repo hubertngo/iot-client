@@ -14,6 +14,7 @@ import Router from 'next/router';
 
 import withReduxSaga from 'src/redux/store';
 import withJss from 'src/theme/jss';
+import withIntl from 'src/intl';
 
 import AuthStorage from 'src/utils/AuthStorage';
 import { getUserAuth } from 'src/redux/actions/auth';
@@ -40,6 +41,7 @@ Router.onRouteChangeError = () => NProgress.done();
 const withRoot = (Child) => {
 	@withJss
 	@withReduxSaga
+	@withIntl
 	class WrappedComponent extends PureComponent {
 		static propTypes = {
 			url: PropTypes.object.isRequired,

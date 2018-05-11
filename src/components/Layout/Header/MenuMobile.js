@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
+import { injectIntl, intlShape } from 'react-intl';
 
 // Styles
 import withStyles from 'src/theme/jss/withStyles';
@@ -81,6 +82,7 @@ const mapDispatchToProps = (dispatch) => {
 @withRouter
 @withStyles(styleSheet)
 @connect(mapStateToProps, mapDispatchToProps)
+@injectIntl
 export default class MenuMobile extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
@@ -94,6 +96,7 @@ export default class MenuMobile extends Component {
 		}).isRequired,
 		router: PropTypes.object.isRequired,
 		active: PropTypes.bool.isRequired,
+		intl: intlShape.isRequired,
 	}
 
 	handleOpenLogin = (e) => {
@@ -106,7 +109,7 @@ export default class MenuMobile extends Component {
 	}
 
 	render() {
-		const { classes, active, router } = this.props;
+		const { classes, active, router, intl: { formatMessage } } = this.props;
 
 		return (
 			<div className={[classes.root, active ? 'active' : ''].join(' ')}>
@@ -114,18 +117,18 @@ export default class MenuMobile extends Component {
 					<ul>
 						<li className={this.isAtCurrentRoute('/', router) ? classes.chosenTab : ''}>
 							<Link href="/">
-								<a>Vé máy bay</a>
+								<a>{formatMessage({ id: 'flight_ticket' })}</a>
 							</Link>
 						</li>
-						<li>Phòng khách sạn</li>
-						<li>Voucher</li>
+						<li>{formatMessage({ id: 'hotel_room' })}</li>
+						<li>{formatMessage({ id: 'voucher' })}</li>
 					</ul>
 				</div>
 				<div className={classes.bottomMenu}>
 					<ul>
 						<li className={this.isAtCurrentRoute('/about-us', router) ? classes.chosenTab : ''}>
 							<Link href="/about-us">
-								<a>Về chúng tôi</a>
+								<a>{formatMessage({ id: 'menu.about_us' })}</a>
 							</Link>
 						</li>
 						<li className={this.isAtCurrentRoute('/blog', router) ? classes.chosenTab : ''}>

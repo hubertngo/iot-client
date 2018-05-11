@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Tabs } from 'antd';
+import { injectIntl, intlShape } from 'react-intl';
 // import { bindActionCreators } from 'redux';
 
 import withStyles from 'src/theme/jss/withStyles';
@@ -132,9 +133,13 @@ const mapDispatchToProps = (dispatch) => {
 
 @withStyles(styleSheet)
 @connect(mapStateToProps, mapDispatchToProps)
+@injectIntl
 export default class ClassName extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
+		intl: PropTypes.shape({
+			formatMessage: PropTypes.func,
+		}).isRequired,
 		// store
 		// store: PropTypes.shape({
 		// 	modal: PropTypes.object.isRequired,
@@ -148,7 +153,7 @@ export default class ClassName extends Component {
 	static defaultProps = {}
 
 	render() {
-		const { classes } = this.props;
+		const { classes, intl: { formatMessage } } = this.props;
 		let isDesktop = true;
 		if (typeof window !== 'undefined') {
 			isDesktop = window.innerWidth >= 992;
@@ -171,12 +176,12 @@ export default class ClassName extends Component {
 			<div className={classes.root}>
 				<div className={classes.banner + ' hidden-md-down'} />
 				<Container>
-					<div className={classes.title}>Sang nhượng vé rẻ khắp mọi nơi</div>
+					<div className={classes.title}>{formatMessage({ id: 'slogan' })}</div>
 					<div style={{ height: 60 }} />
 					<Tabs defaultActiveKey="1" className={classes.tabs}>
-						<Tabs.TabPane tab="Vé máy bay" key="1" />
-						<Tabs.TabPane tab="Phòng khách sạn" key="2" />
-						<Tabs.TabPane tab="Voucher" key="3" />
+						<Tabs.TabPane tab={formatMessage({ id: 'flight_ticket' })} key="1" />
+						<Tabs.TabPane tab={formatMessage({ id: 'hotel_room' })} key="2" />
+						<Tabs.TabPane tab={formatMessage({ id: 'voucher' })} key="3" />
 					</Tabs>
 					{isDesktop ? <FlightList /> : <MobileFlightList />}
 				</Container>

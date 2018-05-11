@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { injectIntl, intlShape } from 'react-intl';
 
 import Router from 'next/router';
 import { Form, Icon, Input, Button } from 'antd';
@@ -62,6 +63,7 @@ const mapDispatchToProps = (dispatch) => {
 @connect(mapStateToProps, mapDispatchToProps)
 @withStyles(styleSheet)
 @Form.create()
+@injectIntl
 export default class SetPassword extends Component {
 	static propTypes = {
 		form: PropTypes.object.isRequired,
@@ -76,6 +78,7 @@ export default class SetPassword extends Component {
 			resetPassword: PropTypes.func.isRequired,
 			logoutRequest: PropTypes.func.isRequired,
 		}).isRequired,
+		intl: intlShape.isRequired,
 	}
 
 	static defaultProps = {}
@@ -114,9 +117,9 @@ export default class SetPassword extends Component {
 	}
 
 	checkPassword = (rule, value, callback) => {
-		const { form } = this.props;
+		const { form, intl: { formatMessage } } = this.props;
 		if (value && value !== form.getFieldValue('password')) {
-			callback('Two passwords that you enter is inconsistent!');
+			callback(formatMessage({ id: 'error_check_confirm_password' }));
 		} else {
 			callback();
 		}
@@ -131,7 +134,7 @@ export default class SetPassword extends Component {
 	}
 
 	render() {
-		const { form: { getFieldDecorator }, token, classes } = this.props;
+		const { form: { getFieldDecorator }, token, classes, intl: { formatMessage } } = this.props;
 		if (!token) {
 			return <div>Token is invalid</div>;
 		}
@@ -144,21 +147,21 @@ export default class SetPassword extends Component {
 					</div>
 					<Form.Item>
 						{getFieldDecorator('password', {
-							rules: [{ required: true, message: 'Làm ơn nhập mật khẩu mới!' }, { min: 6, message: 'Mật khẩu không được ngắn hơn 6 ký tự.' }, { validator: this.checkConfirm }],
+							rules: [{ required: true, message: formatMessage({ id: 'new_password_required' }) }, { min: 6, message: formatMessage({ id: 'password_format' }) }, { validator: this.checkConfirm }],
 						})(
-							<Input size="large" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Mật khẩu mới" />,
+							<Input size="large" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder={formatMessage({ id: 'new_password' })} />,
 						)}
 					</Form.Item>
 					<Form.Item>
 						{getFieldDecorator('passwordConfirm', {
-							rules: [{ required: true, message: 'Làm ơn xác nhận mật khẩu mới!' }, { min: 6, message: 'Mật khẩu không được ngắn hơn 6 ký tự.' }, { validator: this.checkPassword }],
+							rules: [{ required: true, message: formatMessage({ id: 'confirm_password_required' }) }, { min: 6, message: formatMessage({ id: 'password_format' }) }, { validator: this.checkPassword }],
 						})(
-							<Input size="large" onBlur={this.handleConfirmBlur} prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Xác nhận mật khẩu mới" />,
+							<Input size="large" onBlur={this.handleConfirmBlur} prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder={formatMessage({ id: 'confirm_new_password' })} />,
 						)}
 					</Form.Item>
 					<Form.Item>
 						<Button size="large" type="primary" htmlType="submit" className={classes.btn} loading={this.state.loading}>
-							Đặt lại mật khẩu
+							{formatMessage({ id: 'reset_password' })}
 						</Button>
 					</Form.Item>
 				</Form>

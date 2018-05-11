@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { injectIntl, intlShape } from 'react-intl';
 
 import Router from 'next/router';
 
@@ -63,6 +64,7 @@ const mapDispatchToProps = (dispatch) => {
 @connect(mapStateToProps, mapDispatchToProps)
 @withStyles(styleSheet)
 @Form.create()
+@injectIntl
 export default class ForgotPassword extends Component {
 	static propTypes = {
 		form: PropTypes.object.isRequired,
@@ -75,6 +77,9 @@ export default class ForgotPassword extends Component {
 		action: PropTypes.shape({
 			forgotPassword: PropTypes.func.isRequired,
 			logoutRequest: PropTypes.func.isRequired,
+		}).isRequired,
+		intl: PropTypes.shape({
+			formatMessage: PropTypes.func,
 		}).isRequired,
 	}
 
@@ -112,15 +117,15 @@ export default class ForgotPassword extends Component {
 		});
 	}
 	render() {
-		const { form: { getFieldDecorator }, classes } = this.props;
+		const { form: { getFieldDecorator }, classes, intl: { formatMessage } } = this.props;
 
 		if (this.state.sent) {
 			return (
 				<div className={classes.root}>
 					<div className={classes.form}>
-						<p>Làm ơn kiểm tra email của bạn để đặt lại mật khẩu.</p>
+						<p>{formatMessage({ id: 'check_email' })}</p>
 						<Button size="large" type="primary" className={classes.btn} onClick={() => Router.push('/login')}>
-							Đăng nhập
+							{formatMessage({ id: 'login' })}
 						</Button>
 					</div>
 				</div>
@@ -135,19 +140,19 @@ export default class ForgotPassword extends Component {
 					</div>
 
 					<p>
-						Nhập email đã đăng ký của bạn. <br />
-						Chúng tôi sẽ gửi một email cho bạn để đặt lại mật khẩu.
+						{formatMessage({ id: 'fill_email' })} <br />
+						{formatMessage({ id: 'resend_email' })}
 					</p>
 					<Form.Item>
 						{getFieldDecorator('email', {
-							rules: [{ required: true, message: 'Làm ơn nhập email!' }, { pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, message: 'Email không hợp lệ!' }],
+							rules: [{ required: true, message: formatMessage({ id: 'email_required' }) }, { pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, message: 'Email không hợp lệ!' }],
 						})(
 							<Input size="large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Email" />,
 						)}
 					</Form.Item>
 					<Form.Item>
 						<Button type="primary" size="large" htmlType="submit" className={classes.btn} loading={this.state.loading}>
-							Đặt lại mật khẩu
+							{formatMessage({ id: 'reset_password' })}
 						</Button>
 					</Form.Item>
 				</Form>

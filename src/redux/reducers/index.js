@@ -10,6 +10,7 @@ import loading, { initialState as initialLoading } from './loading';
 import modal, { initialState as initialModal } from './modal';
 
 import user, { initialState as initialUser } from './user';
+import lang, { initialState as initialLang } from './lang';
 import ticketSelling, { initialState as initialTicketSelling } from './ticket-selling';
 import ticketBuying, { initialState as initialTicketBuying } from './ticket-buying';
 
@@ -20,6 +21,7 @@ export const initialState = {
 	user: initialUser,
 	ticketSelling: initialTicketSelling,
 	ticketBuying: initialTicketBuying,
+	lang: initialLang,
 };
 
 export default {
@@ -29,4 +31,5 @@ export default {
 	user,
 	ticketSelling,
 	ticketBuying,
+	lang,
 };

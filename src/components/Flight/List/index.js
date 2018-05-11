@@ -10,6 +10,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { injectIntl, intlShape } from 'react-intl';
 
 import { Button, Col, Row } from 'antd';
 
@@ -20,10 +21,9 @@ import CheckLogin from 'src/components/Form/CheckLogin';
 import { getTicketSellingList } from 'src/redux/actions/ticket-selling';
 import { getTicketBuyingList } from 'src/redux/actions/ticket-buying';
 import { toggleTicketPosterModal } from 'src/redux/actions/modal';
-// import moment from 'moment-hijri';
+
 import FlightCard from '../Card';
 import AuthStorage from '../../../utils/AuthStorage';
-import moment from 'src/utils/moment';
 
 const styleSheet = (/* theme */) => ({
 	wrapperContent: {
@@ -85,6 +85,7 @@ const mapDispatchToProps = (dispatch) => {
 
 @withStyles(styleSheet)
 @connect(mapStateToProps, mapDispatchToProps)
+@injectIntl
 export default class FlightList extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
@@ -99,6 +100,7 @@ export default class FlightList extends Component {
 			getTicketBuyingList: PropTypes.func.isRequired,
 			toggleTicketPosterModal: PropTypes.func.isRequired,
 		}).isRequired,
+		intl: intlShape.isRequired,
 	}
 
 	static defaultProps = {
@@ -214,7 +216,7 @@ export default class FlightList extends Component {
 	}
 
 	render() {
-		const { classes, action, store: { ticketBuyingList, ticketSellingList } } = this.props;
+		const { classes, action, store: { ticketBuyingList, ticketSellingList }, intl: { formatMessage } } = this.props;
 
 		if (this.state.loading || ticketBuyingList.loading || ticketSellingList.loading) {
 			return (
@@ -223,13 +225,13 @@ export default class FlightList extends Component {
 					<Row gutter={20} className={classes.wrapperContent}>
 						<div className={classes.border} />
 						<Col span={12}>
-							<Button type="primary" className={classes.btn}>Tìm mua</Button>
+							<Button type="primary" className={classes.btn}>{formatMessage({ id: 'buying' })}</Button>
 							{
 								[0, 0, 0, 0].map((flight, index) => <FlightCard key={index} loading />)
 							}
 						</Col>
 						<Col span={12}>
-							<Button type="primary" className={classes.btn}>Đăng bán</Button>
+							<Button type="primary" className={classes.btn}>{formatMessage({ id: 'selling' })}</Button>
 							{
 								[0, 0, 0, 0].map((flight, index) => <FlightCard key={index} loading />)
 							}
@@ -248,7 +250,7 @@ export default class FlightList extends Component {
 					<div className={classes.border} />
 					<Col span={12}>
 						<CheckLogin onClick={() => action.toggleTicketPosterModal({ open: true, type: 'buying' })}>
-							<Button type="primary" className={classes.btn} >Tìm mua</Button>
+							<Button type="primary" className={classes.btn} >{formatMessage({ id: 'buying' })}</Button>
 						</CheckLogin>
 						{
 							ticketBuyingList.data.map(flight => <FlightCard flightData={flight} key={`${flight.id}_${AuthStorage.userId}`} type="buying" />)
@@ -256,7 +258,7 @@ export default class FlightList extends Component {
 					</Col>
 					<Col span={12}>
 						<CheckLogin onClick={() => action.toggleTicketPosterModal({ open: true, type: 'selling' })}>
-							<Button type="primary" className={classes.btn} >Đăng bán</Button>
+							<Button type="primary" className={classes.btn} >{formatMessage({ id: 'selling' })}</Button>
 						</CheckLogin>
 						{
 							ticketSellingList.data.map(flight => <FlightCard flightData={flight} key={`${flight.id}_${AuthStorage.userId}`} type="selling" />)
@@ -265,7 +267,7 @@ export default class FlightList extends Component {
 					{
 						isShowMore && (
 							<Col span={24}>
-								<Button className={classes.btnMore} size="large" onClick={this.handleViewMore} loading={this.state.loadingMore}>Xem thêm</Button>
+								<Button className={classes.btnMore} size="large" onClick={this.handleViewMore} loading={this.state.loadingMore}>{formatMessage({ id: 'show_more' })}</Button>
 							</Col>
 						)
 					}

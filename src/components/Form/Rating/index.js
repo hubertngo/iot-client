@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
+import { injectIntl, intlShape } from 'react-intl';
 import { Form, Icon, Input, Button, Rate } from 'antd';
 
 import AuthStorage from 'src/utils/AuthStorage';
@@ -80,6 +80,7 @@ const mapDispatchToProps = (dispatch) => {
 @withStyles(styleSheet)
 @connect(mapStateToProps, mapDispatchToProps)
 @Form.create()
+@injectIntl
 export default class LoginForm extends Component {
 	static propTypes = {
 		form: PropTypes.object.isRequired,
@@ -94,6 +95,7 @@ export default class LoginForm extends Component {
 			createRating: PropTypes.func.isRequired,
 			toggleRatingModal: PropTypes.func.isRequired,
 		}).isRequired,
+		intl: intlShape.isRequired,
 	}
 
 	static defaultProps = {
@@ -122,20 +124,20 @@ export default class LoginForm extends Component {
 	}
 
 	render() {
-		const { classes, action, form: { getFieldDecorator, getFieldValue } } = this.props;
+		const { classes, action, form: { getFieldDecorator, getFieldValue }, intl: { formatMessage } } = this.props;
 
 		if (this.state.isVoted) {
 			return (
 				<Form className={classes.root} onSubmit={this.handleSubmit}>
 					<Icon type="close" className={classes.closeBtn} onClick={this.state.loading ? f => f : () => action.toggleRatingModal({ open: false })} />
 					<div className={classes.header}>
-						Đánh giá người dùng
+						{formatMessage({ id: 'user_rate' })}
 					</div>
 					<div className={classes.body + ' text-center'}>
-						<p className={classes.note}><b>Cảm ơn bạn</b> đã vote cho tôi</p>
+						<p className={classes.note}><b>{formatMessage({ id: 'thank_you' })}</b> {formatMessage({ id: 'voted_for_me' })}</p>
 					</div>
 					<div className={classes.footer}>
-						<Button onClick={() => action.toggleRatingModal({ open: false })} type="primary" className={classes.btn}>Đóng</Button>
+						<Button onClick={() => action.toggleRatingModal({ open: false })} type="primary" className={classes.btn}>{formatMessage({ id: 'close' })}</Button>
 					</div>
 				</Form>
 			);
@@ -145,7 +147,7 @@ export default class LoginForm extends Component {
 			<Form className={classes.root} onSubmit={this.handleSubmit}>
 				<Icon type="close" className={classes.closeBtn} onClick={this.state.loading ? f => f : () => action.toggleRatingModal({ open: false })} />
 				<div className={classes.header}>
-					Đánh giá người dùng
+					{formatMessage({ id: 'user_rate' })}
 				</div>
 				<div className={classes.body}>
 					<Form.Item>
@@ -154,20 +156,20 @@ export default class LoginForm extends Component {
 						})(
 							<Rate character={<FaStar />} style={{ color: '#FF7B1F', marginRight: 5, fontSize: 24 }} />,
 						)}
-						{getFieldValue('star') || 0}/5 điểm
+						{getFieldValue('star') || 0}/5 {formatMessage({ id: 'point' })}
 					</Form.Item>
 
-					<p className={classes.note}><b>Bạn</b> chưa hài lòng ở điểm nào, vui lòng để lại bình luận bằng cách nhập nội dung vào ô dưới đây</p>
+					<p className={classes.note}><b>{formatMessage({ id: 'you' })}</b> {formatMessage({ id: 'not_satified_and_comment' })}</p>
 					<Form.Item>
 						{getFieldDecorator('comment', {
-							rules: [{ required: true, message: 'Vui lòng nhập đánh giá của bạn!' }],
+							rules: [{ required: true, message: formatMessage({ id: 'comment_required' }) }],
 						})(
-							<Input.TextArea placeholder="Nhập nội dung bình luận..." rows={6} />,
+							<Input.TextArea placeholder={formatMessage({ id: 'comment_content' })} rows={6} />,
 						)}
 					</Form.Item>
 				</div>
 				<div className={classes.footer}>
-					<Button type="primary" htmlType="submit" className={classes.btn}>Gửi</Button>
+					<Button type="primary" htmlType="submit" className={classes.btn}>{formatMessage({ id: 'send' })}</Button>
 				</div>
 			</Form>
 		);

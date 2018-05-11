@@ -10,6 +10,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { injectIntl, intlShape } from 'react-intl';
 
 import { Button, Col, Row } from 'antd';
 
@@ -85,6 +86,7 @@ const mapDispatchToProps = (dispatch) => {
 
 @withStyles(styleSheet)
 @connect(mapStateToProps, mapDispatchToProps)
+@injectIntl
 export default class FlightList extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
@@ -100,6 +102,7 @@ export default class FlightList extends Component {
 			getUserTicketBuyingList: PropTypes.func.isRequired,
 			toggleTicketPosterModal: PropTypes.func.isRequired,
 		}).isRequired,
+		intl: intlShape.isRequired,
 	}
 
 	static defaultProps = {
@@ -209,7 +212,7 @@ export default class FlightList extends Component {
 	}
 
 	render() {
-		const { classes, action, store: { ticketBuyingList, ticketSellingList } } = this.props;
+		const { classes, action, store: { ticketBuyingList, ticketSellingList }, intl: { formatMessage } } = this.props;
 
 		if (this.state.loading || ticketBuyingList.loading || ticketSellingList.loading) {
 			return (
@@ -218,13 +221,13 @@ export default class FlightList extends Component {
 					<Row gutter={20} className={classes.wrapperContent}>
 						<div className={classes.border} />
 						<Col span={12}>
-							<Button type="primary" className={classes.btn}>Tìm mua</Button>
+							<Button type="primary" className={classes.btn}>{formatMessage({ id: 'buying' })}</Button>
 							{
 								[0, 0, 0, 0].map((flight, index) => <FlightCard key={index} loading />)
 							}
 						</Col>
 						<Col span={12}>
-							<Button type="primary" className={classes.btn}>Đăng bán</Button>
+							<Button type="primary" className={classes.btn}>{formatMessage({ id: 'selling' })}</Button>
 							{
 								[0, 0, 0, 0].map((flight, index) => <FlightCard key={index} loading />)
 							}
@@ -242,13 +245,13 @@ export default class FlightList extends Component {
 				<Row gutter={20} className={classes.wrapperContent}>
 					<div className={classes.border} />
 					<Col span={12}>
-						<Button type="primary" className={classes.btn} onClick={() => action.toggleTicketPosterModal({ open: true, type: 'buying' })}>Tìm mua</Button>
+						<Button type="primary" className={classes.btn} onClick={() => action.toggleTicketPosterModal({ open: true, type: 'buying' })}>{formatMessage({ id: 'buying' })}</Button>
 						{
 							ticketBuyingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="buying" />)
 						}
 					</Col>
 					<Col span={12}>
-						<Button type="primary" className={classes.btn} onClick={() => action.toggleTicketPosterModal({ open: true, type: 'selling' })}>Đăng bán</Button>
+						<Button type="primary" className={classes.btn} onClick={() => action.toggleTicketPosterModal({ open: true, type: 'selling' })}>{formatMessage({ id: 'selling' })}</Button>
 						{
 							ticketSellingList.data.map(flight => <FlightCard flightData={flight} key={flight.id} type="selling" />)
 						}

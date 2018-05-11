@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import withStyles from 'src/theme/jss/withStyles';
+import { injectIntl, intlShape } from 'react-intl';
 
 import { Popover, Icon, Divider } from 'antd';
 
@@ -149,8 +150,8 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 // const AvatarBtn = ({ store, action, classes, isMobile }) => {
+@injectIntl
 class AvatarBtn extends React.Component {
-
 	state = {}
 
 	logout = () => {
@@ -168,7 +169,7 @@ class AvatarBtn extends React.Component {
 	}
 
 	render() {
-		const { classes, store, action, isMobile } = this.props;
+		const { classes, store, action, isMobile, intl: { formatMessage } } = this.props;
 		const content = (
 			<div className={classes.content}>
 				{/* <div className={classes.itemWrapper}>
@@ -181,7 +182,7 @@ class AvatarBtn extends React.Component {
 				<div className={classes.itemWrapper}>
 					<div className={classes.item} onClick={() => action.toggleUserInfoModal({ open: true, id: store.auth.id })}>
 						<Icon type="user" />
-						<span> Thông tin cá nhân </span>
+						<span> {formatMessage({ id: 'personal_info' })} </span>
 					</div>
 				</div>
 				{
@@ -191,7 +192,7 @@ class AvatarBtn extends React.Component {
 						<div className={classes.itemWrapper}>
 							<div className={classes.item} onClick={() => Router.pushRoute('/change-password')}>
 								<Icon type="setting" />
-								<span>Đổi mật khẩu</span>
+								<span>{formatMessage({ id: 'change_password' })}</span>
 							</div>
 						</div>
 					</Fragment>
@@ -201,7 +202,7 @@ class AvatarBtn extends React.Component {
 					{
 						<div className={classes.item} onClick={() => Router.pushRoute('/user-ticket-list')}>
 							{ isMobile ? <IconDeparture size={16} color="#000" /> : <IconDeparture size={16} /> }
-							<span style={{ marginLeft: 15 }}>  Bài đăng của tôi </span>
+							<span style={{ marginLeft: 15 }}>  {formatMessage({ id: 'my_post' })} </span>
 						</div>
 					}
 				</div>
@@ -209,7 +210,7 @@ class AvatarBtn extends React.Component {
 				<div className={classes.itemWrapper}>
 					<div className={classes.item} onClick={this.logout}>
 						<Icon type="logout" />
-						<span> Đăng xuất </span>
+						<span> {formatMessage({ id: 'logout' })} </span>
 					</div>
 				</div>
 			</div>
@@ -270,6 +271,7 @@ AvatarBtn.propTypes = {
 		logoutRequest: PropTypes.func.isRequired,
 		toggleUserInfoModal: PropTypes.func.isRequired,
 	}).isRequired,
+	intl: intlShape.isRequired,
 };
 
 AvatarBtn.defaultProps = {

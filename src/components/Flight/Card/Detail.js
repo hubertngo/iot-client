@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
-
+import { injectIntl, intlShape } from 'react-intl';
 import { Icon, Button, InputNumber, notification, Row, Col, Tag, Tooltip } from 'antd';
 
 import { flightOptions } from 'src/constants/selectOption';
@@ -217,6 +217,7 @@ const mapDispatchToProps = (dispatch) => {
 
 @connect(mapStateToProps, mapDispatchToProps)
 @withStyles(styleSheet)
+@injectIntl
 export default class FlightDetail extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
@@ -232,6 +233,7 @@ export default class FlightDetail extends Component {
 			createTicketSellingBid: PropTypes.func,
 		}).isRequired,
 		onCancel: PropTypes.func.isRequired,
+		intl: intlShape.isRequired,
 	}
 
 	static defaultProps = {
@@ -245,6 +247,8 @@ export default class FlightDetail extends Component {
 	}
 
 	handleSell = () => {
+		const { formatMessage } = this.props.intl;
+
 		if (this.props.flightData.id) {
 			this.setState({
 				btnLoading: true,
@@ -259,8 +263,8 @@ export default class FlightDetail extends Component {
 					btnLoading: false,
 				});
 				notification.success({
-					message: 'Chúc mừng!',
-					description: 'Bạn đã liên hệ thành công! Vui lòng kiểm tra hộp thư để nhận thông tin người mua.',
+					message: formatMessage({ id: 'congrats' }),
+					description: formatMessage({ id: 'contact_success' }),
 				});
 				this.props.onCancel();
 			}, () => {
@@ -273,6 +277,8 @@ export default class FlightDetail extends Component {
 	}
 
 	handleBuy = () => {
+		const { formatMessage } = this.props.intl;
+
 		if (this.props.flightData.id) {
 			this.setState({
 				btnLoading: true,
@@ -287,8 +293,8 @@ export default class FlightDetail extends Component {
 					btnLoading: false,
 				});
 				notification.success({
-					message: 'Chúc mừng!',
-					description: 'Bạn đã mua vé thành công! Vui lòng kiểm tra hộp thư.',
+					message: formatMessage({ id: 'congrats' }),
+					description: formatMessage({ id: 'buy_ticket_success' }),
 				});
 				this.props.onCancel();
 			}, () => {
@@ -301,6 +307,8 @@ export default class FlightDetail extends Component {
 	}
 
 	handleBid = () => {
+		const { formatMessage } = this.props.intl;
+
 		if (this.props.flightData.id) {
 			this.setState({
 				btnLoading: true,
@@ -315,8 +323,8 @@ export default class FlightDetail extends Component {
 					btnLoading: false,
 				});
 				notification.success({
-					message: 'Chúc mừng!',
-					description: 'Bạn đã đấu giá thành công!',
+					message: formatMessage({ id: 'congrats' }),
+					description: formatMessage({ id: 'bid_success' }),
 				});
 				this.props.onCancel();
 			}, () => {
@@ -339,7 +347,7 @@ export default class FlightDetail extends Component {
 	}
 
 	_renderFooter() {
-		const { classes, type, flightData } = this.props;
+		const { classes, type, flightData, intl: { formatMessage } } = this.props;
 
 		if (type === 'buying') {
 			return (
@@ -354,7 +362,7 @@ export default class FlightDetail extends Component {
 					}
 
 					<CheckLogin onClick={this.handleSell}>
-						<Button type="primary" loading={this.state.btnLoading}>Liên hệ</Button>
+						<Button type="primary" loading={this.state.btnLoading}>{formatMessage({ id: 'contact' })}</Button>
 					</CheckLogin>
 				</div>
 			);
@@ -374,20 +382,20 @@ export default class FlightDetail extends Component {
 							<Col md={8} xs={10}>
 								<div className="hidden-sm-up">
 									<div style={{ marginBottom: 10 }}>
-										<div>Thời gian còn lại</div>
+										<div>{formatMessage({ id: 'remaining_time' })}</div>
 										<div className={classes.remainingTimeInfo}>{moment(flightData.dueDate).fromNow()}</div>
 									</div>
 								</div>
 								<div className="hidden-sm-down">
 									<div style={{ marginRight: 25 }}>
-										<div>Thời gian còn lại</div>
+										<div>{formatMessage({ id: 'remaining_time' })}</div>
 										<div className={classes.remainingTimeInfo}>{moment(flightData.dueDate).fromNow()}</div>
 									</div>
 								</div>
 							</Col>
 						</Row>
 						<div className={classes.actionWrapper}>
-							<span className="hidden-sm-down">Mức giá của bạn</span>
+							<span className="hidden-sm-down">{formatMessage({ id: 'your_price' })}n</span>
 							<InputNumber
 								formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 								className="price"
@@ -396,7 +404,7 @@ export default class FlightDetail extends Component {
 								style={{ width: 150, marginLeft: 10, marginRight: 10 }}
 								onChange={(bidPrice) => { this.setState({ bidPrice }); }}
 							/>
-							<Button type="primary" loading={this.state.btnLoading} onClick={this.handleBid}>Đấu giá</Button>
+							<Button type="primary" loading={this.state.btnLoading} onClick={this.handleBid}>{formatMessage({ id: 'bid' })}</Button>
 						</div>
 					</Fragment>
 				);
@@ -412,7 +420,7 @@ export default class FlightDetail extends Component {
 						</Tooltip>
 					}
 					<CheckLogin onClick={this.handleBuy}>
-						<Button type="primary" loading={this.state.btnLoading}>Mua</Button>
+						<Button type="primary" loading={this.state.btnLoading}>{formatMessage({ id: 'buy' })}</Button>
 					</CheckLogin>
 				</div>
 			);
@@ -449,7 +457,7 @@ export default class FlightDetail extends Component {
 		);
 	}
 	render() {
-		const { classes, flightData = {}, action, type } = this.props;
+		const { classes, flightData = {}, action, type, intl: { formatMessage } } = this.props;
 
 		const { creator = {}, fbFeed = {} } = flightData;
 
@@ -486,7 +494,7 @@ export default class FlightDetail extends Component {
 
 				<div className={classes.body}>
 					<div>
-						<div className={classes.title}>Nội dung:</div>
+						<div className={classes.title}>{formatMessage({ id: 'content' })}:</div>
 						<div className="pre-wrap">
 							{flightData.content}
 						</div>
@@ -502,20 +510,20 @@ export default class FlightDetail extends Component {
 					}
 
 					<div className={classes.bodyItem}>
-						<span className={classes.title}>Số vé:</span>
+						<span className={classes.title}>{formatMessage({ id: 'ticket_seat_count' })}:</span>
 						<span>{flightData.seatCount || 1}</span>
 					</div>
 					{
 						type === 'selling' &&
 						<div className={classes.bodyItem}>
-							<span className={classes.title}>Giá vé:</span>
+							<span className={classes.title}>{formatMessage({ id: 'ticket_price' })}:</span>
 							<span>{formatNumber(flightData.price)} VNĐ</span>
 						</div>
 					}
 					{
 						flightData.images && flightData.images.length > 0 &&
 						<div className={classes.imgWrapper}>
-							<div className={classes.title}>Hình ảnh đính kèm:</div>
+							<div className={classes.title}>{formatMessage({ id: 'attached_image' })}:</div>
 							<ImageLightBox
 								className={classes.img}
 								images={flightData.images}
@@ -538,7 +546,7 @@ export default class FlightDetail extends Component {
 								getLabel(flightData.airline, flightOptions).value === 'all' ? (
 									<Fragment>
 										<IconDeparture size={18} extended />
-										<span className={classes.note} style={{ marginLeft: 10 }}>Tất cả các hãng</span>
+										<span className={classes.note} style={{ marginLeft: 10 }}>{formatMessage({ id: 'all_airline' })}</span>
 									</Fragment>
 								) : (
 									<img src={getLabel(flightData.airline, flightOptions).logo} alt="" height={18} />

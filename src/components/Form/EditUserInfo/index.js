@@ -14,6 +14,7 @@ import { bindActionCreators } from 'redux';
 import { Form, Icon, Row, Col, Button, Input, Radio, Upload } from 'antd';
 
 import withStyles from 'src/theme/jss/withStyles';
+import { injectIntl, intlShape } from 'react-intl';
 
 import { toggleEditUserInfoModal } from 'src/redux/actions/modal';
 import { editProfile } from 'src/redux/actions/auth';
@@ -88,6 +89,7 @@ const mapDispatchToProps = (dispatch) => {
 @withStyles(styleSheet)
 @connect(mapStateToProps, mapDispatchToProps)
 @Form.create()
+@injectIntl
 export default class EditUserInfoForm extends Component {
 	static propTypes = {
 		form: PropTypes.object.isRequired,
@@ -105,6 +107,7 @@ export default class EditUserInfoForm extends Component {
 			editProfile: PropTypes.func,
 			uploadFiles: PropTypes.func,
 		}).isRequired,
+		intl: intlShape.isRequired,
 	}
 
 	static defaultProps = {
@@ -130,7 +133,7 @@ export default class EditUserInfoForm extends Component {
 
 	checkBirthday = (rule, value, callback) => {
 		if (moment().diff(value, 'years') < 10 || moment().isBefore(value)) {
-			callback('Vui lòng nhập đúng năm sinh');
+			callback(this.props.intl.formatMessage({ id: 'wrong_birthday_year' }));
 		} else {
 			callback();
 		}
@@ -167,7 +170,7 @@ export default class EditUserInfoForm extends Component {
 	}
 
 	render() {
-		const { form: { getFieldDecorator }, classes, style, store: { auth }, action } = this.props;
+		const { form: { getFieldDecorator }, classes, style, store: { auth }, action, intl: { formatMessage } } = this.props;
 
 		return (
 			<div className={classes.root} style={style}>

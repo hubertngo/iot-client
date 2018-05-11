@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FacebookLogin from 'react-facebook-login';
 import { bindActionCreators } from 'redux';
-
+import { injectIntl, intlShape } from 'react-intl';
 import { notification } from 'antd';
 
 import Router from 'next/router';
@@ -61,6 +61,7 @@ const mapDispatchToProps = (dispatch) => {
 
 @connect(mapStateToProps, mapDispatchToProps)
 @withStyles(styleSheet)
+@injectIntl
 export default class FbBtnLogin extends PureComponent {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
@@ -70,6 +71,7 @@ export default class FbBtnLogin extends PureComponent {
 			toggleLoginModal: PropTypes.func.isRequired,
 			toggleSignUpModal: PropTypes.func.isRequired,
 		}).isRequired,
+		intl: intlShape.isRequired,
 	}
 
 	static defaultProps = {
@@ -81,6 +83,7 @@ export default class FbBtnLogin extends PureComponent {
 	}
 
 	handleResponseFacebook = (resultUser) => {
+		const { formatMessage } = this.props.intl;
 		const { accessToken } = resultUser;
 
 		if (resultUser.status === 'not_authorized' || resultUser.status === 'unknown') {
@@ -100,8 +103,8 @@ export default class FbBtnLogin extends PureComponent {
 			});
 		} else {
 			notification.error({
-				message: 'Error message',
-				description: 'AccessToken not found!',
+				message: formatMessage({ id: 'error' }),
+				description: formatMessage({ id: 'not.access_token_not_found' }),
 			});
 		}
 	}

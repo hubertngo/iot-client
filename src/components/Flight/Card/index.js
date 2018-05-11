@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import Router, { withRouter } from 'next/router';
+import { injectIntl, intlShape } from 'react-intl';
 
 import { Row, Col, Icon, Button, Modal } from 'antd';
 
@@ -229,6 +230,7 @@ const mapDispatchToProps = (dispatch) => {
 @withRouter
 @connect(mapStateToProps, mapDispatchToProps)
 @withStyles(styleSheet)
+@injectIntl
 export default class FlightCard extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
@@ -247,6 +249,9 @@ export default class FlightCard extends Component {
 			toggleEditSellingModal: PropTypes.func,
 			deleteTicketBuying: PropTypes.func,
 			deleteTicketSelling: PropTypes.func,
+		}).isRequired,
+		intl: PropTypes.shape({
+			formatMessage: PropTypes.func,
 		}).isRequired,
 	}
 
@@ -297,19 +302,19 @@ export default class FlightCard extends Component {
 	}
 
 	_renderBodyRight = () => {
-		const { type, flightData } = this.props;
+		const { type, flightData, intl: { formatMessage } } = this.props;
 
 		if (AuthStorage.userId && AuthStorage.userId === flightData.creatorId) {
 			if (type === 'buying') {
 				return (
 					<Fragment>
-						<p>{flightData.seatCount} vé</p>
+						<p>{flightData.seatCount} {formatMessage({ id: 'ticket' })}</p>
 						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 							<CheckLogin onClick={this.handleEditBuying}>
-								<Button>Sửa</Button>
+								<Button>{formatMessage({ id: 'edit' })}</Button>
 							</CheckLogin>
 							<CheckLogin onClick={this.handleDeleteBuying}>
-								<Button>Xóa</Button>
+								<Button>{formatMessage({ id: 'delete' })}</Button>
 							</CheckLogin>
 						</div>
 					</Fragment>
@@ -321,10 +326,10 @@ export default class FlightCard extends Component {
 					<p><Price price={flightData.price} type="primary" /></p>
 					<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 						<CheckLogin onClick={this.handleEditSelling} >
-							<Button>Sửa</Button>
+							<Button>{formatMessage({ id: 'edit' })}</Button>
 						</CheckLogin>
 						<CheckLogin onClick={this.handleDeleteSelling}>
-							<Button>Xóa</Button>
+							<Button>{formatMessage({ id: 'delete' })}</Button>
 						</CheckLogin>
 					</div>
 				</Fragment>
@@ -334,9 +339,9 @@ export default class FlightCard extends Component {
 		if (type === 'buying') {
 			return (
 				<Fragment>
-					<p>{flightData.seatCount} vé</p>
+					<p>{flightData.seatCount} {formatMessage({ id: 'ticket' })}</p>
 					<CheckLogin onClick={this.handleClickFlight}>
-						<Button type="primary">Liên hệ</Button>
+						<Button type="primary">{formatMessage({ id: 'contact' })}</Button>
 					</CheckLogin>
 				</Fragment>
 			);
@@ -354,7 +359,7 @@ export default class FlightCard extends Component {
 				<Fragment>
 					<p><Price price={flightData.price} type="primary" /></p>
 					<CheckLogin onClick={this.handleClickFlight} >
-						<Button type="primary">Mua</Button>
+						<Button type="primary">{formatMessage({ id: 'buy' })}</Button>
 					</CheckLogin>
 				</Fragment>
 			);
@@ -364,7 +369,7 @@ export default class FlightCard extends Component {
 	}
 
 	render() {
-		const { classes, flightData = {}, loading } = this.props;
+		const { classes, flightData = {}, loading, intl: { formatMessage } } = this.props;
 		const { creator = {}, fbFeed = {} } = flightData;
 
 		const { author = { picture: { data: {} } } } = fbFeed;
@@ -403,14 +408,14 @@ export default class FlightCard extends Component {
 				{
 					flightData.status === 'pending' &&
 					<div className={classes.badgePending}>
-						<span>Đang xử lý</span>
+						<span>{formatMessage({ id: 'in_progress' })}</span>
 					</div>
 				}
 
 				{
 					flightData.status === 'closed' &&
 					<div className={classes.badgeClose}>
-						<span>Đã giao</span>
+						<span>{formatMessage({ id: 'delivered' })}</span>
 					</div>
 				}
 
@@ -483,7 +488,7 @@ export default class FlightCard extends Component {
 								<div className={classes.footerInfo}>{moment(flightData.dueDate).fromNow()}</div>
 							</div>
 							<CheckLogin onClick={this.handleClickFlight}>
-								<Button type="primary">Đấu giá</Button>
+								<Button type="primary">{formatMessage({ id: 'bid' })}</Button>
 							</CheckLogin>
 						</div>
 					)

@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { injectIntl, intlShape } from 'react-intl';
 
 import { Form, Icon, Row, Col, Divider } from 'antd';
 import Avatar from 'src/components/Photo/Avatar';
@@ -138,6 +139,7 @@ const mapDispatchToProps = (dispatch) => {
 @withStyles(styleSheet)
 @connect(mapStateToProps, mapDispatchToProps)
 @Form.create()
+@injectIntl
 export default class UserInfoForm extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,

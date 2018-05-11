@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-
+import { injectIntl, intlShape } from 'react-intl';
 import { Row, Col, Tag } from 'antd';
 
 import { flightOptions } from 'src/constants/selectOption';
@@ -29,7 +29,7 @@ const styleSheet = (theme) => ({
 	},
 });
 
-const FlightBlock = ({ flightData, style, classes, loading }) => {
+const FlightBlock = ({ flightData, style, classes, loading, intl: { formatMessage } }) => {
 	const { trip } = flightData;
 
 	if (loading) {
@@ -78,7 +78,7 @@ const FlightBlock = ({ flightData, style, classes, loading }) => {
 						getLabel(flightData.airline, flightOptions).value === 'all' ? (
 							<Fragment>
 								<IconDeparture size={18} extended />
-								<span className={classes.note} style={{ marginLeft: 10 }}>Tất cả các hãng</span>
+								<span className={classes.note} style={{ marginLeft: 10 }}>{formatMessage({ id: 'all_airline' })}</span>
 							</Fragment>
 						) : (
 							<img src={getLabel(flightData.airline, flightOptions).logo} alt="" height={18} />
@@ -99,6 +99,7 @@ FlightBlock.propTypes = {
 	classes: PropTypes.object.isRequired,
 	style: PropTypes.object,
 	loading: PropTypes.bool,
+	intl: intlShape.isRequired,
 };
 
 FlightBlock.defaultProps = {
@@ -107,4 +108,4 @@ FlightBlock.defaultProps = {
 	loading: false,
 };
 
-export default withStyles(styleSheet)(FlightBlock);
+export default withStyles(styleSheet)(injectIntl(FlightBlock));

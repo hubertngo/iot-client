@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { injectIntl, intlShape } from 'react-intl';
 
 import Router from 'next/router';
 
@@ -81,6 +82,7 @@ const mapDispatchToProps = (dispatch) => {
 @withStyles(styleSheet)
 @connect(mapStateToProps, mapDispatchToProps)
 @Form.create()
+@injectIntl
 export default class LoginForm extends Component {
 	static propTypes = {
 		form: PropTypes.object.isRequired,
@@ -96,6 +98,9 @@ export default class LoginForm extends Component {
 			signUpRequest: PropTypes.func.isRequired,
 			toggleSignUpModal: PropTypes.func.isRequired,
 			toggleLoginModal: PropTypes.func.isRequired,
+		}).isRequired,
+		intl: PropTypes.shape({
+			formatMessage: PropTypes.func,
 		}).isRequired,
 	}
 
@@ -148,9 +153,9 @@ export default class LoginForm extends Component {
 	}
 
 	checkPassword = (rule, value, callback) => {
-		const { form } = this.props;
+		const { form, intl: { formatMessage } } = this.props;
 		if (value && value !== form.getFieldValue('password')) {
-			callback('Two passwords that you enter is inconsistent!');
+			callback(formatMessage({ id: 'error_check_confirm_password' }));
 		} else {
 			callback();
 		}
@@ -170,7 +175,7 @@ export default class LoginForm extends Component {
 	}
 
 	render() {
-		const { form: { getFieldDecorator }, classes } = this.props;
+		const { form: { getFieldDecorator }, classes, intl: { formatMessage } } = this.props;
 
 		return (
 			<div className={classes.root}>
@@ -178,48 +183,48 @@ export default class LoginForm extends Component {
 					<img src="/static/assets/images/logo/1x.png" alt="chove.vn" />
 				</div>
 				<Form onSubmit={this.handleSubmit} className={classes.form}>
-					<Form.Item label="Họ và tên" style={{ marginBottom: 0 }}>
+					<Form.Item label={formatMessage({ id: 'fullname' })} style={{ marginBottom: 0 }}>
 						{getFieldDecorator('fullName', {
-							rules: [{ required: true, message: 'Làm ơn nhập tên của bạn!' }],
+							rules: [{ required: true, message: formatMessage({ id: 'form.fullname_required' }) }],
 						})(
-							<Input size="large" className="radius-large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Họ và Tên" />,
+							<Input size="large" className="radius-large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder={formatMessage({ id: 'fullname' })} />,
 						)}
 					</Form.Item>
 					<Form.Item label="Email" style={{ marginBottom: 0 }}>
 						{getFieldDecorator('email', {
-							rules: [{ required: true, message: 'Làm ơn nhập email của bạn!' }, { pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, message: 'Email không hợp lệ!' }],
+							rules: [{ required: true, message: formatMessage({ id: 'email_required' }) }, { pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, message: formatMessage({ id: 'email_format' }) }],
 						})(
 							<Input size="large" className="radius-large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Email" />,
 						)}
 					</Form.Item>
-					<Form.Item label="Tên đăng nhập" style={{ marginBottom: 0 }}>
+					<Form.Item label={formatMessage({ id: 'username' })} style={{ marginBottom: 0 }}>
 						{getFieldDecorator('username', {
-							rules: [{ required: true, message: 'Làm ơn nhập tên tài khoản của bạn!' }],
+							rules: [{ required: true, message: formatMessage({ id: 'username_required' }) }],
 						})(
-							<Input size="large" className="radius-large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Tên đăng nhập" />,
+							<Input size="large" className="radius-large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder={formatMessage({ id: 'username' })} />,
 						)}
 					</Form.Item>
-					<Form.Item label="Mật khẩu" style={{ marginBottom: 0 }}>
+					<Form.Item label={formatMessage({ id: 'password' })} style={{ marginBottom: 0 }}>
 						{getFieldDecorator('password', {
-							rules: [{ required: true, message: 'Làm ơn nhập mật khẩu của bạn!' }, { min: 6, message: 'Mật khẩu không được ngắn hơn 6 ký tự.' }, { validator: this.checkConfirm }],
+							rules: [{ required: true, message: formatMessage({ id: 'password_required' }) }, { min: 6, message: formatMessage({ id: 'password_format' }) }, { validator: this.checkConfirm }],
 						})(
-							<Input size="large" className="radius-large" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Mật khẩu" />,
+							<Input size="large" className="radius-large" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder={formatMessage({ id: 'password' })} />,
 						)}
 					</Form.Item>
-					<Form.Item label="Xác nhận mật khẩu">
+					<Form.Item label={formatMessage({ id: 'confirm_password' })}>
 						{getFieldDecorator('passwordConfirm', {
-							rules: [{ required: true, message: 'Làm ơn nhập mật khẩu xác nhận!' }, { min: 6, message: 'Mật khẩu không được ngắn hơn 6 ký tự.' }, { validator: this.checkPassword }],
+							rules: [{ required: true, message: formatMessage({ id: 'form_error.confirm-password_required' }) }, { min: 6, message: formatMessage({ id: 'password_format' }) }, { validator: this.checkPassword }],
 						})(
-							<Input size="large" className="radius-large" onBlur={this.handleConfirmBlur} prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Xác nhận mật khẩu" />,
+							<Input size="large" className="radius-large" onBlur={this.handleConfirmBlur} prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder={formatMessage({ id: 'confirm_password' })} />,
 						)}
 					</Form.Item>
 					<Button type="primary" className="radius-large" htmlType="submit" size="large" style={{ width: '100%' }} loading={this.state.loading}>
-						Đăng Ký
+						{formatMessage({ id: 'sign_up' })}
 					</Button>
 					<div className={classes.signUp}>
-						Bạn đã có tài khoản?
+						{formatMessage({ id: 'have_account' })}
 						{' '}
-						<a href="/login" onClick={this.handleOpenLoginDialog}>Đăng nhập</a>
+						<a href="/login" onClick={this.handleOpenLoginDialog}>{formatMessage({ id: 'login' })}</a>
 					</div>
 				</Form>
 			</div>

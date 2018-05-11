@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { injectIntl, intlShape } from 'react-intl';
 
 import { Menu, Dropdown, Button } from 'antd';
 
@@ -46,7 +47,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const BtnTicketPoster = (props) => {
-	const { classes, children, action } = props;
+	const { classes, children, action, intl: { formatMessage } } = props;
 
 	const handleMenuClick = (e) => {
 		action.toggleTicketPosterModal({ open: true, type: e.key });
@@ -54,8 +55,8 @@ const BtnTicketPoster = (props) => {
 
 	const menu = (
 		<Menu onClick={handleMenuClick}>
-			<Menu.Item key="buying">Tìm Mua</Menu.Item>
-			<Menu.Item key="selling">Đăng Bán</Menu.Item>
+			<Menu.Item key="buying">{formatMessage({ id: 'buying' })}</Menu.Item>
+			<Menu.Item key="selling">{formatMessage({ id: 'selling' })}</Menu.Item>
 		</Menu>
 	);
 
@@ -65,10 +66,10 @@ const BtnTicketPoster = (props) => {
 				AuthStorage.loggedIn ?
 					<Dropdown overlay={menu} trigger={['click']}>
 						{
-							children || <Button type="primary" size="small" className={classes.postBtn}>Đăng tin</Button>
+							children || <Button type="primary" size="small" className={classes.postBtn}>{formatMessage({ id: 'posting' })}</Button>
 						}
 					</Dropdown> :
-					children || <Button type="primary" size="small" className={classes.postBtn}>Đăng tin</Button>
+					children || <Button type="primary" size="small" className={classes.postBtn}>{formatMessage({ id: 'posting' })}</Button>
 			}
 		</CheckLogin>
 	);
@@ -85,10 +86,11 @@ BtnTicketPoster.propTypes = {
 	action: PropTypes.shape({
 		toggleTicketPosterModal: PropTypes.func.isRequired,
 	}).isRequired,
+	intl: intlShape.isRequired,
 };
 
 BtnTicketPoster.defaultProps = {
 	children: undefined,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(BtnTicketPoster));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(injectIntl(BtnTicketPoster)));

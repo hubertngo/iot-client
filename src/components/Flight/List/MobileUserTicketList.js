@@ -10,8 +10,8 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
-import { Button, Col, Row, Tabs, Menu, Dropdown } from 'antd';
+import { injectIntl, intlShape } from 'react-intl';
+import { Button, Col, Row, Tabs } from 'antd';
 
 import withStyles from 'src/theme/jss/withStyles';
 import MobileSearchBar from 'src/components/Form/SearchBar/MobileSearchBar';
@@ -77,6 +77,7 @@ const mapDispatchToProps = (dispatch) => {
 
 @withStyles(styleSheet)
 @connect(mapStateToProps, mapDispatchToProps)
+@injectIntl
 export default class MobileList extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
@@ -91,6 +92,7 @@ export default class MobileList extends Component {
 			getTicketBuyingList: PropTypes.func.isRequired,
 			toggleTicketPosterModal: PropTypes.func.isRequired,
 		}).isRequired,
+		intl: intlShape.isRequired,
 	}
 
 	static defaultProps = {
@@ -209,12 +211,12 @@ export default class MobileList extends Component {
 		this.tabKey = key;
 	}
 
-	handleCreate = (e) => {
+	handleCreate = () => {
 		this.props.action.toggleTicketPosterModal({ open: true, type: this.tabKey });
 	};
 
 	render() {
-		const { classes, action, store: { ticketBuyingList, ticketSellingList } } = this.props;
+		const { classes, store: { ticketBuyingList, ticketSellingList }, intl: { formatMessage } } = this.props;
 
 		if (this.state.loading || ticketBuyingList.loading || ticketSellingList.loading) {
 			return (
@@ -223,13 +225,13 @@ export default class MobileList extends Component {
 					<Row gutter={20} className={classes.wrapperContent}>
 						<div className={classes.border} />
 						<Col span={12}>
-							<Button type="primary" className={classes.btn}>Tìm mua</Button>
+							<Button type="primary" className={classes.btn}>{formatMessage({ id: 'buying' })}</Button>
 							{
 								[0, 0, 0, 0].map((flight, index) => <MobileFlightCard key={index} loading />)
 							}
 						</Col>
 						<Col span={12}>
-							<Button type="primary" className={classes.btn}>Đăng bán</Button>
+							<Button type="primary" className={classes.btn}>{formatMessage({ id: 'selling' })}</Button>
 							{
 								[0, 0, 0, 0].map((flight, index) => <MobileFlightCard key={index} loading />)
 							}
@@ -242,8 +244,8 @@ export default class MobileList extends Component {
 		const isShowMore = (ticketBuyingList.data.length < ticketBuyingList.total) || (ticketSellingList.data.length < ticketSellingList.total);
 		// const menu = (
 		// 	<Menu onClick={this.handleMenuClick}>
-		// 		<Menu.Item key="buying">Tìm Mua</Menu.Item>
-		// 		<Menu.Item key="selling">Đăng Bán</Menu.Item>
+		// 		<Menu.Item key="buying">{formatMessage({ id: 'buying' })}</Menu.Item>
+		// 		<Menu.Item key="selling">{formatMessage({ id: 'selling' })}</Menu.Item>
 		// 	</Menu>
 		// );
 
@@ -252,12 +254,12 @@ export default class MobileList extends Component {
 
 				<MobileSearchBar onSearch={this.handleSearch} />
 				<Tabs tabPosition="bottom" onChange={this.handleChangeTab}>
-					<Tabs.TabPane tab="Tìm mua" key="buying">
+					<Tabs.TabPane tab="{formatMessage({ id: 'buying' })}" key="buying">
 						{
 							ticketBuyingList.data.map(flight => <MobileFlightCard flightData={flight} key={`${flight.id}_${AuthStorage.userId}`} type="buying" />)
 						}
 					</Tabs.TabPane>
-					<Tabs.TabPane tab="Đăng bán" key="selling">
+					<Tabs.TabPane tab="{formatMessage({ id: 'selling' })}" key="selling">
 						{
 							ticketSellingList.data.map(flight => <MobileFlightCard flightData={flight} key={`${flight.id}_${AuthStorage.userId}`} type="selling" />)
 						}

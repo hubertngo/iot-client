@@ -9,6 +9,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { injectIntl, intlShape } from 'react-intl';
 
 import { Input, Menu, Dropdown, Select, Form, Button, Row, Col, notification, Radio } from 'antd';
 
@@ -144,6 +145,7 @@ const mapDispatchToProps = (dispatch) => {
 @connect(mapStateToProps, mapDispatchToProps)
 @withStyles(styleSheet)
 @Form.create()
+@injectIntl
 export default class SearchBar extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
@@ -152,6 +154,7 @@ export default class SearchBar extends Component {
 			setFieldsValue: PropTypes.func,
 		}).isRequired,
 		onSearch: PropTypes.func,
+		intl: intlShape.isRequired,
 	}
 
 	static defaultProps = {
@@ -163,6 +166,8 @@ export default class SearchBar extends Component {
 
 	handleSubmit = (e) => {
 		e.preventDefault();
+
+		const { formatMessage } = this.props.intl;
 
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
@@ -179,8 +184,8 @@ export default class SearchBar extends Component {
 
 				if (departure && destination && departure === destination) {
 					notification.error({
-						message: 'Lỗi',
-						description: 'Vui lòng nhập điểm xuất phát và điểm đến khác nhau',
+						message: formatMessage({ id: 'error' }),
+						description: formatMessage({ id: 'departure_destination_not_equal' }),
 					});
 					return;
 				}
@@ -205,8 +210,8 @@ export default class SearchBar extends Component {
 
 				if (startDate && endDate && startDate.isAfter(endDate)) {
 					notification.error({
-						message: 'Lỗi',
-						description: 'Vui lòng nhập ngày đi trước ngày về',
+						message: formatMessage({ id: 'error' }),
+						description: formatMessage({ id: 'startDate_before_endDate' }),
 					});
 					return;
 				}
@@ -225,36 +230,26 @@ export default class SearchBar extends Component {
 	}
 
 	render() {
-		const { form: { getFieldDecorator }, classes } = this.props;
-		const menuDeparture = (
-			<Menu className={classes.dropdownMenu} onClick={this._handleDepartureChange}>
-				{locationOptions.map(location => <Menu.Item key={location.value}>{location.label}</Menu.Item>)}
-			</Menu>
-		);
-		const menuDestination = (
-			<Menu className={classes.dropdownMenu} onClick={this._handleDestinationChange}>
-				{locationOptions.map(location => <Menu.Item key={location.value}>{location.label}</Menu.Item>)}
-			</Menu>
-		);
+		const { form: { getFieldDecorator }, classes, intl: { formatMessage } } = this.props;
 
 		return (
 			<Form onSubmit={this.handleSubmit} className={classes.formWrapper}>
 				<Row className={classes.root} type="flex">
 					<Col span={24}>
-						<div className={classes.floatingLabel}>Xuất phát</div>
+						<div className={classes.floatingLabel}>{formatMessage({ id: 'departure' })}</div>
 						<Form.Item style={{ marginBottom: 0 }}>
 							{getFieldDecorator('departure')(
-								<Select className={classes.select} placeholder="Điểm xuất phát">
+								<Select className={classes.select} placeholder={formatMessage({ id: 'departure' })}>
 									{locationOptions.map(location => <Select.Option value={location.value}>{location.label}</Select.Option>)}
 								</Select>,
 							)}
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<div className={classes.floatingLabel}>Điểm đến</div>
+						<div className={classes.floatingLabel}>{formatMessage({ id: 'destination' })}</div>
 						<Form.Item style={{ marginBottom: 0 }}>
 							{getFieldDecorator('destination')(
-								<Select className={classes.select} placeholder="Điểm đến">
+								<Select className={classes.select} placeholder={formatMessage({ id: 'destination' })}>
 									{locationOptions.map(location => <Select.Option value={location.value}>{location.label}</Select.Option>)}
 								</Select>,
 							)}
@@ -266,20 +261,20 @@ export default class SearchBar extends Component {
 								// initialValue: 'all',
 							})(
 								<Radio.Group>
-									<Radio value="oneWay">Một chiều</Radio>
-									<Radio value="roundTrip">Hai chiều</Radio>
+									<Radio value="oneWay">{formatMessage({ id: 'one_way' })}</Radio>
+									<Radio value="roundTrip">{formatMessage({ id: 'round_trip' })}</Radio>
 								</Radio.Group>,
 							)}
 						</Form.Item>
 					</Col>
 					<Col span={12}>
-						<div className={classes.floatingLabel}>Thời gian</div>
+						<div className={classes.floatingLabel}>{formatMessage({ id: 'time' })}</div>
 						<Form.Item style={{ marginBottom: 0 }}>
 							{getFieldDecorator('startDate')(
 								<DatePicker
 									className={classes.datePicker}
 									size="large"
-									placeholder="Thời gian đi"
+									placeholder={formatMessage({ id: 'start_date' })}
 									format="DD/MM/YYYY"
 								/>,
 							)}
@@ -295,7 +290,7 @@ export default class SearchBar extends Component {
 									className={classes.datePicker}
 									style={{ borderLeft: 0 }}
 									size="large"
-									placeholder="Thời gian đến"
+									placeholder={formatMessage({ id: 'end_date' })}
 									format="DD/MM/YYYY"
 								/>,
 							)}
@@ -303,7 +298,7 @@ export default class SearchBar extends Component {
 					</Col>
 
 					<Col span={24}>
-						<Button type="primary" className={classes.btnSearch} htmlType="submit" size="large">Tìm kiếm</Button>
+						<Button type="primary" className={classes.btnSearch} htmlType="submit" size="large">{formatMessage({ id: 'search' })}</Button>
 					</Col>
 				</Row>
 			</Form>

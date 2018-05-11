@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import withStyles from 'src/theme/jss/withStyles';
+import { injectIntl, intlShape } from 'react-intl';
 
 import { Row, Col, Icon } from 'antd';
 
@@ -83,4 +84,4 @@ Footer.defaultProps = {
 	// classes: {},
 };
 
-export default withStyles(styles)(Footer);
+export default withStyles(styles)(injectIntl(Footer));

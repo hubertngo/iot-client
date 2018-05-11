@@ -16,6 +16,7 @@ import IconDeparture from 'src/components/Photo/IconDeparture';
 import IconDestination from 'src/components/Photo/IconDestination';
 
 import withStyles from 'src/theme/jss/withStyles';
+import { injectIntl, intlShape } from 'react-intl';
 
 import { locationOptions } from 'src/constants/selectOption';
 import DatePicker from 'src/components/DatePickerLunar';
@@ -125,6 +126,7 @@ const mapDispatchToProps = (dispatch) => {
 @connect(mapStateToProps, mapDispatchToProps)
 @withStyles(styleSheet)
 @Form.create()
+@injectIntl
 export default class SearchBar extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
@@ -133,6 +135,7 @@ export default class SearchBar extends Component {
 			setFieldsValue: PropTypes.func,
 		}).isRequired,
 		onSearch: PropTypes.func,
+		intl: intlShape.isRequired,
 	}
 
 	static defaultProps = {
@@ -144,6 +147,8 @@ export default class SearchBar extends Component {
 
 	handleSubmit = (e) => {
 		e.preventDefault();
+
+		const { formatMessage } = this.props.intl;
 
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
@@ -160,8 +165,8 @@ export default class SearchBar extends Component {
 
 				if (departure && destination && departure === destination) {
 					notification.error({
-						message: 'Lỗi',
-						description: 'Vui lòng nhập điểm xuất phát và điểm đến khác nhau',
+						message: formatMessage({ id: 'required' }),
+						description: formatMessage({ id: 'departure_destination_not_equal' }),
 					});
 					return;
 				}
@@ -186,8 +191,8 @@ export default class SearchBar extends Component {
 
 				if (startDate && endDate && startDate.isAfter(endDate)) {
 					notification.error({
-						message: 'Lỗi',
-						description: 'Vui lòng nhập ngày đi trước ngày về',
+						message: formatMessage({ id: 'error' }),
+						description: formatMessage({ id: 'startDate_before_endDate' }),
 					});
 					return;
 				}
@@ -206,7 +211,7 @@ export default class SearchBar extends Component {
 	}
 
 	render() {
-		const { form: { getFieldDecorator }, classes } = this.props;
+		const { form: { getFieldDecorator }, classes, intl: { formatMessage } } = this.props;
 		const menuDeparture = (
 			<Menu className={classes.dropdownMenu} onClick={this._handleDepartureChange}>
 				{locationOptions.map(location => <Menu.Item key={location.value}>{location.label}</Menu.Item>)}
@@ -230,7 +235,7 @@ export default class SearchBar extends Component {
 											addonAfter={<IconDeparture extended />}
 											className={classes.dropdownInput + ' ' + classes.firstChild}
 											size="large"
-											placeholder="Nơi xuất phát"
+											placeholder={formatMessage({ id: 'departure' })}
 										/>,
 									)}
 								</Form.Item>
@@ -246,7 +251,7 @@ export default class SearchBar extends Component {
 											addonAfter={<IconDestination extended />}
 											className={classes.dropdownInput}
 											size="large"
-											placeholder="Nơi đến"
+											placeholder={formatMessage({ id: 'destination' })}
 										/>,
 									)}
 								</Form.Item>
@@ -259,7 +264,7 @@ export default class SearchBar extends Component {
 								<DatePicker
 									className={classes.datePicker}
 									size="large"
-									placeholder="Thời gian đi"
+									placeholder={formatMessage({ id: 'start_date' })}
 									format="DD/MM/YYYY"
 								/>,
 							)}
@@ -273,7 +278,7 @@ export default class SearchBar extends Component {
 								<DatePicker
 									className={classes.datePicker}
 									size="large"
-									placeholder="Thời gian đến"
+									placeholder={formatMessage({ id: 'end_date' })}
 									format="DD/MM/YYYY"
 								/>,
 							)}
@@ -284,16 +289,16 @@ export default class SearchBar extends Component {
 							{getFieldDecorator('flightType', {
 								// initialValue: 'all',
 							})(
-								<Select size="large" className={classes.select} placeholder="Loại vé">
-									<Select.Option value={null}>Tất cả</Select.Option>
-									<Select.Option value="oneWay">Một chiều</Select.Option>
-									<Select.Option value="roundTrip">Hai chiều</Select.Option>
+								<Select size="large" className={classes.select} placeholder={formatMessage({ id: 'ticket_type' })}>
+									<Select.Option value={null}>{formatMessage({ id: 'all' })}</Select.Option>
+									<Select.Option value="oneWay">{formatMessage({ id: 'one_way' })}</Select.Option>
+									<Select.Option value="roundTrip">{formatMessage({ id: 'round_trip' })}</Select.Option>
 								</Select>,
 							)}
 						</Form.Item>
 					</Col>
 					<Col span={3}>
-						<Button type="secondary" className={classes.btnSearch} htmlType="submit" size="large">Tìm vé</Button>
+						<Button type="secondary" className={classes.btnSearch} htmlType="submit" size="large">{formatMessage({ id: 'search_ticket' })}</Button>
 					</Col>
 				</Row>
 			</Form>

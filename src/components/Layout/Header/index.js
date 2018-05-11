@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 
 import withStyles from 'src/theme/jss/withStyles';
+import { injectIntl, intlShape } from 'react-intl';
 
 import Container from 'src/components/Layout/Container';
 import { Icon, Button, Avatar } from 'antd';
@@ -78,9 +79,11 @@ const styles = (theme) => ({
 });
 
 @withStyles(styles)
+@injectIntl
 export default class Header extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
+		intl: intlShape.isRequired,
 	}
 
 	state = {
@@ -96,7 +99,7 @@ export default class Header extends Component {
 	}
 
 	render() {
-		const { classes } = this.props;
+		const { classes, intl: { formatMessage } } = this.props;
 
 		return (
 			<header className={classes.root}>
@@ -120,7 +123,7 @@ export default class Header extends Component {
 								</a>
 							</Link>
 							{
-								AuthStorage.loggedIn ? <AvatarBtn isMobile /> : <a href="/login" style={{ color: '#FFF' }}>Đăng nhập</a>
+								AuthStorage.loggedIn ? <AvatarBtn isMobile /> : <a href="/login" style={{ color: '#FFF' }}>{formatMessage({ id: 'login' })}</a>
 							}
 						</div>
 						<MenuMobile active={this.state.active} />

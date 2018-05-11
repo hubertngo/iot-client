@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
+import { injectIntl, intlShape } from 'react-intl';
 
 import withStyles from 'src/theme/jss/withStyles';
 
@@ -103,6 +104,7 @@ const mapDispatchToProps = (dispatch) => {
 @withStyles(styleSheet)
 @connect(mapStateToProps, mapDispatchToProps)
 @Form.create()
+@injectIntl
 export default class TicketPosterForm extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
@@ -148,27 +150,33 @@ export default class TicketPosterForm extends Component {
 	}
 
 	validateSeatCount = (rule, seatCount, callback) => {
+		const { formatMessage } = this.props.intl;
+
 		if (seatCount < 1) {
-			callback('Vui lòng chọn số ghế lớn hơn 0');
+			callback(formatMessage({ id: 'validate_seat_count' }));
 		} else {
 			callback();
 		}
 	}
 
 	validateDestination = (rule, destination, callback) => {
-		const { form } = this.props;
+		const { form, intl: { formatMessage } } = this.props;
 		const departure = form.getFieldValue('trip.departure');
 
 		if (departure === destination) {
-			callback('Vui lòng chọn điểm đến khác điểm đi');
+			callback(formatMessage({ id: 'departure_destination_not_equal' }));
 		} else {
 			callback();
 		}
 	}
 
 	validateTripStartDate = (rule, tripStartDate, callback) => {
+		const { formatMessage } = this.props.intl;
+		if (!tripStartDate) {
+			return callback();
+		}
 		if (moment().isAfter(tripStartDate, 'day')) {
-			callback('Không được chọn ngày bay trong quá khứ');
+			callback(formatMessage({ id: 'validate_trip_start_date' }));
 		} else {
 			callback();
 		}
@@ -178,12 +186,12 @@ export default class TicketPosterForm extends Component {
 		if (!tripStartTime) {
 			return callback();
 		}
-		const { form } = this.props;
+		const { form, intl: { formatMessage } } = this.props;
 		const tripStartDate = form.getFieldValue('trip.startDate');
 		const tripStart = moment(tripStartDate).hours(tripStartTime.hours()).minutes(tripStartTime.minutes());
 
-		if (tripStart.isSameOrBefore(moment())) {
-			callback('Vui lòng chọn giờ bay trong tương lai');
+		if (tripStart.isBefore(moment())) {
+			callback(formatMessage({ id: 'validate_trip_start_time' }));
 		} else {
 			callback();
 		}
@@ -193,11 +201,11 @@ export default class TicketPosterForm extends Component {
 		if (!tripEndDate) {
 			return callback();
 		}
-		const { form } = this.props;
+		const { form, intl: { formatMessage } } = this.props;
 		const tripStartDate = form.getFieldValue('trip.startDate');
 
 		if (tripEndDate.isBefore(tripStartDate, 'day')) {
-			callback('Không được phép chọn ngày đáp sau ngày bay');
+			callback(formatMessage({ id: 'validate_trip_end_date' }));
 		} else {
 			callback();
 		}
@@ -207,7 +215,7 @@ export default class TicketPosterForm extends Component {
 		if (!tripEndTime) {
 			return callback();
 		}
-		const { form } = this.props;
+		const { form, intl: { formatMessage } } = this.props;
 		const tripStartDate = form.getFieldValue('trip.startDate');
 		const tripStartTime = form.getFieldValue('trip.startTime');
 		const tripEndDate = form.getFieldValue('trip.endDate');
@@ -215,7 +223,7 @@ export default class TicketPosterForm extends Component {
 		const tripEnd = moment(tripEndDate).hours(tripEndTime.hours()).minutes(tripEndTime.minutes());
 
 		if (tripEnd.isSameOrBefore(tripStart)) {
-			callback('Vui lòng chọn giờ đáp sau giờ bay');
+			callback(formatMessage({ id: 'validate_trip_end_time' }));
 		} else {
 			callback();
 		}
@@ -225,10 +233,10 @@ export default class TicketPosterForm extends Component {
 		if (!tripBackStartDate) {
 			return callback();
 		}
-		const { form } = this.props;
+		const { form, intl: { formatMessage } } = this.props;
 		const tripEndDate = form.getFieldValue('trip.endDate');
 		if (tripBackStartDate.isBefore(tripEndDate, 'day')) {
-			callback('Không được chọn ngày về trước ngày đi');
+			callback(formatMessage({ id: 'validate_trip_back_start_date' }));
 		} else {
 			callback();
 		}
@@ -238,7 +246,7 @@ export default class TicketPosterForm extends Component {
 		if (!tripBackStartTime) {
 			return callback();
 		}
-		const { form } = this.props;
+		const { form, intl: { formatMessage } } = this.props;
 		const tripEndDate = form.getFieldValue('trip.endDate');
 		const tripEndTime = form.getFieldValue('trip.endTime');
 		const tripEnd = moment(tripEndDate).hours(tripEndTime.hours()).minutes(tripEndTime.minutes());
@@ -246,7 +254,7 @@ export default class TicketPosterForm extends Component {
 		const tripBackStart = moment(tripBackStartDate).hours(tripBackStartTime.hours()).minutes(tripBackStartTime.minutes());
 
 		if (tripBackStart.isSameOrBefore(tripEnd)) {
-			callback('Vui lòng chọn giờ về sau ngày xuất phát');
+			callback(formatMessage({ id: 'validate_trip_back_start_time' }));
 		} else {
 			callback();
 		}
@@ -256,11 +264,11 @@ export default class TicketPosterForm extends Component {
 		if (!tripBackEndDate) {
 			return callback();
 		}
-		const { form } = this.props;
+		const { form, intl: { formatMessage } } = this.props;
 		const tripBackStartDate = form.getFieldValue('tripBack.startDate');
 
 		if (tripBackEndDate.isBefore(tripBackStartDate, 'day')) {
-			callback('Không được phép chọn ngày đáp sau ngày bay');
+			callback(formatMessage({ id: 'validate_trip_back_end_date' }));
 		} else {
 			callback();
 		}
@@ -270,7 +278,7 @@ export default class TicketPosterForm extends Component {
 		if (!tripBackEndTime) {
 			return callback();
 		}
-		const { form } = this.props;
+		const { form, intl: { formatMessage } } = this.props;
 		const tripBackStartDate = form.getFieldValue('tripBack.startDate');
 		const tripBackStartTime = form.getFieldValue('tripBack.startTime');
 		const tripBackEndDate = form.getFieldValue('tripBack.endDate');
@@ -278,7 +286,7 @@ export default class TicketPosterForm extends Component {
 		const tripBackEnd = moment(tripBackEndDate).hours(tripBackEndTime.hours()).minutes(tripBackEndTime.minutes());
 
 		if (tripBackEnd.isSameOrBefore(tripBackStart)) {
-			callback('Vui lòng chọn giờ đáp sau giờ bay');
+			callback(formatMessage({ id: 'validate_trip_back_end_time' }));
 		} else {
 			callback();
 		}
@@ -366,20 +374,20 @@ export default class TicketPosterForm extends Component {
 	}
 
 	render() {
-		const { form: { getFieldDecorator, getFieldValue }, classes, action } = this.props;
+		const { form: { getFieldDecorator, getFieldValue }, classes, action, intl: { formatMessage } } = this.props;
 
 		return (
 			<div className={classes.root}>
 				<Icon type="close-circle" className={classes.closeBtn} onClick={this.state.loading ? f => f : () => action.toggleTicketPosterModal({ open: false })} />
 				<div className={classes.header}>
-					Nhập thông tin bán vé
+					{formatMessage({ id: 'fill_ticket_selling' })}
 				</div>
 				<Form onSubmit={this.handleSubmit} className={classes.form}>
 					<Form.Item>
 						<div className={classes.formItem}>
-							<div className={classes.formLabel}> Nội dung tin đăng </div>
+							<div className={classes.formLabel}> {formatMessage({ id: 'comment_content' })} </div>
 							{getFieldDecorator('content', {
-								rules: [{ required: true, message: 'Làm ơn nhập nội dung tin đăng' }],
+								rules: [{ required: true, message: formatMessage({ id: 'comment_content_required' }) }],
 							})(
 								<TextArea rows={4} style={{ resize: 'none' }} />,
 							)}
@@ -387,14 +395,14 @@ export default class TicketPosterForm extends Component {
 					</Form.Item>
 					<Form.Item>
 						<Row className={classes.formItem} type="flex">
-							<Col col={3} xs={4} className={classes.formLabel}> Loại vé </Col>
+							<Col col={3} xs={4} className={classes.formLabel}>{formatMessage({ id: 'flight_type' })}</Col>
 							<Col col={21} xs={20}>
 								{getFieldDecorator('flightType', {
 									initialValue: 'oneWay',
 								})(
 									<Radio.Group>
-										<Radio value="oneWay"> Một chiều </Radio>
-										<Radio value="roundTrip"> Khứ hồi </Radio>
+										<Radio value="oneWay"> {formatMessage({ id: 'one_way' })} </Radio>
+										<Radio value="roundTrip"> {formatMessage({ id: 'round_trip' })} </Radio>
 									</Radio.Group>,
 								)}
 							</Col>
@@ -402,11 +410,11 @@ export default class TicketPosterForm extends Component {
 					</Form.Item>
 					<Form.Item>
 						<div className={classes.formItem}>
-							<Col col={3} xs={4} className={classes.formLabel}> Số vé </Col>
+							<Col col={3} xs={4} className={classes.formLabel}>{formatMessage({ id: 'ticket_seat_count' })}</Col>
 							<Col col={21} xs={20}>
 								{getFieldDecorator('seatCount', {
 									initialValue: 1,
-									rules: [{ required: true, message: 'Làm ơn chọn số ghế' }, { validator: this.validateSeatCount }],
+									rules: [{ required: true, message: formatMessage({ id: 'seat_count_required' }) }, { validator: this.validateSeatCount }],
 								})(
 									<InputNumber size="default" style={{ width: 70 }} />,
 								)}
@@ -415,7 +423,7 @@ export default class TicketPosterForm extends Component {
 					</Form.Item>
 					<Form.Item>
 						<div className={classes.formItem}>
-							<Col col={3} xs={4} className={classes.formLabel}> Hãng </Col>
+							<Col col={3} xs={4} className={classes.formLabel}> {formatMessage({ id: 'airline' })} </Col>
 							<Col col={11} xs={20}>
 								{getFieldDecorator('airline', {
 									initialValue: flightOptions[0].value,
@@ -434,14 +442,14 @@ export default class TicketPosterForm extends Component {
 							}
 						</div>
 					</Form.Item>
-					<PosterDivider title="Chiều đi" titleWidth={13} />
+					<PosterDivider title={formatMessage({ id: 'way_to_go' })} titleWidth={13} />
 					<Row className={classes.formItem} type="flex">
 						<Col span={10}>
 							<Form.Item>
 								<div className={classes.formItem}>
-									<div className={classes.formLabel}> Điểm xuất phát </div>
+									<div className={classes.formLabel}> {formatMessage({ id: 'departure' })} </div>
 									{getFieldDecorator('trip.departure', {
-										rules: [{ required: true, message: 'Làm ơn chọn điểm xuất phát' }],
+										rules: [{ required: true, message: formatMessage({ id: 'departure_required' }) }],
 									})(
 										<Select
 											size="default"
@@ -457,9 +465,9 @@ export default class TicketPosterForm extends Component {
 						<Col span={10}>
 							<Form.Item>
 								<div className={classes.formItem}>
-									<div className={classes.formLabel}> Điểm đến </div>
+									<div className={classes.formLabel}> {formatMessage({ id: 'destination' })} </div>
 									{getFieldDecorator('trip.destination', {
-										rules: [{ required: true, message: 'Làm ơn chọn điểm đến' }, { validator: this.validateDestination }],
+										rules: [{ required: true, message: formatMessage({ id: 'destination_required' }) }, { validator: this.validateDestination }],
 									})(
 										<Select
 											size="default"
@@ -475,11 +483,11 @@ export default class TicketPosterForm extends Component {
 					<Row className={classes.formItem} type="flex" style={{ marginBottom: 10 }}>
 						<Col span={20}>
 							<div className={classes.formItem}>
-								<div className={classes.formLabel}> Thời gian xuất phát </div>
+								<div className={classes.formLabel}> {formatMessage({ id: 'start_date' })} </div>
 								<div style={{ display: 'flex' }}>
 									<Form.Item>
 										{getFieldDecorator('trip.startDate', {
-											rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày xuất phát' }, { validator: this.validateTripStartDate }],
+											rules: [{ type: 'object', required: true, message: formatMessage({ id: 'start_date_required' }) }, { validator: this.validateTripStartDate }],
 										})(
 											<DatePicker
 												format="DD/MM/YYYY"
@@ -498,7 +506,7 @@ export default class TicketPosterForm extends Component {
 									</Form.Item>
 									<Form.Item>
 										{getFieldDecorator('trip.startTime', {
-											rules: [{ type: 'object', required: true, message: 'Làm ơn chọn giờ xuất phát' }, { validator: this.validateTripStartTime }],
+											rules: [{ type: 'object', required: true, message: formatMessage({ id: 'start_time_required' }) }, { validator: this.validateTripStartTime }],
 										})(
 											<TimePicker format="HH:mm" style={{ marginLeft: 20 }} />,
 										)}
@@ -506,11 +514,11 @@ export default class TicketPosterForm extends Component {
 								</div>
 							</div>
 							<div className={classes.formItem}>
-								<div className={classes.formLabel}> Thời gian hạ cánh </div>
+								<div className={classes.formLabel}> {formatMessage({ id: 'end_date' })} </div>
 								<div style={{ display: 'flex' }}>
 									<Form.Item>
 										{getFieldDecorator('trip.endDate', {
-											rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày hạ cánh' }, { validator: this.validateTripEndDate }],
+											rules: [{ type: 'object', required: true, message: formatMessage({ id: 'end_date_required' }) }, { validator: this.validateTripEndDate }],
 										})(
 											<DatePicker
 												format="DD/MM/YYYY"
@@ -526,7 +534,7 @@ export default class TicketPosterForm extends Component {
 									</Form.Item>
 									<Form.Item>
 										{getFieldDecorator('trip.endTime', {
-											rules: [{ type: 'object', required: true, message: 'Làm ơn chọn giờ hạ cánh' }, { validator: this.validateTripEndTime }],
+											rules: [{ type: 'object', required: true, message: formatMessage({ id: 'end_time' }) }, { validator: this.validateTripEndTime }],
 										})(
 											<TimePicker format="HH:mm" style={{ marginLeft: 20 }} />,
 										)}
@@ -538,14 +546,14 @@ export default class TicketPosterForm extends Component {
 					{
 						getFieldValue('flightType') !== 'oneWay' &&
 						<div style={{ marginBottom: 24 }}>
-							<PosterDivider title="Chiều về" titleWidth={13} />
+							<PosterDivider title={formatMessage({ id: 'way_to_back' })} titleWidth={13} />
 							<Row className={classes.formItem} type="flex">
 								<Col span={10}>
 									<Form.Item>
 										<div className={classes.formItem}>
-											<div className={classes.formLabel}> Điểm xuất phát </div>
+											<div className={classes.formLabel}> {formatMessage({ id: 'departure' })} </div>
 											{getFieldDecorator('tripBack.departure', {
-												rules: [{ required: true, message: 'Làm ơn chọn điểm xuất phát' }],
+												rules: [{ required: true, message: formatMessage({ id: 'departure_required' }) }],
 												initialValue: getFieldValue('trip.destination'),
 											})(
 												<Select
@@ -563,9 +571,9 @@ export default class TicketPosterForm extends Component {
 								<Col span={10}>
 									<Form.Item>
 										<div className={classes.formItem}>
-											<div className={classes.formLabel}> Điểm đến </div>
+											<div className={classes.formLabel}> {formatMessage({ id: 'destination' })} </div>
 											{getFieldDecorator('tripBack.destination', {
-												rules: [{ required: true, message: 'Làm ơn chọn điểm đến' }],
+												rules: [{ required: true, message: formatMessage({ id: 'destination_required' }) }],
 												initialValue: getFieldValue('trip.departure'),
 											})(
 												<Select
@@ -583,11 +591,11 @@ export default class TicketPosterForm extends Component {
 							<Row className={classes.formItem} type="flex" style={{ marginBottom: 10 }}>
 								<Col span={20}>
 									<div className={classes.formItem}>
-										<div className={classes.formLabel}> Thời gian xuất phát </div>
+										<div className={classes.formLabel}> {formatMessage({ id: 'start_date' })} </div>
 										<div style={{ display: 'flex' }}>
 											<Form.Item>
 												{getFieldDecorator('tripBack.startDate', {
-													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày xuất phát' }, { validator: this.validateTripBackStartDate }],
+													rules: [{ type: 'object', required: true, message: formatMessage({ id: 'start_date_required' }) }, { validator: this.validateTripBackStartDate }],
 												})(
 													<DatePicker
 														format="DD/MM/YYYY"
@@ -606,7 +614,7 @@ export default class TicketPosterForm extends Component {
 											</Form.Item>
 											<Form.Item>
 												{getFieldDecorator('tripBack.startTime', {
-													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn giờ xuất phát' }, { validator: this.validateTripBackStartTime }],
+													rules: [{ type: 'object', required: true, message: formatMessage({ id: 'start_time_required' }) }, { validator: this.validateTripBackStartTime }],
 												})(
 													<TimePicker format="HH:mm" style={{ marginLeft: 20 }} />,
 												)}
@@ -614,11 +622,11 @@ export default class TicketPosterForm extends Component {
 										</div>
 									</div>
 									<div className={classes.formItem}>
-										<div className={classes.formLabel}> Thời gian hạ cánh </div>
+										<div className={classes.formLabel}> {formatMessage({ id: 'end_date' })} </div>
 										<div style={{ display: 'flex' }}>
 											<Form.Item>
 												{getFieldDecorator('tripBack.endDate', {
-													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn ngày hạ cánh' }, { validator: this.validateTripBackEndDate }],
+													rules: [{ type: 'object', required: true, message: formatMessage({ id: 'end_date_required' }) }, { validator: this.validateTripBackEndDate }],
 												})(
 													<DatePicker
 														format="DD/MM/YYYY"
@@ -634,7 +642,7 @@ export default class TicketPosterForm extends Component {
 											</Form.Item>
 											<Form.Item>
 												{getFieldDecorator('tripBack.endTime', {
-													rules: [{ type: 'object', required: true, message: 'Làm ơn chọn giờ hạ cánh' }, { validator: this.validateTripBackEndTime }],
+													rules: [{ type: 'object', required: true, message: formatMessage({ id: 'end_time_required' }) }, { validator: this.validateTripBackEndTime }],
 												})(
 													<TimePicker format="HH:mm" style={{ marginLeft: 20 }} />,
 												)}
@@ -645,10 +653,10 @@ export default class TicketPosterForm extends Component {
 							</Row>
 						</div>
 					}
-					<PosterDivider title="Thông tin khác" titleWidth={23} />
+					<PosterDivider title={formatMessage({ id: 'other_info' })} titleWidth={23} />
 					<Form.Item>
 						<Row className={classes.formItem} type="flex">
-							<Col span={6} className={classes.formLabel}> Loại ghế </Col>
+							<Col span={6} className={classes.formLabel}> {formatMessage({ id: 'seat_type' })} </Col>
 							<Col span={18}>
 								{getFieldDecorator('seatType', {
 									initialValue: 'promo',
@@ -664,7 +672,7 @@ export default class TicketPosterForm extends Component {
 					</Form.Item>
 					<Form.Item>
 						<Row className={classes.formItem} type="flex">
-							<Col span={6} className={classes.formLabel}> Số kg hành lý </Col>
+							<Col span={6} className={classes.formLabel}>{formatMessage({ id: 'package_weight' })} </Col>
 							<Col span={18} style={{ display: 'flex' }}>
 								{getFieldDecorator('packageWeight', {
 									initialValue: 7,
@@ -672,14 +680,14 @@ export default class TicketPosterForm extends Component {
 									<Radio.Group>
 										<Radio value={7}> 7kg </Radio>
 										<Radio value={20}> 20kg </Radio>
-										<Radio value={-1}> Khác </Radio>
+										<Radio value={-1}> {formatMessage({ id: 'other' })} </Radio>
 									</Radio.Group>,
 								)}
 								{
 									getFieldValue('packageWeight') === -1 &&
 									<Form.Item style={{ margin: 0 }}>
 										{getFieldDecorator('packageWeightOther', {
-											rules: [{ required: true, message: 'Làm ơn nhập số kg' }],
+											rules: [{ required: true, message: formatMessage({ id: 'package_weight_requried' }) }],
 										})(
 											<Input type="number" autoFocus size="default" maxLength="25" style={{ width: 90, marginLeft: 10 }} suffix="KG" />,
 										)}
@@ -703,7 +711,7 @@ export default class TicketPosterForm extends Component {
 							{this.state.fileList.length >= 3 ? null : <Icon type="plus" style={{ color: '#BACAD6', fontSize: 20 }} />}
 						</Upload>
 						<span style={{ lineHeight: '65px', marginLeft: '15px' }} >
-							Đính kèm ảnh sản phẩm
+							{formatMessage({ id: 'attached_image' })}
 						</span>
 					</Row>
 					<PosterDivider />
@@ -714,8 +722,8 @@ export default class TicketPosterForm extends Component {
 									initialValue: 'sell',
 								})(
 									<Radio.Group>
-										<Radio.Button value="bid"> Đấu thầu </Radio.Button>
-										<Radio.Button value="sell"> Cố định </Radio.Button>
+										<Radio.Button value="bid"> {formatMessage({ id: 'bid' })} </Radio.Button>
+									<Radio.Button value="sell"> {formatMessage({ id: 'fixed' })} </Radio.Button>
 									</Radio.Group>,
 								)}
 							</div>
@@ -724,10 +732,10 @@ export default class TicketPosterForm extends Component {
 							{
 								getFieldValue('type') !== 'Buy' &&
 									<div className={classes.actionGroup}>
-										<span> {getFieldValue('type') === 'sell' ? 'Giá đăng bán' : 'Giá khởi điểm' } </span>
+										<span> {getFieldValue('type') === 'sell' ? formatMessage({ id: 'post_price' }) : formatMessage({ id: 'start_price' }) } </span>
 										<span>
 											{getFieldDecorator('price', {
-												rules: [{ required: true, message: 'Làm ơn nhập giá' }],
+												rules: [{ required: true, message: formatMessage({ id: 'price_required' }) }],
 											})(
 												<InputNumber
 													formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
@@ -741,8 +749,8 @@ export default class TicketPosterForm extends Component {
 							}
 						</Form.Item>
 						<div className={classes.actionGroup}>
-							<Button type="primary" htmlType="submit" loading={this.state.loading}> Đăng tin </Button>
-							<Button style={{ marginLeft: 10 }} disabled={this.state.loading} onClick={() => action.toggleTicketPosterModal({ open: false })}>Hủy</Button>
+							<Button type="primary" htmlType="submit" loading={this.state.loading}> {formatMessage({ id: 'posting' })} </Button>
+							<Button style={{ marginLeft: 10 }} disabled={this.state.loading} onClick={() => action.toggleTicketPosterModal({ open: false })}>{formatMessage({ id: 'cancel' })}</Button>
 						</div>
 					</div>
 				</Form>

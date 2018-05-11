@@ -10,7 +10,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
+import { injectIntl, intlShape } from 'react-intl';
 import Router from 'next/router';
 import Link from 'next/link';
 
@@ -217,6 +217,7 @@ const mapDispatchToProps = (dispatch) => {
 @withStyles(styleSheet)
 @connect(mapStateToProps, mapDispatchToProps)
 @Form.create()
+@injectIntl
 export default class LoginForm extends Component {
 	static propTypes = {
 		form: PropTypes.object.isRequired,
@@ -234,6 +235,9 @@ export default class LoginForm extends Component {
 			toggleLoginModal: PropTypes.func.isRequired,
 			toggleSignUpModal: PropTypes.func.isRequired,
 			checkUserExist: PropTypes.func.isRequired,
+		}).isRequired,
+		intl: PropTypes.shape({
+			formatMessage: PropTypes.func,
 		}).isRequired,
 	}
 
@@ -274,7 +278,7 @@ export default class LoginForm extends Component {
 						if (res.count === 0) {
 							// ko có
 							this.setState({
-								error: 'Tài khoản không tồn tại',
+								error: this.props.intl.formatMessage({ id: 'unexist_account' }),
 							});
 						}
 					});
@@ -322,7 +326,7 @@ export default class LoginForm extends Component {
 	}
 
 	render() {
-		const { form: { getFieldDecorator }, classes, style, isLoginPage } = this.props;
+		const { form: { getFieldDecorator }, classes, style, isLoginPage, intl: { formatMessage } } = this.props;
 
 		return (
 			<div className={classes.root} style={style}>
@@ -331,19 +335,19 @@ export default class LoginForm extends Component {
 				</div>
 				<Form onSubmit={this.handleSubmit} className={classes.form}>
 					<div className={classes.formWrapper}>
-						<Form.Item label="Tên đăng nhập hoặc email" style={{ marginBottom: 0 }}>
+						<Form.Item label={formatMessage({ id: 'username_or_email' })} style={{ marginBottom: 0 }}>
 							{getFieldDecorator('email', {
-								rules: [{ required: true, message: 'Làm ơn nhập tài khoản hoặc email của bạn!' }],
+								rules: [{ required: true, message: formatMessage({ id: 'username_email_required' }) }],
 							})(
-								<Input autoFocus className="radius-large" size="large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Tên đăng nhập hoặc email" />,
+								<Input autoFocus className="radius-large" size="large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder={formatMessage({ id: 'username_or_email' })} />,
 							)}
 						</Form.Item>
 						<Form.Item label="Mật khẩu" className={classes.nextPage + ' ' + (this.state.nextPage ? classes.open : '')}>
 							{
 								this.state.nextPage && getFieldDecorator('password', {
-									rules: [{ required: true, message: 'Làm ơn nhập mật khẩu!' }, { min: 5 }],
+									rules: [{ required: true, message: formatMessage({ id: 'password_required' }) }, { min: 5 }],
 								})(
-									<Input autoFocus size="large" className="radius-large" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Mật khẩu" />,
+									<Input autoFocus size="large" className="radius-large" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder={formatMessage({ id: 'password' })} />,
 								)
 							}
 						</Form.Item>
@@ -355,12 +359,12 @@ export default class LoginForm extends Component {
 						</div>
 					}
 					<Button type="primary" htmlType="submit" size="large" className="radius-large" style={{ width: '100%', marginTop: 20 }} loading={this.state.loading}>
-						Đăng nhập
+						{formatMessage({ id: 'login' })}
 					</Button>
 					<Form.Item>
 						<div className={classes.buttonLogin}>
 							<div>
-								<a href="/sign-up" onClick={this.handleOpenSignUpDialog} className={classes.mobileLink}>Đăng ký</a>
+								<a href="/sign-up" onClick={this.handleOpenSignUpDialog} className={classes.mobileLink}>{formatMessage({ id: 'sign_up' })}</a>
 								{
 									!isLoginPage && <Icon type="question-circle" style={{ marginLeft: 5, color: '#4368C4' }} className="hidden-md-down" onClick={this.toggleNote} />
 								}
@@ -368,7 +372,7 @@ export default class LoginForm extends Component {
 							</div>
 
 							<Link href="/forgot-password">
-								<a className={classes.mobileLink + ' login-form-forgot'}>Quên mật khẩu?</a>
+								<a className={classes.mobileLink + ' login-form-forgot'}>{formatMessage({ id: 'forgot_password' })}?</a>
 							</Link>
 						</div>
 					</Form.Item>
@@ -389,7 +393,7 @@ export default class LoginForm extends Component {
 						!this.state.activeNote && (
 							<Fragment>
 								<div className={classes.dividend}>
-									<span>Hoặc đăng nhập qua</span>
+									<span>{formatMessage({ id: 'login_by' })}</span>
 								</div>
 								{
 									this.state.visible && <div style={{ height: 400 }} className="hidden-sm-up" />
