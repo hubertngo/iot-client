@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import Router from 'next/router';
+import { Router } from 'src/routes';
 import { Form, Icon, Input, Button, notification } from 'antd';
 
 import { changePassword, logoutRequest } from 'src/redux/actions/auth';
@@ -95,7 +95,7 @@ export default class ChangePass extends Component {
 						description: 'Your password has been changed successfully! Thank you.',
 					});
 					this.props.action.logoutRequest(() => {
-						Router.push('/login');
+						Router.pushRoute('/login');
 					});
 				}, () => {
 					this.setState({

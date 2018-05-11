@@ -10,7 +10,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Router, { withRouter } from 'next/router';
+import { withRouter } from 'next/router';
+import { Router } from 'src/routes';
 
 import withStyles from 'src/theme/jss/withStyles';
 
@@ -84,7 +85,7 @@ export default class FlightModal extends Component {
 
 			if (typeof window !== 'undefined') {
 				if (window.innerWidth < 992) {
-					Router.push(`/ticket-${query.type}/${query.ticketId}`);
+					Router.pushRoute(`/ticket-${query.type}/${query.ticketId}`);
 				}
 			}
 

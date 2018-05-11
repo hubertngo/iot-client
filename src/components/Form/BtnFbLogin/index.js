@@ -14,7 +14,7 @@ import { bindActionCreators } from 'redux';
 
 import { notification } from 'antd';
 
-import Router from 'next/router';
+import { Router } from 'src/routes';
 
 import withStyles from 'src/theme/jss/withStyles';
 
@@ -91,7 +91,7 @@ export default class FbBtnLogin extends PureComponent {
 			this.props.action.loginFacebook({ accessToken }, () => {
 				if (AuthStorage.loggedIn) {
 					if (this.props.isLoginPage) {
-						Router.push('/');
+						Router.pushRoute('/');
 					} else {
 						this.props.action.toggleLoginModal({ open: false });
 						this.props.action.toggleSignUpModal({ open: false });

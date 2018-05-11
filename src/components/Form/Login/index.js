@@ -11,10 +11,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import Router from 'next/router';
+import { Router } from 'src/routes';
 import Link from 'next/link';
 
-import { Form, Icon, Input, Button, Popover } from 'antd';
+import { Form, Icon, Input, Button } from 'antd';
 
 import BtnFbLogin from 'src/components/Form/BtnFbLogin';
 import BtnGgLogin from 'src/components/Form/BtnGgLogin';
@@ -251,7 +251,7 @@ export default class LoginForm extends Component {
 
 	componentDidMount() {
 		if (AuthStorage.loggedIn) {
-			Router.push('/');
+			Router.pushRoute('/');
 		}
 	}
 
@@ -290,7 +290,7 @@ export default class LoginForm extends Component {
 					this.props.action.loginRequest(auth, () => {
 						if (AuthStorage.loggedIn && this.props.store.auth.id) {
 							if (this.props.isLoginPage) {
-								Router.push('/');
+								Router.pushRoute('/');
 							} else {
 								this.props.action.toggleLoginModal({ open: false });
 							}

@@ -11,7 +11,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
-import Router, { withRouter } from 'next/router';
+import { withRouter } from 'next/router';
+import { Router } from 'src/routes';
 
 import { Row, Col, Icon, Button, Modal } from 'antd';
 
@@ -233,6 +234,7 @@ export default class FlightCard extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
 		flightData: PropTypes.object,
+		router: PropTypes.object.isRequired,
 		type: PropTypes.string,
 		loading: PropTypes.bool,
 		// store
@@ -260,7 +262,7 @@ export default class FlightCard extends Component {
 	}
 
 	handleClickFlight = () => {
-		Router.push(`${this.props.router.pathname}?ticketId=${this.props.flightData.id}&type=${this.props.type}`)
+		Router.pushRoute(`${this.props.router.pathname}?ticketId=${this.props.flightData.id}&type=${this.props.type}`)
 		this.props.action.toggleFlightModal({ open: true, type: this.props.type, id: this.props.flightData.id });
 	}
 

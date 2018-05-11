@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import Router from 'next/router';
+import { Router } from 'src/routes';
 
 import { Form, Icon, Input, Button } from 'antd';
 
@@ -119,7 +119,7 @@ export default class ForgotPassword extends Component {
 				<div className={classes.root}>
 					<div className={classes.form}>
 						<p>Làm ơn kiểm tra email của bạn để đặt lại mật khẩu.</p>
-						<Button size="large" type="primary" className={classes.btn} onClick={() => Router.push('/login')}>
+						<Button size="large" type="primary" className={classes.btn} onClick={() => Router.pushRoute('/login')}>
 							Đăng nhập
 						</Button>
 					</div>

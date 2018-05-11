@@ -23,18 +23,19 @@ const styleSheet = (theme) => ({
 	root: {
 		position: 'fixed',
 		top: 65,
-		width: 0,
+		left: -300,
+		width: 300,
 		height: 'calc(100vh - 65px)',
 		background: '#FFF',
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'space-between',
-		transition: 'width 300ms ease',
+		transition: 'left 300ms ease',
 		overflow: 'hidden',
 		zIndex: 10,
 
 		'&.active': {
-			width: 300,
+			left: 0,
 		},
 
 		'& ul': {
@@ -59,7 +60,7 @@ const styleSheet = (theme) => ({
 	},
 	bottomMenu: {
 		background: '#F6F8FD',
-	}
+	},
 });
 
 function mapStateToProps(state) {

@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import cookie from 'react-cookies';
 import NProgress from 'nprogress';
 
-import Router from 'next/router';
+import { Router } from 'src/routes';
 
 import withReduxSaga from 'src/redux/store';
 import withJss from 'src/theme/jss';

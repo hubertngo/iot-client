@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import Router from 'next/router';
+import { Router } from 'src/routes';
 
 import { Form, Icon, Input, Button } from 'antd';
 
@@ -109,7 +109,7 @@ export default class LoginForm extends Component {
 
 	componentDidMount() {
 		if (AuthStorage.loggedIn) {
-			Router.push('/');
+			Router.pushRoute('/');
 		}
 	}
 

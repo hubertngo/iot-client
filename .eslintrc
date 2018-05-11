@@ -50,6 +50,7 @@
 	"globals": {
 		"fetch": true,
 		"FormData": true,
-		"document": true
+		"document": true,
+		"window": true
 	}
 }
