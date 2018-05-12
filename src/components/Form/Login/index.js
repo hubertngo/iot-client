@@ -362,7 +362,8 @@ export default class LoginForm extends Component {
 					<Form.Item>
 						<div className={classes.buttonLogin}>
 							<div>
-								<a href="/sign-up" onClick={this.handleOpenSignUpDialog} className={classes.mobileLink}>{formatMessage({ id: 'sign_up' })}</a>
+								<a href="/sign-up" onClick={this.handleOpenSignUpDialog} className={classes.mobileLink + ' hidden-md-down'}>{formatMessage({ id: 'sign_up' })}</a>
+								<a href="/sign-up" className={classes.mobileLink + ' hidden-md-up'}>{formatMessage({ id: 'sign_up' })}</a>
 								{
 									!isLoginPage && <Icon type="question-circle" style={{ marginLeft: 5, color: '#4368C4' }} className="hidden-md-down" onClick={this.toggleNote} />
 								}

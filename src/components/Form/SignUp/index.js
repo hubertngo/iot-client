@@ -224,7 +224,8 @@ export default class LoginForm extends Component {
 					<div className={classes.signUp}>
 						{formatMessage({ id: 'have_account' })}
 						{' '}
-						<a href="/login" onClick={this.handleOpenLoginDialog}>{formatMessage({ id: 'login' })}</a>
+						<a href="/login" onClick={this.handleOpenLoginDialog} className="hidden-md-down">{formatMessage({ id: 'login' })}</a>
+						<a href="/login" className="hidden-md-up">{formatMessage({ id: 'login' })}</a>
 					</div>
 				</Form>
 			</div>
