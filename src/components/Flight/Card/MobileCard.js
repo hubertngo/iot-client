@@ -493,7 +493,7 @@ export default class FlightCard extends Component {
 				}
 
 				{
-					flightData.approved && (
+					flightData.approved && AuthStorage.userId !== flightData.creatorId && (
 						<span className={classes.iconMedal}>
 							<IconMedal color="#2D9CDB" />
 						</span>

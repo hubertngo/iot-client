@@ -450,7 +450,7 @@ export default class FlightDetail extends Component {
 		return (
 			<div className={classes.root}>
 				{
-					flightData.approved && (
+					flightData.approved && AuthStorage.userId !== flightData.creatorId && (
 						<span className={classes.iconMedal}>
 							<IconMedal color="#2D9CDB" />
 						</span>

@@ -353,7 +353,7 @@ export default class FlightDetail extends Component {
 			return (
 				<div className={classes.examine}>
 					{
-						flightData.dataType === 'fb' &&
+						flightData.approved && AuthStorage.userId !== flightData.creatorId &&
 						<Tooltip title="Kiểm định bởi chove.vn">
 							<span style={{ marginRight: 20, marginLeft: 5 }}>
 								<IconMedal />
@@ -412,7 +412,7 @@ export default class FlightDetail extends Component {
 			return (
 				<div className={classes.examine}>
 					{
-						flightData.approved &&
+						flightData.approved && AuthStorage.userId !== flightData.creatorId &&
 						<Tooltip title="Kiểm định bởi chove.vn">
 							<span style={{ marginRight: 20, marginLeft: 5 }}>
 								<IconMedal />
