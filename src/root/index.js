@@ -9,12 +9,18 @@ import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import cookie from 'react-cookies';
 import NProgress from 'nprogress';
-
+import { LocaleProvider } from 'antd';
+import { IntlProvider } from 'react-intl';
 import Router from 'next/router';
 
 import withReduxSaga from 'src/redux/store';
 import withJss from 'src/theme/jss';
-import withIntl from 'src/intl';
+import enUS from 'antd/lib/locale-provider/en_US';
+import viVN from 'antd/lib/locale-provider/vi_VN';
+import 'moment/locale/fr';
+import 'moment/locale/vi';
+import vi from 'src/lang/vi.json';
+import en from 'src/lang/en.json';
 
 import AuthStorage from 'src/utils/AuthStorage';
 import { getUserAuth } from 'src/redux/actions/auth';
@@ -31,6 +37,7 @@ import EditSellingModal from 'src/components/Modals/EditSelling';
 
 import { addTicketBuyingListener } from 'src/redux/actions/ticket-buying';
 import { addTicketSellingListener } from 'src/redux/actions/ticket-selling';
+import { connect } from 'react-redux';
 
 Router.onRouteChangeStart = (/* url */) => {
 	NProgress.start();
@@ -38,10 +45,24 @@ Router.onRouteChangeStart = (/* url */) => {
 Router.onRouteChangeComplete = () => NProgress.done();
 Router.onRouteChangeError = () => NProgress.done();
 
+const mapStateToProps = (state) => {
+	return {
+		store: {
+			// auth: state.get('auth').toJS(),
+			lang: state.get('lang'),
+		},
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+	};
+};
+
 const withRoot = (Child) => {
 	@withJss
 	@withReduxSaga
-	@withIntl
+	@connect(mapStateToProps, mapDispatchToProps)
 	class WrappedComponent extends PureComponent {
 		static propTypes = {
 			url: PropTypes.object.isRequired,
@@ -71,18 +92,24 @@ const withRoot = (Child) => {
 		}
 
 		render() {
+			const { lang } = this.props.store;
+
 			return (
-				<Fragment>
-					<Child {...this.props} />
-					<LoginModal />
-					<SignUpModal />
-					<TicketPosterModal />
-					<UserInfoModal />
-					<EditUserInfoModal />
-					<EditBuyingModal />
-					<EditSellingModal />
-					<RatingModal />
-				</Fragment>
+				<LocaleProvider locale={lang === 'vi' ? viVN : enUS}>
+					<IntlProvider locale="en" messages={lang === 'vi' ? vi : en} key={lang}>
+						<Fragment>
+							<Child {...this.props} />
+							<LoginModal />
+							<SignUpModal />
+							<TicketPosterModal />
+							<UserInfoModal />
+							<EditUserInfoModal />
+							<EditBuyingModal />
+							<EditSellingModal />
+							<RatingModal />
+						</Fragment>
+					</IntlProvider>
+				</LocaleProvider>
 			);
 		}
 	}

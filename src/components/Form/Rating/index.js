@@ -159,7 +159,7 @@ export default class LoginForm extends Component {
 						{getFieldValue('star') || 0}/5 {formatMessage({ id: 'point' })}
 					</Form.Item>
 
-					<p className={classes.note}><b>{formatMessage({ id: 'you' })}</b> {formatMessage({ id: 'not_satified_and_comment' })}</p>
+					<p className={classes.note}><b>{formatMessage({ id: 'you' })}</b> {formatMessage({ id: 'not_satisfied_and_comment' })}</p>
 					<Form.Item>
 						{getFieldDecorator('comment', {
 							rules: [{ required: true, message: formatMessage({ id: 'comment_required' }) }],

@@ -11,10 +11,9 @@ export const initialState = 'vi';
 export default (state = initialState, action) => {
 	switch (action.type) {
 		case 'UPDATE_LANGUAGE':
-			return action.payload.lang;
 		case 'LOGIN_SUCCESS':
-			return action.payload.lang;
 		case 'EDIT_PROFILE_SUCCESS':
+		case 'GET_USER_AUTH_SUCCESS':
 			return action.payload.lang;
 		default:
 			return state;
