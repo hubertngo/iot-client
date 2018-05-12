@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 
-import { Input, Menu, Dropdown, Select, Form, Button, Row, Col, notification, Radio } from 'antd';
+import { Input, Menu, Dropdown, Select, Form, Button, Row, Col, notification, Radio, Collapse } from 'antd';
 
 import IconDeparture from 'src/components/Photo/IconDeparture';
 import IconDestination from 'src/components/Photo/IconDestination';
@@ -23,14 +23,16 @@ import DatePicker from 'src/components/DatePickerLunar';
 import moment from 'moment';
 
 const styleSheet = (theme) => ({
-	formWrapper: {
-		padding: '0 10px',
+	// formWrapper: {
+	// 	padding: '0 10px',
 
-	},
+	// },
 	root: {
 		marginTop: 10,
+		marginLeft: 10,
+		marginRight: 10,
 		background: '#FFF',
-		padding: 20,
+		// padding: 20,
 		borderRadius: 8,
 		boxShadow: '0px 0px 16px 0px rgba(0, 0, 0, 0.15)',
 
@@ -233,75 +235,80 @@ export default class SearchBar extends Component {
 		const { form: { getFieldDecorator }, classes, intl: { formatMessage } } = this.props;
 
 		return (
-			<Form onSubmit={this.handleSubmit} className={classes.formWrapper}>
-				<Row className={classes.root} type="flex">
-					<Col span={24}>
-						<div className={classes.floatingLabel}>{formatMessage({ id: 'departure' })}</div>
-						<Form.Item style={{ marginBottom: 0 }}>
-							{getFieldDecorator('departure')(
-								<Select className={classes.select} placeholder={formatMessage({ id: 'departure' })}>
-									{locationOptions.map(location => <Select.Option value={location.value}>{location.label}</Select.Option>)}
-								</Select>,
-							)}
-						</Form.Item>
-					</Col>
-					<Col span={24}>
-						<div className={classes.floatingLabel}>{formatMessage({ id: 'destination' })}</div>
-						<Form.Item style={{ marginBottom: 0 }}>
-							{getFieldDecorator('destination')(
-								<Select className={classes.select} placeholder={formatMessage({ id: 'destination' })}>
-									{locationOptions.map(location => <Select.Option value={location.value}>{location.label}</Select.Option>)}
-								</Select>,
-							)}
-						</Form.Item>
-					</Col>
-					<Col span={24}>
-						<Form.Item style={{ marginBottom: 0 }}>
-							{getFieldDecorator('flightType', {
-								// initialValue: 'all',
-							})(
-								<Radio.Group>
-									<Radio value="oneWay">{formatMessage({ id: 'one_way' })}</Radio>
-									<Radio value="roundTrip">{formatMessage({ id: 'round_trip' })}</Radio>
-								</Radio.Group>,
-							)}
-						</Form.Item>
-					</Col>
-					<Col span={12}>
-						<div className={classes.floatingLabel}>{formatMessage({ id: 'time' })}</div>
-						<Form.Item style={{ marginBottom: 0 }}>
-							{getFieldDecorator('startDate')(
-								<DatePicker
-									className={classes.datePicker}
-									size="large"
-									placeholder={formatMessage({ id: 'start_date' })}
-									format="DD/MM/YYYY"
-								/>,
-							)}
+			<Collapse className={classes.root}>
+				<Collapse.Panel header={formatMessage({ id: 'search_ticket' })}>
+					<Form onSubmit={this.handleSubmit} className={classes.formWrapper}>
+						<Row type="flex">
+							<Col span={24}>
+								<div className={classes.floatingLabel}>{formatMessage({ id: 'departure' })}</div>
+								<Form.Item style={{ marginBottom: 0 }}>
+									{getFieldDecorator('departure')(
+										<Select className={classes.select} placeholder={formatMessage({ id: 'departure' })}>
+											{locationOptions.map(location => <Select.Option value={location.value}>{location.label}</Select.Option>)}
+										</Select>,
+									)}
+								</Form.Item>
+							</Col>
+							<Col span={24}>
+								<div className={classes.floatingLabel}>{formatMessage({ id: 'destination' })}</div>
+								<Form.Item style={{ marginBottom: 0 }}>
+									{getFieldDecorator('destination')(
+										<Select className={classes.select} placeholder={formatMessage({ id: 'destination' })}>
+											{locationOptions.map(location => <Select.Option value={location.value}>{location.label}</Select.Option>)}
+										</Select>,
+									)}
+								</Form.Item>
+							</Col>
+							<Col span={24}>
+								<Form.Item style={{ marginBottom: 0 }}>
+									{getFieldDecorator('flightType', {
+										// initialValue: 'all',
+									})(
+										<Radio.Group>
+											<Radio value="oneWay">{formatMessage({ id: 'one_way' })}</Radio>
+											<Radio value="roundTrip">{formatMessage({ id: 'round_trip' })}</Radio>
+										</Radio.Group>,
+									)}
+								</Form.Item>
+							</Col>
+							<Col span={12}>
+								<div className={classes.floatingLabel}>{formatMessage({ id: 'time' })}</div>
+								<Form.Item style={{ marginBottom: 0 }}>
+									{getFieldDecorator('startDate')(
+										<DatePicker
+											className={classes.datePicker}
+											size="large"
+											placeholder={formatMessage({ id: 'start_date' })}
+											format="DD/MM/YYYY"
+										/>,
+									)}
 
-						</Form.Item>
+								</Form.Item>
 
-					</Col>
-					<Col span={12}>
-						<div className={classes.floatingLabel}>&nbsp;</div>
-						<Form.Item style={{ marginBottom: 0 }}>
-							{getFieldDecorator('endDate')(
-								<DatePicker
-									className={classes.datePicker}
-									style={{ borderLeft: 0 }}
-									size="large"
-									placeholder={formatMessage({ id: 'end_date' })}
-									format="DD/MM/YYYY"
-								/>,
-							)}
-						</Form.Item>
-					</Col>
+							</Col>
+							<Col span={12}>
+								<div className={classes.floatingLabel}>&nbsp;</div>
+								<Form.Item style={{ marginBottom: 0 }}>
+									{getFieldDecorator('endDate')(
+										<DatePicker
+											className={classes.datePicker}
+											style={{ borderLeft: 0 }}
+											size="large"
+											placeholder={formatMessage({ id: 'end_date' })}
+											format="DD/MM/YYYY"
+										/>,
+									)}
+								</Form.Item>
+							</Col>
 
-					<Col span={24}>
-						<Button type="primary" className={classes.btnSearch} htmlType="submit" size="large">{formatMessage({ id: 'search' })}</Button>
-					</Col>
-				</Row>
-			</Form>
+							<Col span={24}>
+								<Button type="primary" className={classes.btnSearch} htmlType="submit" size="large">{formatMessage({ id: 'search' })}</Button>
+							</Col>
+						</Row>
+					</Form>
+				</Collapse.Panel>
+			</Collapse>
+
 		);
 	}
 }
