@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'next/router';
+import NextRouter, { withRouter } from 'next/router';
 import { Router } from 'src/routes';
 
 import withStyles from 'src/theme/jss/withStyles';
@@ -76,44 +76,8 @@ export default class FlightModal extends Component {
 		}).isRequired,
 	}
 
-	constructor(props) {
-		super(props);
-
-		const { query } = props.router;
-
-		if (query && query.ticketId) {
-
-			if (typeof window !== 'undefined') {
-				if (window.innerWidth < 992) {
-					Router.pushRoute(`/ticket-${query.type}/${query.ticketId}`);
-				}
-			}
-
-			const params = {
-				id: query.ticketId,
-				filter: {
-					include: [
-						{
-							relation: 'creator',
-							scope: {
-								fields: ['id', 'username', 'avatar', 'fullName', 'ratingsCount', 'ratingsStats'],
-							},
-						},
-					],
-				},
-			};
-
-			this.state = { active: true };
-
-			if (query.type === 'selling') {
-				this.props.action.getTicketSellingData(params);
-			} else {
-				this.props.action.getTicketBuyingData(params);
-			}
-			this._type = query.type;
-		} else {
-			this.state = { active: false };
-		}
+	componentDidCMount() {
+		console.log('didididididididi');
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -134,33 +98,30 @@ export default class FlightModal extends Component {
 				},
 			};
 
-			this.setState({ active: true });
-
 			if (flight.type === 'selling') {
 				nextProps.action.getTicketSellingData(params);
 			} else {
 				nextProps.action.getTicketBuyingData(params);
 			}
-
-			this._type = flight.type;
 		}
 	}
 
-	_type = 'selling'
-
 	handleCancel = () => {
-		this.setState({ active: false });
+		const route = this.props.router.query ? this.props.router.query.route : '/';
 		this.props.action.toggleFlightModal({ open: false });
+
+
+		NextRouter.push(route);
 	}
 
 	render() {
-		const { classes, store: { modal: { flight }, ticketSellingView, ticketBuyingView }, action } = this.props;
-		const flightData = this._type === 'selling' ? ticketSellingView : ticketBuyingView;
-
+		const { classes, store: { modal: { flight }, ticketSellingView, ticketBuyingView } } = this.props;
+		const flightData = flight.type === 'selling' ? ticketSellingView : ticketBuyingView;
+		console.log('renderrrrr', flight);
 		return (
 			<Modal
 				// title="Basic Modal"
-				visible={this.state.active}
+				visible={flight.open}
 				closable={flight.closable}
 				footer={null}
 				bodyStyle={{ padding: 0 }}

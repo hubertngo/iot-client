@@ -16,7 +16,6 @@ import { injectIntl, intlShape } from 'react-intl';
 import withStyles from 'src/theme/jss/withStyles';
 import FlightList from 'src/components/Flight/List';
 import MobileFlightList from 'src/components/Flight/List/MobileList';
-import FlightModal from 'src/components/Modals/Flight';
 import Container from 'src/components/Layout/Container';
 
 const styleSheet = (theme) => ({
@@ -166,8 +165,6 @@ export default class ClassName extends Component {
 					<Container>
 						<MobileFlightList />
 					</Container>
-
-					<FlightModal />
 				</div>
 			);
 		}
@@ -185,8 +182,6 @@ export default class ClassName extends Component {
 					</Tabs>
 					{isDesktop ? <FlightList /> : <MobileFlightList />}
 				</Container>
-
-				<FlightModal />
 			</div>
 		);
 

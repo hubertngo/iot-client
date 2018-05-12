@@ -34,6 +34,7 @@ import EditUserInfoModal from 'src/components/Modals/EditUserInfo';
 import RatingModal from 'src/components/Modals/Rating';
 import EditBuyingModal from 'src/components/Modals/EditBuying';
 import EditSellingModal from 'src/components/Modals/EditSelling';
+import FlightModal from 'src/components/Modals/Flight';
 
 import { addTicketBuyingListener } from 'src/redux/actions/ticket-buying';
 import { addTicketSellingListener } from 'src/redux/actions/ticket-selling';
@@ -107,6 +108,7 @@ const withRoot = (Child) => {
 							<EditBuyingModal />
 							<EditSellingModal />
 							<RatingModal />
+							<FlightModal />
 						</Fragment>
 					</IntlProvider>
 				</LocaleProvider>

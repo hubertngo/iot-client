@@ -13,6 +13,7 @@ import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import { injectIntl, intlShape } from 'react-intl';
 import { Router } from 'src/routes';
+import NextRouter from 'next/router';
 
 import { Row, Col, Icon, Button, Modal, Tag } from 'antd';
 
@@ -290,6 +291,7 @@ export default class FlightCard extends Component {
 	}
 
 	handleClickFlight = () => {
+		// NextRouter.push(`/?ticketId=${this.props.flightData.id}&type=${this.props.type}`, `/ticket-${this.props.type}/${this.props.flightData.id}`);
 		Router.pushRoute(`/ticket-${this.props.type}/${this.props.flightData.id}`);
 		// this.props.action.toggleFlightModal({ open: true, type: this.props.type, id: this.props.flightData.id });
 	}

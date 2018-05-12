@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import { injectIntl, intlShape } from 'react-intl';
+import { withRouter } from 'next/router';
 
 import { Icon, Button, InputNumber, notification, Row, Col, Tag, Tooltip, Divider } from 'antd';
 
@@ -24,8 +25,8 @@ import IconMedal from 'src/components/Photo/IconMedal';
 import IconDeparture from 'src/components/Photo/IconDeparture';
 
 import { toggleFlightModal, toggleLoginModal } from 'src/redux/actions/modal';
-import { updateTicketBuying } from 'src/redux/actions/ticket-buying';
-import { updateTicketSelling, createTicketSellingBid } from 'src/redux/actions/ticket-selling';
+import { updateTicketBuying, getTicketBuyingData } from 'src/redux/actions/ticket-buying';
+import { updateTicketSelling, createTicketSellingBid, getTicketSellingData } from 'src/redux/actions/ticket-selling';
 
 import AuthStorage from 'src/utils/AuthStorage';
 
@@ -44,6 +45,8 @@ const styleSheet = (theme) => ({
 		boxShadow: '0px 0px 20px 0px rgba(0, 0, 0, 0.15)',
 		marginBottom: 8,
 		position: 'relative',
+		maxWidth: 500,
+		margin: 'auto',
 
 		'&:hover': {
 			boxShadow: '0px 0px 20px 0px rgba(0, 0, 0, 0.35)',
@@ -202,9 +205,11 @@ const styleSheet = (theme) => ({
 
 function mapStateToProps(state) {
 	return {
-		// store: {
-		// 	flightModal: state.getIn(['modal', 'flight']),
-		// },
+		store: {
+			// flightModal: state.getIn(['modal', 'flight']),
+			ticketSellingView: state.getIn(['ticketSelling', 'view']),
+			ticketBuyingView: state.getIn(['ticketBuying', 'view']),
+		},
 	};
 }
 
@@ -216,10 +221,13 @@ const mapDispatchToProps = (dispatch) => {
 			updateTicketBuying,
 			updateTicketSelling,
 			createTicketSellingBid,
+			getTicketSellingData,
+			getTicketBuyingData,
 		}, dispatch),
 	};
 };
 
+@withRouter
 @connect(mapStateToProps, mapDispatchToProps)
 @withStyles(styleSheet)
 @injectIntl
@@ -251,6 +259,33 @@ export default class FlightDetail extends Component {
 	state = {
 		btnLoading: false,
 		bidPrice: '',
+	}
+
+	componentDidMount() {
+		const { id, type } = this.props;
+		// console.log('why', this.props);
+
+		if (id) {
+			const params = {
+				id,
+				filter: {
+					include: [
+						{
+							relation: 'creator',
+							scope: {
+								fields: ['id', 'username', 'avatar', 'fullName', 'ratingsCount', 'ratingsStats'],
+							},
+						},
+					],
+				},
+			};
+
+			if (type === 'selling') {
+				this.props.action.getTicketSellingData(params);
+			} else {
+				this.props.action.getTicketBuyingData(params);
+			}
+		}
 	}
 
 	handleSell = () => {

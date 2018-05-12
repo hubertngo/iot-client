@@ -17,15 +17,15 @@ import MainLayout from 'src/layout/Main';
 import { Router } from 'src/routes';
 
 // import SignUpForm from 'src/components/Form/SignUp';
-import MobileFlightDetail from 'src/components/Flight/Card/MobileDetail';
+import MobileFlightDetailWrapper from 'src/components/Flight/Card/_MobileDetailWrapper';
 import { getTicketSellingData } from 'src/redux/actions/ticket-selling';
 import { getTicketBuyingData } from 'src/redux/actions/ticket-buying';
 
 function mapStateToProps(state) {
 	return {
 		store: {
-			ticketSellingView: state.getIn(['ticketSelling', 'view']),
-			ticketBuyingView: state.getIn(['ticketBuying', 'view']),
+			// ticketSellingView: state.getIn(['ticketSelling', 'view']),
+			// ticketBuyingView: state.getIn(['ticketBuying', 'view']),
 		},
 	};
 }
@@ -40,9 +40,8 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 @withRoot
-@connect(mapStateToProps, mapDispatchToProps)
+// @connect(mapStateToProps, mapDispatchToProps)
 export default class MobileFlightDetailPage extends PureComponent {
-
 	static async getInitialProps(ctx) {
 		return {
 			id: ctx.query.id,
@@ -52,65 +51,36 @@ export default class MobileFlightDetailPage extends PureComponent {
 
 	static propTypes = {
 		// store
-		store: PropTypes.shape({
-			modal: PropTypes.object.isRequired,
-		}).isRequired,
-		// action
-		action: PropTypes.shape({
-			toggleFlightModal: PropTypes.func.isRequired,
-			getTicketSellingData: PropTypes.func.isRequired,
-			getTicketBuyingData: PropTypes.func.isRequired,
-		}).isRequired,
-		id: PropTypes.string.isRequired,
-		type: PropTypes.string.isRequired,
+		// store: PropTypes.shape({
+		// 	modal: PropTypes.object.isRequired,
+		// }).isRequired,
+		// // action
+		// action: PropTypes.shape({
+		// 	toggleFlightModal: PropTypes.func.isRequired,
+		// 	getTicketSellingData: PropTypes.func.isRequired,
+		// 	getTicketBuyingData: PropTypes.func.isRequired,
+		// }).isRequired,
+		// id: PropTypes.string.isRequired,
+		// type: PropTypes.string.isRequired,
 	}
 
-	constructor(props) {
-		super(props);
-		if (typeof window !== 'undefined') {
-			if (window.innerWidth >= 992) {
-				Router.pushRoute(`/?ticketId=${this.props.id}&type=${this.props.type}`);
-			}
-		}
-	}
-
-	componentDidMount() {
-		const { id, type } = this.props;
-
-		if (id) {
-			const params = {
-				id,
-				filter: {
-					include: [
-						{
-							relation: 'creator',
-							scope: {
-								fields: ['id', 'username', 'avatar', 'fullName', 'ratingsCount', 'ratingsStats'],
-							},
-						},
-					],
-				},
-			};
-
-			if (type === 'selling') {
-				this.props.action.getTicketSellingData(params);
-			} else {
-				this.props.action.getTicketBuyingData(params);
-			}
-		}
-	}
+	// constructor(props) {
+	// 	super(props);
+	// 	if (typeof window !== 'undefined') {
+	// 		if (window.innerWidth >= 992) {
+	// 			Router.pushRoute(`/?ticketId=${this.props.id}&type=${this.props.type}`);
+	// 		}
+	// 	}
+	// }
 
 	render() {
-		const { store: { ticketSellingView, ticketBuyingView }, type } = this.props;
-		const flightData = type === 'selling' ? ticketSellingView : ticketBuyingView;
-
 		return (
 			<MainLayout>
 				<Head>
 					<title>Chove.vn - Đăng ký</title>
 				</Head>
 				<div style={{ padding: 10 }}>
-					<MobileFlightDetail flightData={flightData} type={type} onCancel={this.handleCancel} />
+					<MobileFlightDetailWrapper id={this.props.id} type={this.props.type} />
 				</div>
 			</MainLayout>
 		);
