@@ -108,13 +108,13 @@ export default class MobileList extends Component {
 
 	componentDidMount() {
 		const p1 = new Promise((resolve) => {
-			this.props.action.getTicketSellingList({ filter: this.filter, firstLoad: true }, () => {
+			this.props.action.getTicketSellingList({ filter: this.filterSelling, firstLoad: true }, () => {
 				resolve();
 			});
 		});
 
 		const p2 = new Promise((resolve) => {
-			this.props.action.getTicketBuyingList({ filter: this.filter, firstLoad: true }, () => {
+			this.props.action.getTicketBuyingList({ filter: this.filterBuying, firstLoad: true }, () => {
 				resolve();
 			});
 		});
@@ -129,7 +129,7 @@ export default class MobileList extends Component {
 
 	tabKey = 'buying'
 
-	filter = {
+	filterBuying = {
 		limit: 4,
 		skip: 0,
 		page: 1,
@@ -152,63 +152,93 @@ export default class MobileList extends Component {
 		},
 	}
 
-	handleViewMore = () => {
+	filterSelling = {
+		limit: 4,
+		skip: 0,
+		page: 1,
+		include: [
+			{
+				relation: 'creator',
+				scope: {
+					fields: ['id', 'username', 'avatar', 'fullName', 'ratingsCount', 'ratingsStats'],
+				},
+			},
+			// {
+			// 	relation: 'fbFeed',
+			// },
+		],
+		where: {
+			status: 'open',
+			dueDate: {
+				gte: new Date(),
+			},
+		},
+	}
+
+	handleViewMoreSelling = () => {
 		this.setState({
-			loadingMore: true,
+			loadingMoreSelling: true,
 		});
 
-		this.filter.skip = this.filter.limit * this.filter.page;
+		this.filterSelling.skip = this.filterSelling.limit * this.filterSelling.page;
 
-		const p1 = new Promise((resolve, reject) => {
-			this.props.action.getTicketSellingList({ filter: this.filter }, () => {
-				resolve();
-			}, () => {
-				reject();
-			});
-		});
-
-		const p2 = new Promise((resolve, reject) => {
-			this.props.action.getTicketBuyingList({ filter: this.filter }, () => {
-				resolve();
-			}, () => {
-				reject();
-			});
-		});
-
-		Promise.all([
-			p1,
-			p2,
-		]).then(() => {
-			this.filter.page = this.filter.page + 1;
+		this.props.action.getTicketSellingList({ filter: this.filterSelling }, () => {
 			this.setState({
-				loadingMore: false,
+				loadingMoreSelling: false,
 			});
-		}).catch(() => {
+		});
+	}
+
+	handleViewMoreBuying = () => {
+		this.setState({
+			loadingMoreBuying: true,
+		});
+
+		this.filterBuying.skip = this.filterBuying.limit * this.filterBuying.page;
+
+		this.props.action.getTicketBuyingList({ filter: this.filterBuying }, () => {
 			this.setState({
-				loadingMore: false,
+				loadingMoreBuying: false,
 			});
 		});
 	}
 
 	handleSearch = (where) => {
-		this.filter.where = {
-			...this.filter.where,
+		if (this.tabKey === 'buying') {
+			this.handleSearchBuying(where);
+		} else {
+			this.handleSearchSelling(where);
+		}
+	}
+
+	handleSearchBuying = (where) => {
+		this.filterBuying.where = {
+			...this.filterBuying.where,
 			...where,
 		};
-		this.filter.skip = 0;
-		this.filter.limit = 4;
-		this.filter.page = 1;
+		this.filterBuying.skip = 0;
+		this.filterBuying.limit = 4;
+		this.filterBuying.page = 1;
 
-		Promise.all([
-			this.props.action.getTicketSellingList({ filter: this.filter, firstLoad: true }),
-			this.props.action.getTicketBuyingList({ filter: this.filter, firstLoad: true }),
-		]).then(() => {
+		this.props.action.getTicketBuyingList({ filter: this.filterBuying, firstLoad: true }, () => {
+
 			this.setState({ loading: false });
 		});
+	}
 
-		// this.props.action.getTicketSellingList({ filter: this.filter, firstLoad: true }, () => {
-		// 	this.setState({ loading: false });
-		// });
+	handleSearchSelling = (where) => {
+		this.filterSelling.where = {
+			...this.filterSelling.where,
+			...where,
+		};
+		this.filterSelling.skip = 0;
+		this.filterSelling.limit = 4;
+		this.filterSelling.page = 1;
+
+		this.props.action.getTicketSellingList({ filter: this.filterSelling, firstLoad: true }, () => {
+
+			this.setState({ loading: false });
+		});
 	}
 
 	handleChangeTab = (key) => {
@@ -245,7 +275,8 @@ export default class MobileList extends Component {
 			);
 		}
 
-		const isShowMore = (ticketBuyingList.data.length < ticketBuyingList.total) || (ticketSellingList.data.length < ticketSellingList.total);
+		const isShowMoreBuying = ticketBuyingList.data.length < ticketBuyingList.total;
+		const isShowMoreSelling = ticketSellingList.data.length < ticketSellingList.total;
 		// const menu = (
 		// 	<Menu onClick={this.handleMenuClick}>
 		// 		<Menu.Item key="buying">{formatMessage({ id: 'buying' })}</Menu.Item>
@@ -255,17 +286,30 @@ export default class MobileList extends Component {
 
 		return (
 			<div className={classes.root}>
-
 				<MobileSearchBar onSearch={this.handleSearch} />
 				<Tabs tabPosition="bottom" onChange={this.handleChangeTab}>
-					<Tabs.TabPane tab="{formatMessage({ id: 'buying' })}" key="buying">
+					<Tabs.TabPane tab={formatMessage({ id: 'buying' })} key="buying">
 						{
 							ticketBuyingList.data.map(flight => <MobileFlightCard flightData={flight} key={`${flight.id}_${AuthStorage.userId}`} type="buying" />)
 						}
+						{
+							isShowMoreBuying && (
+								<Col span={24}>
+									<Button style={{ width: '100%' }} size="large" onClick={this.handleViewMoreBuying} loading={this.state.loadingMoreBuying}>{formatMessage({ id: 'show_more' })}</Button>
+								</Col>
+							)
+						}
 					</Tabs.TabPane>
-					<Tabs.TabPane tab="{formatMessage({ id: 'selling' })}" key="selling">
+					<Tabs.TabPane tab={formatMessage({ id: 'selling' })} key="selling">
 						{
 							ticketSellingList.data.map(flight => <MobileFlightCard flightData={flight} key={`${flight.id}_${AuthStorage.userId}`} type="selling" />)
+						}
+						{
+							isShowMoreSelling && (
+								<Col span={24}>
+									<Button style={{ width: '100%' }} size="large" onClick={this.handleViewMoreSelling} loading={this.state.loadingMoreSelling}>{formatMessage({ id: 'show_more' })}</Button>
+								</Col>
+							)
 						}
 					</Tabs.TabPane>
 				</Tabs>
