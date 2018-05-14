@@ -76,10 +76,6 @@ export default class FlightModal extends Component {
 		}).isRequired,
 	}
 
-	componentDidCMount() {
-		console.log('didididididididi');
-	}
-
 	componentWillReceiveProps(nextProps) {
 		const { flight } = nextProps.store.modal;
 
@@ -107,9 +103,9 @@ export default class FlightModal extends Component {
 	}
 
 	handleCancel = () => {
-		const route = this.props.router.query ? this.props.router.query.route : '/';
+		const { query } = this.props.router;
+		const route = query && query.route ? query.route : '/';
 		this.props.action.toggleFlightModal({ open: false });
-
 
 		NextRouter.push(route);
 	}

@@ -14,7 +14,7 @@ export default (state = initialState, action) => {
 		case 'LOGIN_SUCCESS':
 		case 'EDIT_PROFILE_SUCCESS':
 		case 'GET_USER_AUTH_SUCCESS':
-			return action.payload.lang;
+			return action.payload && action.payload.lang ? action.payload.lang : 'vi';
 		default:
 			return state;
 	}
