@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 
-import { Input, Menu, Dropdown, Select, Form, Button, Row, Col, notification, Radio, Collapse } from 'antd';
+import { Input, Menu, Dropdown, Select, Form, Button, Row, Col, notification, Radio, Collapse, AutoComplete } from 'antd';
 
 import IconDeparture from 'src/components/Photo/IconDeparture';
 import IconDestination from 'src/components/Photo/IconDestination';
@@ -164,6 +164,31 @@ export default class SearchBar extends Component {
 	}
 
 	state = {
+		destinationSource: [],
+		departureSource: [],
+	}
+
+	timeout = null
+
+	handleSearchDeparture = (value) => {
+		clearTimeout(this.timeout);
+		this.timeout = setTimeout(this.searchAirport.bind(this, value, 'departureSource'), 300);
+	}
+
+	handleSearchDestination = (value) => {
+		clearTimeout(this.timeout);
+		this.timeout = setTimeout(this.searchAirport.bind(this, value, 'destinationSource'), 300);
+	}
+
+	searchAirport = (query, stateName) => {
+		fetch(`https://api.flynow.vn/api/Search/AutoSuggestAirport?aId=FLYNOW&Search=${encodeURIComponent(query)}`)
+			.then(res => {
+				return res.json();
+			})
+			.then(response => {
+				const source = response.filter(item => item.CountryId === 'VN').map(item => `${item.PlaceName} (${item.PlaceId})`);
+				this.setState({ [stateName]: source });
+			});
 	}
 
 	handleSubmit = (e) => {
@@ -243,9 +268,14 @@ export default class SearchBar extends Component {
 								<div className={classes.floatingLabel}>{formatMessage({ id: 'departure' })}</div>
 								<Form.Item style={{ marginBottom: 0 }}>
 									{getFieldDecorator('departure')(
-										<Select className={classes.select} placeholder={formatMessage({ id: 'departure' })}>
-											{locationOptions.map(location => <Select.Option value={location.value}>{location.label}</Select.Option>)}
-										</Select>,
+										<AutoComplete
+											dataSource={this.state.departureSource}
+											style={{ width: '100%' }}
+											size="default"
+											className={classes.select}
+											placeholder={formatMessage({ id: 'departure' })}
+											onSearch={this.handleSearchDeparture}
+										/>,
 									)}
 								</Form.Item>
 							</Col>
@@ -253,9 +283,14 @@ export default class SearchBar extends Component {
 								<div className={classes.floatingLabel}>{formatMessage({ id: 'destination' })}</div>
 								<Form.Item style={{ marginBottom: 0 }}>
 									{getFieldDecorator('destination')(
-										<Select className={classes.select} placeholder={formatMessage({ id: 'destination' })}>
-											{locationOptions.map(location => <Select.Option value={location.value}>{location.label}</Select.Option>)}
-										</Select>,
+										<AutoComplete
+											dataSource={this.state.destinationSource}
+											style={{ width: '100%' }}
+											size="default"
+											onSearch={this.handleSearchDestination}
+											className={classes.select}
+											placeholder={formatMessage({ id: 'destination' })}
+										/>,
 									)}
 								</Form.Item>
 							</Col>

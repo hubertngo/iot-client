@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { Input, Menu, Dropdown, Select, Form, Button, Row, Col, notification } from 'antd';
+import { Input, Menu, Dropdown, Select, Form, Button, Row, Col, notification, AutoComplete, Icon } from 'antd';
 
 import IconDeparture from 'src/components/Photo/IconDeparture';
 import IconDestination from 'src/components/Photo/IconDestination';
@@ -36,8 +36,10 @@ const styleSheet = (theme) => ({
 	dropdownInput: {
 		background: '#FFF',
 		height: '45px',
-		'& + span': {
-			background: '#FFF',
+
+		'& .ant-input': {
+			background: '#FFF !important',
+			height: '45px !important',
 			border: 0,
 		},
 		'&:focus': {
@@ -143,6 +145,8 @@ export default class SearchBar extends Component {
 	}
 
 	state = {
+		destinationSource: [],
+		departureSource: [],
 	}
 
 	handleSubmit = (e) => {
@@ -154,7 +158,8 @@ export default class SearchBar extends Component {
 			if (!err) {
 				const { startDate, endDate, departure, destination, flightType } = values;
 				const filter = {};
-
+				console.log('vales', values);
+				return;
 				if (departure) {
 					filter['trip.departure'] = departure;
 				}
@@ -202,6 +207,29 @@ export default class SearchBar extends Component {
 		});
 	}
 
+	timeout = null
+
+	handleSearchDeparture = (value) => {
+		clearTimeout(this.timeout);
+		this.timeout = setTimeout(this.searchAirport.bind(this, value, 'departureSource'), 300);
+	}
+
+	handleSearchDestination = (value) => {
+		clearTimeout(this.timeout);
+		this.timeout = setTimeout(this.searchAirport.bind(this, value, 'destinationSource'), 300);
+	}
+
+	searchAirport = (query, stateName) => {
+		fetch(`https://api.flynow.vn/api/Search/AutoSuggestAirport?aId=FLYNOW&Search=${encodeURIComponent(query)}`)
+			.then(res => {
+				return res.json();
+			})
+			.then(response => {
+				const source = response.filter(item => item.CountryId === 'VN').map(item => `${item.PlaceName} (${item.PlaceId})`);
+				this.setState({ [stateName]: source });
+			});
+	}
+
 	_handleDepartureChange = (value) => {
 		this.props.form.setFieldsValue({ departure: value.key });
 	}
@@ -212,51 +240,52 @@ export default class SearchBar extends Component {
 
 	render() {
 		const { form: { getFieldDecorator }, classes, intl: { formatMessage } } = this.props;
-		const menuDeparture = (
-			<Menu className={classes.dropdownMenu} onClick={this._handleDepartureChange}>
-				{locationOptions.map(location => <Menu.Item key={location.value}>{location.label}</Menu.Item>)}
-			</Menu>
-		);
-		const menuDestination = (
-			<Menu className={classes.dropdownMenu} onClick={this._handleDestinationChange}>
-				{locationOptions.map(location => <Menu.Item key={location.value}>{location.label}</Menu.Item>)}
-			</Menu>
-		);
+		// console.log('áđâsdá', this.state);
+		// const menuDeparture = (
+		// 	<Menu className={classes.dropdownMenu} onClick={this._handleDepartureChange}>
+		// 		{this.state.departureSource.map(location => <Menu.Item key={location}>{location}</Menu.Item>)}
+		// 	</Menu>
+		// );
+		// const menuDestination = (
+		// 	<Menu className={classes.dropdownMenu} onClick={this._handleDestinationChange}>
+		// 		{this.state.destinationSource.map(location => <Menu.Item key={location}>{location}</Menu.Item>)}
+		// 	</Menu>
+		// );
 
 		return (
 			<Form onSubmit={this.handleSubmit}>
 				<Row className={classes.root} type="flex">
 					<Col span={5} className={classes.borderRight}>
-						<Dropdown overlay={menuDeparture} trigger={['click']}>
-							<div>
-								<Form.Item style={{ marginBottom: 0 }}>
-									{getFieldDecorator('departure')(
-										<Input
-											addonAfter={<IconDeparture extended />}
-											className={classes.dropdownInput + ' ' + classes.firstChild}
-											size="large"
-											placeholder={formatMessage({ id: 'departure' })}
-										/>,
-									)}
-								</Form.Item>
-							</div>
-						</Dropdown>
+
+						<Form.Item style={{ marginBottom: 0 }}>
+							{getFieldDecorator('departure')(
+								<AutoComplete
+									dataSource={this.state.departureSource}
+									style={{ width: '100%' }}
+									size="large"
+									className={classes.dropdownInput + ' ' + classes.firstChild}
+									onSearch={this.handleSearchDeparture}
+								>
+									<Input size="large" suffix={<IconDeparture extended />} placeholder={formatMessage({ id: 'departure' })} />
+								</AutoComplete>,
+							)}
+						</Form.Item>
+
 					</Col>
 					<Col span={5} className={classes.borderRight}>
-						<Dropdown overlay={menuDestination} trigger={['click']} >
-							<div>
-								<Form.Item style={{ marginBottom: 0 }}>
-									{getFieldDecorator('destination')(
-										<Input
-											addonAfter={<IconDestination extended />}
-											className={classes.dropdownInput}
-											size="large"
-											placeholder={formatMessage({ id: 'destination' })}
-										/>,
-									)}
-								</Form.Item>
-							</div>
-						</Dropdown>
+						<Form.Item style={{ marginBottom: 0 }}>
+							{getFieldDecorator('destination')(
+								<AutoComplete
+									dataSource={this.state.destinationSource}
+									style={{ width: '100%' }}
+									size="large"
+									className={classes.dropdownInput}
+									onSearch={this.handleSearchDestination}
+								>
+									<Input size="large" suffix={<IconDestination extended />} placeholder={formatMessage({ id: 'destination' })} />
+								</AutoComplete>,
+							)}
+						</Form.Item>
 					</Col>
 					<Col span={4} className={classes.borderRight}>
 						<Form.Item style={{ marginBottom: 0 }}>

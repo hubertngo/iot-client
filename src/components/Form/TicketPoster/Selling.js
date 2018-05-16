@@ -15,7 +15,7 @@ import { injectIntl, intlShape } from 'react-intl';
 
 import withStyles from 'src/theme/jss/withStyles';
 
-import { Form, Icon, Input, Button, Radio, Select, Row, Col, TimePicker, InputNumber, Upload } from 'antd';
+import { Form, Icon, Input, Button, Radio, Select, Row, Col, TimePicker, InputNumber, Upload, AutoComplete } from 'antd';
 import DatePicker from 'src/components/DatePickerLunar';
 
 import { locationOptions, flightOptions } from 'src/constants/selectOption';
@@ -127,6 +127,8 @@ export default class TicketPosterForm extends Component {
 	state = {
 		loading: false,
 		fileList: [],
+		destinationSource: [],
+		departureSource: [],
 	}
 
 	filter = {
@@ -294,6 +296,29 @@ export default class TicketPosterForm extends Component {
 
 	handleChange = ({ fileList }) => this.setState({ fileList })
 
+	timeout = null
+
+	handleSearchDeparture = (value) => {
+		clearTimeout(this.timeout);
+		this.timeout = setTimeout(this.searchAirport.bind(this, value, 'departureSource'), 300);
+	}
+
+	handleSearchDestination = (value) => {
+		clearTimeout(this.timeout);
+		this.timeout = setTimeout(this.searchAirport.bind(this, value, 'destinationSource'), 300);
+	}
+
+	searchAirport = (query, stateName) => {
+		fetch(`https://api.flynow.vn/api/Search/AutoSuggestAirport?aId=FLYNOW&Search=${encodeURIComponent(query)}`)
+			.then(res => {
+				return res.json();
+			})
+			.then(response => {
+				const source = response.filter(item => item.CountryId === 'VN').map(item => `${item.PlaceName} (${item.PlaceId})`);
+				this.setState({ [stateName]: source });
+			});
+	}
+
 	handleSubmit = (e) => {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
@@ -395,7 +420,7 @@ export default class TicketPosterForm extends Component {
 					</Form.Item>
 					<Form.Item>
 						<Row className={classes.formItem} type="flex">
-							<Col col={3} xs={4} className={classes.formLabel}>{formatMessage({ id: 'flight_type' })}</Col>
+							<Col col={3} xs={4} className={classes.formLabel}>{formatMessage({ id: 'ticket_type' })}</Col>
 							<Col col={21} xs={20}>
 								{getFieldDecorator('flightType', {
 									initialValue: 'oneWay',
@@ -451,12 +476,12 @@ export default class TicketPosterForm extends Component {
 									{getFieldDecorator('trip.departure', {
 										rules: [{ required: true, message: formatMessage({ id: 'departure_required' }) }],
 									})(
-										<Select
-											size="default"
+										<AutoComplete
+											dataSource={this.state.departureSource}
 											style={{ width: '100%' }}
-										>
-											{locationOptions.map(item => <Option value={item.value} key={item.value}>{item.label}</Option>)}
-										</Select>,
+											size="default"
+											onSearch={this.handleSearchDeparture}
+										/>,
 									)}
 								</div>
 							</Form.Item>
@@ -469,12 +494,12 @@ export default class TicketPosterForm extends Component {
 									{getFieldDecorator('trip.destination', {
 										rules: [{ required: true, message: formatMessage({ id: 'destination_required' }) }, { validator: this.validateDestination }],
 									})(
-										<Select
-											size="default"
+										<AutoComplete
+											dataSource={this.state.destinationSource}
 											style={{ width: '100%' }}
-										>
-											{locationOptions.map(item => <Option value={item.value} key={item.value}>{item.label}</Option>)}
-										</Select>,
+											size="default"
+											onSearch={this.handleSearchDestination}
+										/>,
 									)}
 								</div>
 							</Form.Item>
@@ -723,7 +748,7 @@ export default class TicketPosterForm extends Component {
 								})(
 									<Radio.Group>
 										<Radio.Button value="bid"> {formatMessage({ id: 'bid' })} </Radio.Button>
-									<Radio.Button value="sell"> {formatMessage({ id: 'fixed' })} </Radio.Button>
+										<Radio.Button value="sell"> {formatMessage({ id: 'fixed' })} </Radio.Button>
 									</Radio.Group>,
 								)}
 							</div>

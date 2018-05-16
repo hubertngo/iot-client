@@ -162,7 +162,7 @@ export default class LoginForm extends Component {
 					<p className={classes.note}><b>{formatMessage({ id: 'you' })}</b> {formatMessage({ id: 'not_satisfied_and_comment' })}</p>
 					<Form.Item>
 						{getFieldDecorator('comment', {
-							rules: [{ required: true, message: formatMessage({ id: 'comment_required' }) }],
+							rules: [{ required: true, message: formatMessage({ id: 'comment_content_required' }) }],
 						})(
 							<Input.TextArea placeholder={formatMessage({ id: 'comment_content' })} rows={6} />,
 						)}

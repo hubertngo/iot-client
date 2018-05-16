@@ -96,7 +96,7 @@
 	"point": "point",
 	"you": "",
 	"not_satisfied_and_comment": "if you are satisfied or not, please leave your comment here!",
-	"comment_required": "Please fill your comment!",
+	"comment_content_required": "Please fill your comment!",
 	"comment_content": "Content of your comment...",
 	"send": "send",
 	"all": "All",
