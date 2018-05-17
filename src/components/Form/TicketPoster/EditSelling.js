@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import withStyles from 'src/theme/jss/withStyles';
 import { injectIntl, intlShape } from 'react-intl';
+import getAirport from 'src/utils/getAirport';
 
 import { Form, Icon, Input, Button, Radio, Select, Row, Col, TimePicker, InputNumber, Upload, AutoComplete } from 'antd';
 import DatePicker from 'src/components/DatePickerLunar';
@@ -25,7 +26,6 @@ import { getUserTicketSellingList, getTicketSellingData, updateTicketSelling } f
 import { getUserTicketBuyingList } from 'src/redux/actions/ticket-buying';
 import { toggleEditSellingModal } from 'src/redux/actions/modal';
 import { uploadFiles } from 'src/redux/actions/upload';
-import api from 'src/constants/api';
 
 import { getLabel } from 'src/utils';
 import moment from 'moment';
@@ -331,11 +331,9 @@ export default class TicketPosterForm extends Component {
 	}
 
 	searchAirport = (query, stateName) => {
-		fetch(`${api.API_URL}/airport?search=${encodeURIComponent(query)}`)
-			.then(res => res.json())
-			.then(source => {
-				this.setState({ [stateName]: source });
-			});
+		getAirport(query).then(source => {
+			this.setState({ [stateName]: source });
+		});
 	}
 
 	handleSubmit = (e) => {

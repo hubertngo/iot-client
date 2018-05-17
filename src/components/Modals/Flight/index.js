@@ -113,7 +113,6 @@ export default class FlightModal extends Component {
 	render() {
 		const { classes, store: { modal: { flight }, ticketSellingView, ticketBuyingView } } = this.props;
 		const flightData = flight.type === 'selling' ? ticketSellingView : ticketBuyingView;
-		console.log('renderrrrr', flight);
 		return (
 			<Modal
 				// title="Basic Modal"

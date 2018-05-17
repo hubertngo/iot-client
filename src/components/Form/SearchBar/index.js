@@ -9,6 +9,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import getAirport from 'src/utils/getAirport';
 
 import { Input, Select, Form, Button, Row, Col, notification, AutoComplete } from 'antd';
 
@@ -21,7 +22,6 @@ import { injectIntl, intlShape } from 'react-intl';
 // import { locationOptions } from 'src/constants/selectOption';
 import DatePicker from 'src/components/DatePickerLunar';
 import moment from 'moment';
-import api from 'src/constants/api';
 
 const styleSheet = (/* theme */) => ({
 	root: {
@@ -77,10 +77,19 @@ const styleSheet = (/* theme */) => ({
 			},
 		},
 	},
+	inputNoStyle: {
+		'& input': {
+			'&:focus': {
+				border: 0,
+				outline: 0,
+				boxShadow: 'none',
+			},
+		},
+	},
 	btnSearch: {
 		height: '45px',
 		borderRadius: '0px 30px 30px 0px',
-		width: '100%',
+		width: '101%',
 	},
 	borderRight: {
 		borderRight: '1px solid #E1E7F0',
@@ -220,11 +229,9 @@ export default class SearchBar extends Component {
 	}
 
 	searchAirport = (query, stateName) => {
-		fetch(`${api.API_URL}/airport?search=${encodeURIComponent(query)}`)
-			.then(res => res.json())
-			.then(source => {
-				this.setState({ [stateName]: source });
-			});
+		getAirport(query).then(source => {
+			this.setState({ [stateName]: source });
+		});
 	}
 
 	_handleDepartureChange = (value) => {
@@ -263,7 +270,7 @@ export default class SearchBar extends Component {
 									className={classes.dropdownInput + ' ' + classes.firstChild}
 									onSearch={this.handleSearchDeparture}
 								>
-									<Input size="large" suffix={<IconDeparture extended />} placeholder={formatMessage({ id: 'departure' })} />
+									<Input className={classes.inputNoStyle} size="large" suffix={<IconDeparture extended />} placeholder={formatMessage({ id: 'departure' })} />
 								</AutoComplete>,
 							)}
 						</Form.Item>
@@ -279,7 +286,7 @@ export default class SearchBar extends Component {
 									className={classes.dropdownInput}
 									onSearch={this.handleSearchDestination}
 								>
-									<Input size="large" suffix={<IconDestination extended />} placeholder={formatMessage({ id: 'destination' })} />
+									<Input className={classes.inputNoStyle} size="large" suffix={<IconDestination extended />} placeholder={formatMessage({ id: 'destination' })} />
 								</AutoComplete>,
 							)}
 						</Form.Item>

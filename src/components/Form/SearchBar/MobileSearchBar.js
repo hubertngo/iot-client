@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
+import getAirport from 'src/utils/getAirport';
 
 import { Form, Button, Row, Col, notification, Radio, Collapse, AutoComplete } from 'antd';
 
@@ -21,7 +22,6 @@ import withStyles from 'src/theme/jss/withStyles';
 // import { locationOptions } from 'src/constants/selectOption';
 import DatePicker from 'src/components/DatePickerLunar';
 import moment from 'moment';
-import api from 'src/constants/api';
 
 const styleSheet = (/* theme */) => ({
 	// formWrapper: {
@@ -182,11 +182,9 @@ export default class SearchBar extends Component {
 	}
 
 	searchAirport = (query, stateName) => {
-		fetch(`${api.API_URL}/airport?search=${encodeURIComponent(query)}`)
-			.then(res => res.json())
-			.then(source => {
-				this.setState({ [stateName]: source });
-			});
+		getAirport(query).then(source => {
+			this.setState({ [stateName]: source });
+		});
 	}
 
 	handleSubmit = (e) => {
