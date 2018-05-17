@@ -76,10 +76,19 @@ const styleSheet = (theme) => ({
 			},
 		},
 	},
+	inputNoStyle: {
+		'& input': {
+			'&:focus': {
+				border: 0,
+				outline: 0,
+				boxShadow: 'none',
+			},
+		},
+	},
 	btnSearch: {
 		height: '45px',
 		borderRadius: '0px 30px 30px 0px',
-		width: '100%',
+		width: '101%',
 	},
 	borderRight: {
 		borderRight: '1px solid #E1E7F0',
@@ -220,12 +229,18 @@ export default class SearchBar extends Component {
 	}
 
 	searchAirport = (query, stateName) => {
-		fetch(`https://api.flynow.vn/api/Search/AutoSuggestAirport?aId=FLYNOW&Search=${encodeURIComponent(query)}`)
-			.then(res => {
-				return res.json();
-			})
+		fetch(`https://api.flynow.vn/api/Search/AutoSuggestAirport?aId=FLYNOW&Search=${encodeURIComponent(query)}`, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Headers': 'Content-Type',
+				'Access-Control-Allow-Credentials': true,
+			},
+		})
+			.then((response) => (response.status === 204 || response.statusText === 'No Content' ? {} : response.json()))
 			.then(response => {
-				const source = response.filter(item => item.CountryId === 'VN').map(item => `${item.PlaceName} (${item.PlaceId})`);
+				console.log('response', response);
+				// .filter(item => item.CountryId === 'VN')
+				const source = response.map(item => `${item.PlaceName} (${item.PlaceId})`);
 				this.setState({ [stateName]: source });
 			});
 	}
@@ -266,7 +281,7 @@ export default class SearchBar extends Component {
 									className={classes.dropdownInput + ' ' + classes.firstChild}
 									onSearch={this.handleSearchDeparture}
 								>
-									<Input size="large" suffix={<IconDeparture extended />} placeholder={formatMessage({ id: 'departure' })} />
+									<Input className={classes.inputNoStyle} size="large" suffix={<IconDeparture extended />} placeholder={formatMessage({ id: 'departure' })} />
 								</AutoComplete>,
 							)}
 						</Form.Item>
@@ -282,7 +297,7 @@ export default class SearchBar extends Component {
 									className={classes.dropdownInput}
 									onSearch={this.handleSearchDestination}
 								>
-									<Input size="large" suffix={<IconDestination extended />} placeholder={formatMessage({ id: 'destination' })} />
+									<Input className={classes.inputNoStyle} size="large" suffix={<IconDestination extended />} placeholder={formatMessage({ id: 'destination' })} />
 								</AutoComplete>,
 							)}
 						</Form.Item>
