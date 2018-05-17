@@ -9,6 +9,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import getAirport from 'src/utils/getAirport';
 
 import { Input, Menu, Dropdown, Select, Form, Button, Row, Col, notification, AutoComplete, Icon } from 'antd';
 
@@ -229,20 +230,11 @@ export default class SearchBar extends Component {
 	}
 
 	searchAirport = (query, stateName) => {
-		fetch(`https://api.flynow.vn/api/Search/AutoSuggestAirport?aId=FLYNOW&Search=${encodeURIComponent(query)}`, {
-			headers: {
-				'Access-Control-Allow-Origin': '*',
-				'Access-Control-Allow-Headers': 'Content-Type',
-				'Access-Control-Allow-Credentials': true,
-			},
-		})
-			.then((response) => (response.status === 204 || response.statusText === 'No Content' ? {} : response.json()))
-			.then(response => {
-				console.log('response', response);
-				// .filter(item => item.CountryId === 'VN')
-				const source = response.map(item => `${item.PlaceName} (${item.PlaceId})`);
-				this.setState({ [stateName]: source });
-			});
+		getAirport(query).then(response => {
+			// .filter(item => item.CountryId === 'VN')
+			const source = response.map(item => `${item.PlaceName} (${item.PlaceId})`);
+			this.setState({ [stateName]: source });
+		});
 	}
 
 	_handleDepartureChange = (value) => {

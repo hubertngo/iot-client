@@ -13,6 +13,7 @@ import { bindActionCreators } from 'redux';
 import withStyles from 'src/theme/jss/withStyles';
 import moment from 'moment';
 import { injectIntl, intlShape } from 'react-intl';
+import getAirport from 'src/utils/getAirport';
 
 import { Form, Icon, Input, Button, Radio, Select, Row, Col, TimePicker, InputNumber, Upload, AutoComplete } from 'antd';
 
@@ -258,14 +259,10 @@ export default class TicketPosterForm extends Component {
 	}
 
 	searchAirport = (query, stateName) => {
-		fetch(`https://api.flynow.vn/api/Search/AutoSuggestAirport?aId=FLYNOW&Search=${encodeURIComponent(query)}`)
-			.then(res => {
-				return res.json();
-			})
-			.then(response => {
-				const source = response.filter(item => item.CountryId === 'VN').map(item => `${item.PlaceName} (${item.PlaceId})`);
-				this.setState({ [stateName]: source });
-			});
+		getAirport(query).then(response => {
+			const source = response.map(item => `${item.PlaceName} (${item.PlaceId})`);
+			this.setState({ [stateName]: source });
+		});
 	}
 
 	handleSubmit = (e) => {

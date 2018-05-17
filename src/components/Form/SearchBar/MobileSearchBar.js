@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
+import getAirport from 'src/utils/getAirport';
 
 import { Input, Menu, Dropdown, Select, Form, Button, Row, Col, notification, Radio, Collapse, AutoComplete } from 'antd';
 
@@ -181,14 +182,10 @@ export default class SearchBar extends Component {
 	}
 
 	searchAirport = (query, stateName) => {
-		fetch(`https://api.flynow.vn/api/Search/AutoSuggestAirport?aId=FLYNOW&Search=${encodeURIComponent(query)}`)
-			.then(res => {
-				return res.json();
-			})
-			.then(response => {
-				const source = response.filter(item => item.CountryId === 'VN').map(item => `${item.PlaceName} (${item.PlaceId})`);
-				this.setState({ [stateName]: source });
-			});
+		getAirport(query).then(response => {
+			const source = response.map(item => `${item.PlaceName} (${item.PlaceId})`);
+			this.setState({ [stateName]: source });
+		});
 	}
 
 	handleSubmit = (e) => {
