@@ -27,6 +27,7 @@ import { createTicketSelling, getTicketSellingList } from 'src/redux/actions/tic
 import { getTicketBuyingList } from 'src/redux/actions/ticket-buying';
 import { toggleTicketPosterModal } from 'src/redux/actions/modal';
 import { uploadFiles } from 'src/redux/actions/upload';
+import api from 'src/constants/api';
 
 import { getLabel } from 'src/utils';
 
@@ -119,6 +120,7 @@ export default class TicketPosterForm extends Component {
 			toggleTicketPosterModal: PropTypes.func,
 			uploadFiles: PropTypes.func,
 		}).isRequired,
+		intl: intlShape.isRequired,
 	}
 
 	static defaultProps = {
@@ -309,12 +311,9 @@ export default class TicketPosterForm extends Component {
 	}
 
 	searchAirport = (query, stateName) => {
-		fetch(`https://api.flynow.vn/api/Search/AutoSuggestAirport?aId=FLYNOW&Search=${encodeURIComponent(query)}`)
-			.then(res => {
-				return res.json();
-			})
-			.then(response => {
-				const source = response.filter(item => item.CountryId === 'VN').map(item => `${item.PlaceName} (${item.PlaceId})`);
+		fetch(`${api.API_URL}/airport?search=${encodeURIComponent(query)}`)
+			.then(res => res.json())
+			.then(source => {
 				this.setState({ [stateName]: source });
 			});
 	}

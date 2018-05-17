@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { Input, Menu, Dropdown, Select, Form, Button, Row, Col, notification, AutoComplete, Icon } from 'antd';
+import { Input, Select, Form, Button, Row, Col, notification, AutoComplete } from 'antd';
 
 import IconDeparture from 'src/components/Photo/IconDeparture';
 import IconDestination from 'src/components/Photo/IconDestination';
@@ -18,11 +18,12 @@ import IconDestination from 'src/components/Photo/IconDestination';
 import withStyles from 'src/theme/jss/withStyles';
 import { injectIntl, intlShape } from 'react-intl';
 
-import { locationOptions } from 'src/constants/selectOption';
+// import { locationOptions } from 'src/constants/selectOption';
 import DatePicker from 'src/components/DatePickerLunar';
 import moment from 'moment';
+import api from 'src/constants/api';
 
-const styleSheet = (theme) => ({
+const styleSheet = (/* theme */) => ({
 	root: {
 		marginTop: 20,
 		marginBottom: 20,
@@ -158,8 +159,7 @@ export default class SearchBar extends Component {
 			if (!err) {
 				const { startDate, endDate, departure, destination, flightType } = values;
 				const filter = {};
-				console.log('vales', values);
-				return;
+
 				if (departure) {
 					filter['trip.departure'] = departure;
 				}
@@ -220,12 +220,9 @@ export default class SearchBar extends Component {
 	}
 
 	searchAirport = (query, stateName) => {
-		fetch(`https://api.flynow.vn/api/Search/AutoSuggestAirport?aId=FLYNOW&Search=${encodeURIComponent(query)}`)
-			.then(res => {
-				return res.json();
-			})
-			.then(response => {
-				const source = response.filter(item => item.CountryId === 'VN').map(item => `${item.PlaceName} (${item.PlaceId})`);
+		fetch(`${api.API_URL}/airport?search=${encodeURIComponent(query)}`)
+			.then(res => res.json())
+			.then(source => {
 				this.setState({ [stateName]: source });
 			});
 	}
