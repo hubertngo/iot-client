@@ -186,8 +186,10 @@ export default class TicketPosterForm extends Component {
 	validateDestination = (rule, destination, callback) => {
 		const { form, intl: { formatMessage } } = this.props;
 		const departure = form.getFieldValue('trip.departure');
+		const departureCode = departure.substr(-5).substr(1, 3);
+		const destinationCode = destination.substr(-5).substr(1, 3);
 
-		if (departure === destination) {
+		if (departureCode === destinationCode) {
 			callback(formatMessage({ id: 'departure_destination_not_equal' }));
 		} else {
 			callback();
