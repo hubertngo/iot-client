@@ -185,7 +185,7 @@ export default class LoginForm extends Component {
 				<Form onSubmit={this.handleSubmit} className={classes.form}>
 					<Form.Item label={formatMessage({ id: 'fullname' })} style={{ marginBottom: 0 }}>
 						{getFieldDecorator('fullName', {
-							rules: [{ required: true, message: formatMessage({ id: 'form.fullname_required' }) }],
+							rules: [{ required: true, message: formatMessage({ id: 'fullname_required' }) }],
 						})(
 							<Input size="large" className="radius-large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder={formatMessage({ id: 'fullname' })} />,
 						)}
@@ -213,7 +213,7 @@ export default class LoginForm extends Component {
 					</Form.Item>
 					<Form.Item label={formatMessage({ id: 'confirm_password' })}>
 						{getFieldDecorator('passwordConfirm', {
-							rules: [{ required: true, message: formatMessage({ id: 'form_error.confirm-password_required' }) }, { min: 6, message: formatMessage({ id: 'password_format' }) }, { validator: this.checkPassword }],
+							rules: [{ required: true, message: formatMessage({ id: 'confirm_password_required' }) }, { min: 6, message: formatMessage({ id: 'password_format' }) }, { validator: this.checkPassword }],
 						})(
 							<Input size="large" className="radius-large" onBlur={this.handleConfirmBlur} prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder={formatMessage({ id: 'confirm_password' })} />,
 						)}

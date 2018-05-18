@@ -35,7 +35,7 @@
 	"one_way": "One way",
 	"round_trip": "Round trip",
 	"login": "Login",
-	"username_or_email": "username or email",
+	"username_or_email": "Username or Email",
 	"username_email_required": "Please fill your username or email!",
 	"password": "Password",
 	"login_by": "Login by",
@@ -61,6 +61,7 @@
 	"new_password_required": "Please fill your new password!",
 	"confirm_password_required": "Please confirm your password!",
 	"confirm_new_password": "Please confirm your new password",
+	"error_check_confirm_password": "Two passwords that you enter is inconsistent!",
 	"wrong_birthday_year": "Please fill birthday with the right format!",
 	"old_password": "Old password",
 	"new_password": "New password",
@@ -132,5 +133,9 @@
 	"end_time": "Return",
 	"my_post": "My post",
 	"logout": "Logout",
-	"personal_info": "Personal information"
+	"personal_info": "Personal information",
+	"access_token_expired": "Access token has expired",
+	"account_disabled": "Account has been disabled",
+	"duplicate_email": "Email already exist. Please choose a different email",
+	"error_system": "System error. Please try again later"
 }

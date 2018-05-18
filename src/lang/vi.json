@@ -61,6 +61,7 @@
 	"new_password_required": "Làm ơn nhập mật khẩu mới!",
 	"confirm_password_required": "Làm ơn xác nhận mật khẩu!",
 	"confirm_new_password": "Xác nhận mật khẩu mới",
+	"error_check_confirm_password": "Mật khẩu xác nhận không trùng khớp",
 	"wrong_birthday_year": "Vui lòng nhập đúng năm sinh!",
 	"old_password": "Mật khẩu cũ",
 	"new_password": "Mật khẩu mới",
@@ -131,6 +132,9 @@
 	"end_time": "Giờ hạ cánh",
 	"my_post": "Bài đăng của tôi",
 	"logout": "Đăng xuất",
-	"personal_info": "Thông tin cá nhân"
-
+	"personal_info": "Thông tin cá nhân",
+	"access_token_expired": "Phiên làm việc hết hạn",
+	"account_disabled": "Tài khoản bị vô hiệu hóa",
+	"duplicate_email": "Email đã tồn tại trên hệ thống, Vui lòng nhập lại",
+	"error_system": "Lỗi hệ thống. Vui lòng thử lại sau"
 }

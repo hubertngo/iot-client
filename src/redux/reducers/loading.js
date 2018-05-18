@@ -21,6 +21,7 @@ export default function (state = initialState, action) {
 			return false;
 		case REQUEST_ERROR: {
 			if (process.browser) {
+				console.log('action', action.payload);
 				notification.error({
 					message: 'Error Message',
 					description: action.payload.message || action.payload,

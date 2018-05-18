@@ -201,45 +201,45 @@ export default class TicketPosterForm extends Component {
 		}
 	}
 
-	validateTripEndDate = (rule, tripEndDate, callback) => {
-		if (!tripEndDate) {
-			return callback();
-		}
-		const { form, intl: { formatMessage } } = this.props;
-		const tripStartDate = form.getFieldValue('trip.startDate');
+	// validateTripEndDate = (rule, tripEndDate, callback) => {
+	// 	if (!tripEndDate) {
+	// 		return callback();
+	// 	}
+	// 	const { form, intl: { formatMessage } } = this.props;
+	// 	const tripStartDate = form.getFieldValue('trip.startDate');
 
-		if (tripEndDate.isBefore(tripStartDate, 'day')) {
-			callback(formatMessage({ id: 'validate_trip_end_date' }));
-		} else {
-			callback();
-		}
-	}
+	// 	if (tripEndDate.isBefore(tripStartDate, 'day')) {
+	// 		callback(formatMessage({ id: 'validate_trip_end_date' }));
+	// 	} else {
+	// 		callback();
+	// 	}
+	// }
 
-	validateTripEndTime = (rule, tripEndTime, callback) => {
-		if (!tripEndTime) {
-			return callback();
-		}
-		const { form, intl: { formatMessage } } = this.props;
-		const tripStartDate = form.getFieldValue('trip.startDate');
-		const tripStartTime = form.getFieldValue('trip.startTime');
-		const tripEndDate = form.getFieldValue('trip.endDate');
-		const tripStart = moment(tripStartDate).hours(tripStartTime.hours()).minutes(tripStartTime.minutes());
-		const tripEnd = moment(tripEndDate).hours(tripEndTime.hours()).minutes(tripEndTime.minutes());
+	// validateTripEndTime = (rule, tripEndTime, callback) => {
+	// 	if (!tripEndTime) {
+	// 		return callback();
+	// 	}
+	// 	const { form, intl: { formatMessage } } = this.props;
+	// 	const tripStartDate = form.getFieldValue('trip.startDate');
+	// 	const tripStartTime = form.getFieldValue('trip.startTime');
+	// 	const tripEndDate = form.getFieldValue('trip.endDate');
+	// 	const tripStart = moment(tripStartDate).hours(tripStartTime.hours()).minutes(tripStartTime.minutes());
+	// 	const tripEnd = moment(tripEndDate).hours(tripEndTime.hours()).minutes(tripEndTime.minutes());
 
-		if (tripEnd.isSameOrBefore(tripStart)) {
-			callback(formatMessage({ id: 'validate_trip_end_time' }));
-		} else {
-			callback();
-		}
-	}
+	// 	if (tripEnd.isSameOrBefore(tripStart)) {
+	// 		callback(formatMessage({ id: 'validate_trip_end_time' }));
+	// 	} else {
+	// 		callback();
+	// 	}
+	// }
 
 	validateTripBackStartDate = (rule, tripBackStartDate, callback) => {
 		if (!tripBackStartDate) {
 			return callback();
 		}
 		const { form, intl: { formatMessage } } = this.props;
-		const tripEndDate = form.getFieldValue('trip.endDate');
-		if (tripBackStartDate.isBefore(tripEndDate, 'day')) {
+		const tripStartDate = form.getFieldValue('trip.startDate');
+		if (tripBackStartDate.isBefore(tripStartDate, 'day')) {
 			callback(formatMessage({ id: 'validate_trip_back_start_date' }));
 		} else {
 			callback();
@@ -251,50 +251,50 @@ export default class TicketPosterForm extends Component {
 			return callback();
 		}
 		const { form, intl: { formatMessage } } = this.props;
-		const tripEndDate = form.getFieldValue('trip.endDate');
-		const tripEndTime = form.getFieldValue('trip.endTime');
-		const tripEnd = moment(tripEndDate).hours(tripEndTime.hours()).minutes(tripEndTime.minutes());
+		const tripStartDate = form.getFieldValue('trip.startDate');
+		const tripStartTime = form.getFieldValue('trip.startTime');
+		const tripStart = moment(tripStartDate).hours(tripStartTime.hours()).minutes(tripStartTime.minutes());
 		const tripBackStartDate = form.getFieldValue('tripBack.startDate');
 		const tripBackStart = moment(tripBackStartDate).hours(tripBackStartTime.hours()).minutes(tripBackStartTime.minutes());
 
-		if (tripBackStart.isSameOrBefore(tripEnd)) {
+		if (tripBackStart.isSameOrBefore(tripStart)) {
 			callback(formatMessage({ id: 'validate_trip_back_start_time' }));
 		} else {
 			callback();
 		}
 	}
 
-	validateTripBackEndDate = (rule, tripBackEndDate, callback) => {
-		if (!tripBackEndDate) {
-			return callback();
-		}
-		const { form, intl: { formatMessage } } = this.props;
-		const tripBackStartDate = form.getFieldValue('tripBack.startDate');
+	// validateTripBackEndDate = (rule, tripBackEndDate, callback) => {
+	// 	if (!tripBackEndDate) {
+	// 		return callback();
+	// 	}
+	// 	const { form, intl: { formatMessage } } = this.props;
+	// 	const tripBackStartDate = form.getFieldValue('tripBack.startDate');
 
-		if (tripBackEndDate.isBefore(tripBackStartDate, 'day')) {
-			callback(formatMessage({ id: 'validate_trip_back_end_date' }));
-		} else {
-			callback();
-		}
-	}
+	// 	if (tripBackEndDate.isBefore(tripBackStartDate, 'day')) {
+	// 		callback(formatMessage({ id: 'validate_trip_back_end_date' }));
+	// 	} else {
+	// 		callback();
+	// 	}
+	// }
 
-	validateTripBackEndTime = (rule, tripBackEndTime, callback) => {
-		if (!tripBackEndTime) {
-			return callback();
-		}
-		const { form, intl: { formatMessage } } = this.props;
-		const tripBackStartDate = form.getFieldValue('tripBack.startDate');
-		const tripBackStartTime = form.getFieldValue('tripBack.startTime');
-		const tripBackEndDate = form.getFieldValue('tripBack.endDate');
-		const tripBackStart = moment(tripBackStartDate).hours(tripBackStartTime.hours()).minutes(tripBackStartTime.minutes());
-		const tripBackEnd = moment(tripBackEndDate).hours(tripBackEndTime.hours()).minutes(tripBackEndTime.minutes());
+	// validateTripBackEndTime = (rule, tripBackEndTime, callback) => {
+	// 	if (!tripBackEndTime) {
+	// 		return callback();
+	// 	}
+	// 	const { form, intl: { formatMessage } } = this.props;
+	// 	const tripBackStartDate = form.getFieldValue('tripBack.startDate');
+	// 	const tripBackStartTime = form.getFieldValue('tripBack.startTime');
+	// 	const tripBackEndDate = form.getFieldValue('tripBack.endDate');
+	// 	const tripBackStart = moment(tripBackStartDate).hours(tripBackStartTime.hours()).minutes(tripBackStartTime.minutes());
+	// 	const tripBackEnd = moment(tripBackEndDate).hours(tripBackEndTime.hours()).minutes(tripBackEndTime.minutes());
 
-		if (tripBackEnd.isSameOrBefore(tripBackStart)) {
-			callback(formatMessage({ id: 'validate_trip_back_end_time' }));
-		} else {
-			callback();
-		}
-	}
+	// 	if (tripBackEnd.isSameOrBefore(tripBackStart)) {
+	// 		callback(formatMessage({ id: 'validate_trip_back_end_time' }));
+	// 	} else {
+	// 		callback();
+	// 	}
+	// }
 
 	handleChange = ({ fileList }) => this.setState({ fileList })
 
@@ -535,7 +535,7 @@ export default class TicketPosterForm extends Component {
 									</Form.Item>
 								</div>
 							</div>
-							<div className={classes.formItem}>
+							{/* <div className={classes.formItem}>
 								<div className={classes.formLabel}> {formatMessage({ id: 'end_date' })} </div>
 								<div style={{ display: 'flex' }}>
 									<Form.Item>
@@ -562,7 +562,7 @@ export default class TicketPosterForm extends Component {
 										)}
 									</Form.Item>
 								</div>
-							</div>
+							</div> */}
 						</Col>
 					</Row>
 					{
@@ -643,7 +643,7 @@ export default class TicketPosterForm extends Component {
 											</Form.Item>
 										</div>
 									</div>
-									<div className={classes.formItem}>
+									{/* <div className={classes.formItem}>
 										<div className={classes.formLabel}> {formatMessage({ id: 'end_date' })} </div>
 										<div style={{ display: 'flex' }}>
 											<Form.Item>
@@ -670,7 +670,7 @@ export default class TicketPosterForm extends Component {
 												)}
 											</Form.Item>
 										</div>
-									</div>
+									</div> */}
 								</Col>
 							</Row>
 						</div>
@@ -780,4 +780,3 @@ export default class TicketPosterForm extends Component {
 		);
 	}
 }
-

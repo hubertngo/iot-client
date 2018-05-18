@@ -6,7 +6,7 @@
 * Created: 2018-01-10 23:11:06
 *------------------------------------------------------- */
 import merge from 'lodash/merge';
-import { put, call } from 'redux-saga/effects';
+import { put, call, select } from 'redux-saga/effects';
 
 import { Router } from 'src/routes';
 
@@ -15,6 +15,8 @@ import ENV from 'src/constants/env';
 
 import AuthStorage from 'src/utils/AuthStorage';
 import { REQUEST_ERROR } from 'src/redux/actions/type';
+import vi from 'src/lang/vi.json';
+import en from 'src/lang/en.json';
 
 const { API_URL } = API;
 
@@ -146,13 +148,17 @@ export default function* ({ uri, params = {}, opt = {}, loading = true, uploadFi
 	} catch (error) {
 		response = { error };
 
+		const state = yield select();
+		const lang = state.get('lang');
+		const message = lang === 'vi' ? vi : en;
+
 		if (error.statusCode === 401 && (error.code === 'INVALID_TOKEN' || error.code === 'AUTHORIZATION_REQUIRED')) {
 			// Access token has expired
 			if (AuthStorage.loggedIn) {
 				yield put({ type: 'LOGOUT_SUCCESS' });
 			}
 
-			yield put({ type: REQUEST_ERROR, payload: 'Access token has expired' });
+			yield put({ type: REQUEST_ERROR, payload: message.access_token_expired });
 			Router.pushRoute('/login');
 		} else if (error.statusCode === 401 && error.code === 'ACCOUNT_DISABLED') {
 			// Access token has expired
@@ -160,12 +166,12 @@ export default function* ({ uri, params = {}, opt = {}, loading = true, uploadFi
 				yield put({ type: 'LOGOUT_SUCCESS' });
 			}
 
-			yield put({ type: REQUEST_ERROR, payload: 'Account has been disabled' });
+			yield put({ type: REQUEST_ERROR, payload: message.account_disabled });
 			Router.pushRoute('/login');
 		} else if (error.statusCode === 422) {
-			yield put({ type: REQUEST_ERROR, payload: 'Email đã tồn tại trên hệ thống, Vui lòng nhập lại' });
+			yield put({ type: REQUEST_ERROR, payload: message.duplicate_email });
 		} else {
-			yield put({ type: REQUEST_ERROR, payload: error.message || error });
+			yield put({ type: REQUEST_ERROR, payload: message.error_system });
 		}
 	}
 
