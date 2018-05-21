@@ -14,8 +14,6 @@ import { injectIntl, intlShape } from 'react-intl';
 // import { bindActionCreators } from 'redux';
 
 import withStyles from 'src/theme/jss/withStyles';
-import FlightList from 'src/components/Flight/List';
-import MobileFlightList from 'src/components/Flight/List/MobileList';
 import Container from 'src/components/Layout/Container';
 
 const styleSheet = (theme) => ({
@@ -162,9 +160,6 @@ export default class ClassName extends Component {
 			return (
 				<div className={classes.root}>
 					<div className={classes.banner + ' hidden-md-down'} />
-					<Container>
-						<MobileFlightList />
-					</Container>
 				</div>
 			);
 		}
@@ -180,7 +175,6 @@ export default class ClassName extends Component {
 						<Tabs.TabPane tab={formatMessage({ id: 'hotel_room' })} key="2" />
 						<Tabs.TabPane tab={formatMessage({ id: 'voucher' })} key="3" />
 					</Tabs>
-					{isDesktop ? <FlightList /> : <MobileFlightList />}
 				</Container>
 			</div>
 		);

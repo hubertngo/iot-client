@@ -11,16 +11,12 @@ import modal, { initialState as initialModal } from './modal';
 
 import user, { initialState as initialUser } from './user';
 import lang, { initialState as initialLang } from './lang';
-import ticketSelling, { initialState as initialTicketSelling } from './ticket-selling';
-import ticketBuying, { initialState as initialTicketBuying } from './ticket-buying';
 
 export const initialState = {
 	auth: initialAuth,
 	loading: initialLoading,
 	modal: initialModal,
 	user: initialUser,
-	ticketSelling: initialTicketSelling,
-	ticketBuying: initialTicketBuying,
 	lang: initialLang,
 };
 
@@ -29,7 +25,5 @@ export default {
 	loading,
 	modal,
 	user,
-	ticketSelling,
-	ticketBuying,
 	lang,
 };

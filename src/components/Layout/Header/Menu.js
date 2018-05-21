@@ -27,7 +27,6 @@ import { editProfile } from 'src/redux/actions/auth';
 import AuthStorage from 'src/utils/AuthStorage';
 
 // Components
-import BtnTicketPoster from 'src/components/Form/BtnTicketPoster';
 
 import AvatarBtn from './AvatarBtn';
 
@@ -200,12 +199,6 @@ export default class Menu extends Component {
 							!AuthStorage.loggedIn && !auth.id &&
 							<li className={classes.loginBtn}>
 								<a href="/login" onClick={this.handleOpenLogin}>{formatMessage({ id: 'login' })}</a>
-							</li>
-						}
-						{
-							AuthStorage.loggedIn &&
-							<li className={classes.postBtn}>
-								<BtnTicketPoster />
 							</li>
 						}
 					</ul>

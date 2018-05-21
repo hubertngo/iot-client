@@ -18,7 +18,6 @@ import { Popover, Icon, Divider } from 'antd';
 import { Router } from 'src/routes';
 
 import Avatar from 'src/components/Photo/Avatar';
-import GroupStar from 'src/components/Flight/Card/GroupStar';
 import IconDeparture from 'src/components/Photo/IconDeparture';
 
 import { logoutRequest } from 'src/redux/actions/auth';
@@ -221,7 +220,6 @@ class AvatarBtn extends React.Component {
 				<div className={classes.info}>
 					<h4>{store.auth.fullName}</h4>
 					{/* <i>{store.auth.email}</i> */}
-					<GroupStar ratingsStats={store.auth.ratingsStats} ratingsCount={store.auth.ratingsCount} user={store.auth} />
 				</div>
 			</div>
 		);
@@ -236,7 +234,6 @@ class AvatarBtn extends React.Component {
 							<div className={classes.info}>
 								<h4>{store.auth.fullName}</h4>
 								{/* <i>{store.auth.email}</i> */}
-								<GroupStar ratingsStats={store.auth.ratingsStats} ratingsCount={store.auth.ratingsCount} user={store.auth} />
 							</div>
 						</div>
 						{content}

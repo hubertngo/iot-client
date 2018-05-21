@@ -28,16 +28,9 @@ import { getUserAuth } from 'src/redux/actions/auth';
 // import LoaderGlobal from 'src/components/LoaderGlobal';
 import LoginModal from 'src/components/Modals/Login';
 import SignUpModal from 'src/components/Modals/SignUp';
-import TicketPosterModal from 'src/components/Modals/TicketPoster';
 import UserInfoModal from 'src/components/Modals/UserInfo';
 import EditUserInfoModal from 'src/components/Modals/EditUserInfo';
-import RatingModal from 'src/components/Modals/Rating';
-import EditBuyingModal from 'src/components/Modals/EditBuying';
-import EditSellingModal from 'src/components/Modals/EditSelling';
-import FlightModal from 'src/components/Modals/Flight';
 
-import { addTicketBuyingListener } from 'src/redux/actions/ticket-buying';
-import { addTicketSellingListener } from 'src/redux/actions/ticket-selling';
 import { connect } from 'react-redux';
 
 Router.onRouteChangeStart = (/* url */) => {
@@ -102,13 +95,8 @@ const withRoot = (Child) => {
 							<Child {...this.props} />
 							<LoginModal />
 							<SignUpModal />
-							<TicketPosterModal />
 							<UserInfoModal />
 							<EditUserInfoModal />
-							<EditBuyingModal />
-							<EditSellingModal />
-							<RatingModal />
-							<FlightModal />
 						</Fragment>
 					</IntlProvider>
 				</LocaleProvider>

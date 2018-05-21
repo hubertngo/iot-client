@@ -14,7 +14,6 @@ import { injectIntl, intlShape } from 'react-intl';
 
 import { Form, Icon, Row, Col, Divider } from 'antd';
 import Avatar from 'src/components/Photo/Avatar';
-import GroupStar from 'src/components/Flight/Card/GroupStar';
 
 import withStyles from 'src/theme/jss/withStyles';
 
@@ -241,7 +240,6 @@ export default class UserInfoForm extends Component {
 						</div>
 					</Col>
 					<Col span={7} className={classes.rightCol}>
-						<GroupStar rate={3} />
 						<div className={classes.infoRow}>
 							<div> Ngày tham gia </div>
 							<div style={{ width: 80 }} className="loading-block" />
