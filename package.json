@@ -5,6 +5,9 @@
   "main": "index.js",
   "author": "Trần Đức Tiến <ductienas@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=4"
+  },
   "private": true,
   "scripts": {
     "dev": "node server.js",
