@@ -79,10 +79,6 @@ const withRoot = (Child) => {
 		}
 
 		componentDidMount() {
-			if (AuthStorage.loggedIn) {
-				addTicketBuyingListener(this.props.dispatch); // eslint-disable-line
-				addTicketSellingListener(this.props.dispatch); // eslint-disable-line
-			}
 		}
 
 		render() {
