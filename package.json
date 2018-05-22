@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js",
+    "start": "next start -p $PORT",
+    "heroku-postbuild": "next build",
     "prod:pm2": "NODE_ENV=production pm2 start server.js --name chove-web"
   },
   "dependencies": {
