@@ -70,10 +70,6 @@ export default class MyDocument extends Document {
 					<title>NTU IOT</title>
 					<link rel="shortcut icon" type="image/x-icon" href="/static/assets/favicon.ico" />
 					<meta charSet="utf-8" />
-					<meta
-						name="description"
-						content="Sang nhượng vé rẻ khắp mọi nơi!"
-					/>
 					{/* Use minimum-scale=1 to enable GPU rasterization */}
 					<meta
 						name="viewport"
@@ -88,16 +84,8 @@ export default class MyDocument extends Document {
 					{/* Twitter */}
 					<meta name="twitter:card" content="summary" />
 					<meta name="twitter:site" content="@alfazi" />
-					<meta
-						name="twitter:description"
-						content="Sang nhượng vé rẻ khắp mọi nơi!"
-					/>
 					{/* Facebook */}
 					<meta property="og:type" content="website" />
-					<meta
-						property="og:description"
-						content="Sang nhượng vé rẻ khắp mọi nơi!"
-					/>
 					<meta property="og:locale" content="vi_VN" />
 
 					<link rel="shortcut icon" href="/static/assets/favicon.ico" />
