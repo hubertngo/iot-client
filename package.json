@@ -1,7 +1,7 @@
 {
-  "name": "chove-web",
+  "name": "ntu-iot-web",
   "version": "1.0.0",
-  "description": "chove web",
+  "description": "ntu iot web",
   "main": "index.js",
   "author": "Trần Đức Tiến <ductienas@gmail.com>",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "build": "next build",
     "start": "next start -p $PORT",
     "heroku-postbuild": "next build",
-    "prod:pm2": "NODE_ENV=production pm2 start server.js --name chove-web"
+    "prod:pm2": "NODE_ENV=production pm2 start server.js --name ntu"
   },
   "dependencies": {
     "antd": "^3.1.5",

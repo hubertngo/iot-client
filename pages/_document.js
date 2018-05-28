@@ -67,7 +67,7 @@ export default class MyDocument extends Document {
 		return (
 			<html lang="vi" dir="ltr">
 				<Head>
-					<title>Chove.vn</title>
+					<title>NTU IOT</title>
 					<link rel="shortcut icon" type="image/x-icon" href="/static/assets/favicon.ico" />
 					<meta charSet="utf-8" />
 					<meta
@@ -88,22 +88,17 @@ export default class MyDocument extends Document {
 					{/* Twitter */}
 					<meta name="twitter:card" content="summary" />
 					<meta name="twitter:site" content="@alfazi" />
-					<meta name="twitter:title" content="Chợ vé" />
 					<meta
 						name="twitter:description"
 						content="Sang nhượng vé rẻ khắp mọi nơi!"
 					/>
-					<meta name="twitter:image" content="https://chove.vn/static/assets/images/banner.jpeg" />
 					{/* Facebook */}
 					<meta property="og:type" content="website" />
-					<meta property="og:title" content="Chợ vé" />
 					<meta
 						property="og:description"
 						content="Sang nhượng vé rẻ khắp mọi nơi!"
 					/>
-					<meta property="og:image" content="https://chove.vn/static/assets/images/banner.jpeg" />
 					<meta property="og:locale" content="vi_VN" />
-					<meta property="og:url" content="https://chove.vn/" />
 
 					<link rel="shortcut icon" href="/static/assets/favicon.ico" />
 					<link rel="canonical" href={canonical} />
