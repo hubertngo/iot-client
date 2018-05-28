@@ -28,94 +28,13 @@ const styleSheet = (theme) => ({
 			background: 'none',
 		},
 	},
-
-	banner: {
-		left: '0',
-		width: '100%',
-		height: '384px',
-		zIndex: '-1',
-		position: 'absolute',
-		background: 'lightblue url(/static/assets/images/banner.jpeg)',
-		backgroundSize: 'cover',
-		backgroundPosition: '55%',
-		'&:after': {
-			top: '0',
-			width: '100%',
-			height: '100%',
-			content: '""',
-			display: 'block',
-			opacity: '0.5',
-			position: 'absolute',
-			background: 'linear-gradient(221.52deg, #4F3F91 28.2%, #496BC4 81.27%)',
-			boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
-		},
-	},
-
-	title: {
-		paddingTop: 80,
-		paddingBottom: 30,
-		textAlign: 'center',
-		fontStyle: 'italic',
-		fontSize: 22,
-		fontWeight: 500,
-		color: '#FFF',
-		fontFamily: 'Lato',
-	},
-
-	tabs: {
-		'& > .ant-tabs-bar': {
-			borderBottom: 0,
-			display: 'flex',
-			justifyContent: 'center',
-			color: 'rgba(255, 255, 255, 0.8)',
-
-			'& .ant-tabs-tab:hover, & .ant-tabs-tab-active': {
-				color: '#FFF',
-			},
-		},
-
-		'& .ant-tabs-ink-bar': {
-			backgroundColor: theme.palette.secondary[500],
-		},
-	},
-
-	wrapperContent: {
-		position: 'relative',
-		textAlign: 'center',
-	},
-
-	btn: {
-		marginBottom: 10,
-	},
-
-	border: {
-		'&:before': {
-			content: '""',
-			display: 'block',
-			position: 'absolute',
-			width: 'calc(100% - 20px)',
-			height: 1,
-			borderTop: '1px dotted #FFF',
-			top: 17,
-		},
-
-		'&:after': {
-			content: '""',
-			display: 'block',
-			position: 'absolute',
-			width: 1,
-			height: 120,
-			borderLeft: '1px dotted #FFF',
-			top: 17,
-			left: '50%',
-		},
-	},
 });
 
 function mapStateToProps(state) {
 	return {
 		store: {
-			// modal: state.get('modal').toJS(),
+			sensorList: state.getIn(['sensor', 'sensorList']),
+			selectedSensors: state.getIn(['sensor', 'selectedSensors']),
 		},
 	};
 }
@@ -134,13 +53,11 @@ const mapDispatchToProps = (dispatch) => {
 export default class ClassName extends Component {
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
-		intl: PropTypes.shape({
-			formatMessage: PropTypes.func,
-		}).isRequired,
 		// store
-		// store: PropTypes.shape({
-		// 	modal: PropTypes.object.isRequired,
-		// }).isRequired,
+		store: PropTypes.shape({
+			sensorList: PropTypes.object.isRequired,
+			selectedSensors: PropTypes.arr,
+		}).isRequired,
 		// // action
 		// action: PropTypes.shape({
 		// 	toggleLoginModal: PropTypes.func.isRequired,
@@ -150,32 +67,12 @@ export default class ClassName extends Component {
 	static defaultProps = {}
 
 	render() {
-		const { classes, intl: { formatMessage } } = this.props;
-		let isDesktop = true;
-		if (typeof window !== 'undefined') {
-			isDesktop = window.innerWidth >= 992;
-		}
+		const { classes, store } = this.props;
 
-		if (!isDesktop) {
-			return (
-				<div className={classes.root}>
-					<div className={classes.banner + ' hidden-md-down'} />
-				</div>
-			);
-		}
-
+		console.log(store.selectedSensors);
 		return (
 			<div className={classes.root}>
-				<div className={classes.banner + ' hidden-md-down'} />
-				<Container>
-					<div className={classes.title}>{formatMessage({ id: 'slogan' })}</div>
-					<div style={{ height: 60 }} />
-					<Tabs defaultActiveKey="1" className={classes.tabs}>
-						<Tabs.TabPane tab={formatMessage({ id: 'flight_ticket' })} key="1" />
-						<Tabs.TabPane tab={formatMessage({ id: 'hotel_room' })} key="2" />
-						<Tabs.TabPane tab={formatMessage({ id: 'voucher' })} key="3" />
-					</Tabs>
-				</Container>
+
 			</div>
 		);
 

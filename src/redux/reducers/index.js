@@ -11,6 +11,7 @@ import modal, { initialState as initialModal } from './modal';
 
 import user, { initialState as initialUser } from './user';
 import lang, { initialState as initialLang } from './lang';
+import sensor, { initialState as initialSensor } from './sensor';
 
 export const initialState = {
 	auth: initialAuth,
@@ -18,6 +19,7 @@ export const initialState = {
 	modal: initialModal,
 	user: initialUser,
 	lang: initialLang,
+	sensor: initialSensor,
 };
 
 export default {
@@ -26,4 +28,5 @@ export default {
 	modal,
 	user,
 	lang,
+	sensor,
 };

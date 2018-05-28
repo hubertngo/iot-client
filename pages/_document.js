@@ -112,7 +112,6 @@ export default class MyDocument extends Document {
 						href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
 					/>
 					<style dangerouslySetInnerHTML={{ __html: stylesheet }} />
-					<script async id="embed-tawk" src="https://embed.tawk.to/5ad638a4227d3d7edc2409e6/default" charSet="UTF-8" crossOrigin="*" />
 				</Head>
 				<body>
 					<Main />

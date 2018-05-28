@@ -11,7 +11,7 @@ import React, { PureComponent } from 'react';
 import Head from 'next/head';
 import withRoot from 'src/root';
 
-import MainLayout from 'src/layout/Main';
+import BasicLayout from 'src/layout/basic';
 import Index from 'src/components/Pages/Index';
 
 @withRoot
@@ -22,13 +22,13 @@ export default class IndexPage extends PureComponent {
 
 	render() {
 		return (
-			<MainLayout>
+			<BasicLayout>
 				<Head>
-					<title>Chove.vn - Sang nhượng vé rẻ khắp mọi nơi!</title>
+					<title>IOT Client</title>
 				</Head>
 				<Index />
 
-			</MainLayout>
+			</BasicLayout>
 		);
 	}
 }
