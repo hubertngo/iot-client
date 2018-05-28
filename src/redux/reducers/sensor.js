@@ -38,6 +38,18 @@ export default (state = initialState, action) => {
 			return state.update('selectedSensors', () => {
 				return action.payload;
 			});
+		case 'ADD_SENSOR_VALUE':
+			return state.update('sensorList', (sensorList) => {
+				return {
+					...sensorList,
+					data: sensorList.data.map(sensor => sensor.name === action.payload.sensorName
+						? {
+							...sensor, SensorValues: [...sensor.SensorValues, action.payload]
+						}
+						: sensor
+					)
+				};
+			});
 
 		default:
 			return state;

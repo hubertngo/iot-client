@@ -7,9 +7,10 @@
 *------------------------------------------------------- */
 
 import { SINGLE_API } from 'src/redux/actions/type';
-
+import config from 'src/constants/api';
 import { applyURIFilter } from 'src/utils';
 
+const { API_URL } = config;
 export const getSensorList = (payload, next, nextError) => {
 	const { filter, firstLoad } = payload;
 
@@ -28,6 +29,13 @@ export const getSensorList = (payload, next, nextError) => {
 export const selectSensors = (payload) => {
 	return {
 		type: 'UPDATE_SELECTED_SENSOR',
+		payload,
+	};
+};
+
+export const addSensorValue = (payload) => {
+	return {
+		type: 'ADD_SENSOR_VALUE',
 		payload,
 	};
 };

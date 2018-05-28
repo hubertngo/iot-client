@@ -85,19 +85,19 @@ export default class MenuComponent extends Component {
 						title={<span style={{ color: '#000000' }}>Sensor</span>}
 					>
 						<Menu.Item key="1">
-							<Checkbox value="sensor1">sensor1</Checkbox>
+							<Checkbox value={0}>sensor5</Checkbox>
 						</Menu.Item>
 						<Menu.Item key="2">
-							<Checkbox value="sensor2">sensor2</Checkbox>
+							<Checkbox value={1}>sensor4</Checkbox>
 						</Menu.Item>
 						<Menu.Item key="3">
-							<Checkbox value="sensor3">sensor3</Checkbox>
+							<Checkbox value={2}>sensor3</Checkbox>
 						</Menu.Item>
 						<Menu.Item key="4">
-							<Checkbox value="sensor4">sensor4</Checkbox>
+							<Checkbox value={3}>sensor2</Checkbox>
 						</Menu.Item>
 						<Menu.Item key="5">
-							<Checkbox value="sensor5">sensor5</Checkbox>
+							<Checkbox value={4}>sensor1</Checkbox>
 						</Menu.Item>
 					</SubMenu>
 				</Menu>

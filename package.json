@@ -19,6 +19,7 @@
   "dependencies": {
     "antd": "^3.1.5",
     "brcast": "^3.0.1",
+    "chart.js": "^2.7.2",
     "classnames": "^2.2.5",
     "deepmerge": "^2.0.1",
     "dotenv": "^5.0.1",
@@ -45,6 +46,7 @@
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-avatar-editor": "^10.3.0",
+    "react-chartjs-2": "^2.7.2",
     "react-cookies": "^0.1.0",
     "react-dom": "^16.2.0",
     "react-facebook-login": "^4.0.0",
