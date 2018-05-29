@@ -78,6 +78,8 @@ export default class ClassName extends Component {
 }
 
 const RenderLine = ({ sensor }) => {
+	if (!sensor) return null;
+	if (!sensor.SensorValues) return null;
 	const labels = sensor.SensorValues.map(item => {
 		return moment(item.createdAt).format('DD-MM-YYYY HH:mm');
 	});
