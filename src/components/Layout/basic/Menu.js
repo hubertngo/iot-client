@@ -94,10 +94,10 @@ export default class MenuComponent extends Component {
 							<Checkbox value={2}>sensor3</Checkbox>
 						</Menu.Item>
 						<Menu.Item key="4">
-							<Checkbox value={3}>sensor2</Checkbox>
+							<Checkbox value={4}>sensor2</Checkbox>
 						</Menu.Item>
 						<Menu.Item key="5">
-							<Checkbox value={4}>sensor1</Checkbox>
+							<Checkbox value={3}>sensor1</Checkbox>
 						</Menu.Item>
 					</SubMenu>
 				</Menu>
