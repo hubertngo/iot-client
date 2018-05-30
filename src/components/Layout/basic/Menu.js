@@ -66,7 +66,12 @@ export default class MenuComponent extends Component {
 	componentWillMount = () => {
 		this.props.action.getSensorList({
 			filter: {
-				include: 'SensorValues',
+				include: {
+					relation: 'SensorValues',
+					scope: {
+						limit: 100,
+					},
+				},
 			},
 			firstLoad: true,
 		});
