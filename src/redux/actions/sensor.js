@@ -11,6 +11,7 @@ import config from 'src/constants/api';
 import { applyURIFilter } from 'src/utils';
 
 const { API_URL } = config;
+
 export const getSensorList = (payload, next, nextError) => {
 	const { filter, firstLoad } = payload;
 
@@ -20,6 +21,19 @@ export const getSensorList = (payload, next, nextError) => {
 			uri: `/sensors${applyURIFilter(filter)}`,
 			beforeCallType: firstLoad ? 'GET_SENSORS_REQUEST' : '',
 			successType: 'GET_SENSORS_SUCCESS',
+			afterSuccess: next,
+			afterError: nextError,
+		},
+	};
+};
+
+export const Analysis = (next, nextError) => {
+	return {
+		type: SINGLE_API,
+		payload: {
+			uri: '/sensors/analysis',
+			beforeCallType: 'ANALYSIS_REQUEST',
+			successType: 'ANALYSIS_SUCCESS',
 			afterSuccess: next,
 			afterError: nextError,
 		},

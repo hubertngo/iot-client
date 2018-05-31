@@ -17,6 +17,10 @@ export const initialState = fromJS({
 		loading: true,
 	},
 	selectedSensors: [],
+	analysis: {
+		result: [],
+		loading: false,
+	},
 });
 
 export default (state = initialState, action) => {
@@ -50,7 +54,20 @@ export default (state = initialState, action) => {
 					)
 				};
 			});
-
+		case 'ANALYSIS_REQUEST':
+			return state.update('analysis', () => {
+				return {
+					result: [],
+					loading: true,
+				}
+			});
+		case 'ANALYSIS_SUCCESS':
+			return state.update('analysis', () => {
+				return {
+					result: action.payload.sensor,
+					loading: false,
+				};
+			});
 		default:
 			return state;
 	}

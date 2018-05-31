@@ -13,7 +13,7 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
 import { injectIntl, intlShape } from 'react-intl';
-import { Menu, Checkbox, Row, Col, Tree } from 'antd';
+import { Menu, Button, Row, Col, Tree, Modal, Table } from 'antd';
 // Styles
 import withStyles from 'src/theme/jss/withStyles';
 
@@ -21,7 +21,7 @@ import withStyles from 'src/theme/jss/withStyles';
 import { toggleLoginModal } from 'src/redux/actions/modal';
 import { updateLanguage } from 'src/redux/actions/lang';
 import { editProfile } from 'src/redux/actions/auth';
-import { getSensorList, selectSensors } from 'src/redux/actions/sensor';
+import { getSensorList, selectSensors, Analysis } from 'src/redux/actions/sensor';
 // Store
 import AuthStorage from 'src/utils/AuthStorage';
 
@@ -51,6 +51,7 @@ function mapStateToProps(state) {
 		store: {
 			auth: state.get('auth').toJS(),
 			lang: state.get('lang'),
+			analysis: state.getIn(['sensor', 'analysis']),
 		},
 	};
 }
@@ -58,7 +59,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		action: bindActionCreators({
-			toggleLoginModal,
+			Analysis,
 			updateLanguage,
 			selectSensors,
 			getSensorList,
@@ -76,6 +77,7 @@ export default class MenuComponent extends Component {
 		action: PropTypes.shape({
 			getSensorList: PropTypes.func,
 			selectSensors: PropTypes.func,
+			Analysis: PropTypes.func,
 		}).isRequired,
 	}
 
@@ -84,6 +86,7 @@ export default class MenuComponent extends Component {
 		autoExpandParent: true,
 		checkedKeys: [],
 		selectedKeys: [],
+		visible: false,
 	}
 
 	componentWillMount = () => {
@@ -112,6 +115,24 @@ export default class MenuComponent extends Component {
 		console.log('onSelect', info.node.props.title);
 		this.setState({ selectedKeys });
 	}
+	showModal = () => {
+		this.setState({
+			visible: true,
+		});
+		this.props.action.Analysis();
+	}
+	handleOk = (e) => {
+		console.log(e);
+		this.setState({
+			visible: false,
+		});
+	}
+	handleCancel = (e) => {
+		console.log(e);
+		this.setState({
+			visible: false,
+		});
+	}
 	renderTreeNodes = (data) => {
 		return data.map((item) => {
 			if (item.children) {
@@ -125,22 +146,74 @@ export default class MenuComponent extends Component {
 		});
 	}
 
+	columns = [
+		{
+			title: 'Name',
+			dataIndex: 'name',
+			key: 'name',
+
+		}, {
+			title: 'RMS',
+			dataIndex: 'rms',
+			key: 'rms',
+		}, {
+			title: 'Max',
+			dataIndex: 'max',
+			key: 'max',
+		}, {
+			title: 'Min',
+			dataIndex: 'min',
+			key: 'min',
+		}, {
+			title: 'Average',
+			dataIndex: 'average',
+			key: 'average',
+		},
+	]
+
 	render() {
+		const { analysis } = this.props.store;
+
 		return (
-			<Checkbox.Group style={{ width: '100%' }} onChange={this.onChange}>
-				<Tree
-					showLine
-					checkable
-					expandedKeys={this.state.expandedKeys}
-					autoExpandParent={this.state.autoExpandParent}
-					onCheck={this.onCheck}
-					checkedKeys={this.state.checkedKeys}
-					onSelect={this.onSelect}
-					selectedKeys={this.state.selectedKeys}
-				>
-					{this.renderTreeNodes(treeData)}
-				</Tree>
-			</Checkbox.Group>
+			<div>
+				<Row>
+					<Tree
+						showLine
+						checkable
+						expandedKeys={this.state.expandedKeys}
+						autoExpandParent={this.state.autoExpandParent}
+						onCheck={this.onCheck}
+						checkedKeys={this.state.checkedKeys}
+						onSelect={this.onSelect}
+						selectedKeys={this.state.selectedKeys}
+					>
+						{this.renderTreeNodes(treeData)}
+					</Tree>
+				</Row>
+				<Row type="flex" align="middle">
+					<Col>
+						<div style={{ marginLeft: '30px', marginTop: '100px', }}>
+
+							<Button type="primary" onClick={this.showModal}> Analysis </Button>
+							<Modal
+								title="Analysis Table"
+								width={800}
+								visible={this.state.visible}
+								footer={[
+									<Button key="back" type="primary" onClick={this.handleOk}>Ok</Button>,
+								]}
+							>
+								<Table
+									dataSource={analysis.result}
+									pagination={false}
+									columns={this.columns}
+									loading={analysis.loading}
+								/>
+							</Modal>
+						</div>
+					</Col>
+				</Row>
+			</div>
 		);
 	}
 }
