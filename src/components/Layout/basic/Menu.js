@@ -84,7 +84,7 @@ export default class MenuComponent extends Component {
 	state = {
 		expandedKeys: ['10'],
 		autoExpandParent: true,
-		checkedKeys: [],
+		checkedKeys: ['1', '2', '3', '4', '0'],
 		selectedKeys: [],
 		visible: false,
 	}

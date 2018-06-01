@@ -16,7 +16,7 @@ export const initialState = fromJS({
 		limit: 12,
 		loading: true,
 	},
-	selectedSensors: [],
+	selectedSensors: ['1', '2', '3', '4', '0'],
 	analysis: {
 		result: [],
 		loading: false,

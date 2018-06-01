@@ -9,7 +9,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Tabs } from 'antd';
+import { Row, Col, Spin } from 'antd';
 import { injectIntl, intlShape } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import withStyles from 'src/theme/jss/withStyles';
@@ -67,11 +67,24 @@ export default class ClassName extends Component {
 
 	render() {
 		const { classes, store } = this.props;
+		console.log('store.sensorList', store.sensorList);
+
+		if (store.sensorList.loading) {
+			return null;
+		}
 		return (
 			<div className={classes.root}>
-				{store.selectedSensors.map(sensor => (
+				{!store.sensorList.loading && store.sensorList.data && store.selectedSensors.map(sensor => (
 					<RenderLine key={sensor} sensor={store.sensorList.data[sensor]} />
-				))};
+				))
+				}
+				{(store.sensorList.loading || !store.sensorList.data) &&
+					<Row>
+						<Col span={4} offset={10} >
+							<Spin size="large" />
+						</Col>
+					</Row>
+				}
 			</div>
 		);
 	}
