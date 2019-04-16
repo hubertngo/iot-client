@@ -33,11 +33,16 @@ const styleSheet = (theme) => ({
 
 
 const treeData = [{
-	title: 'Sensor',
+	title: 'Group A (1-2)',
 	key: '10',
 	children: [
 		{ title: 'sensor1', key: 3 },
 		{ title: 'sensor2', key: 4 },
+	],
+}, {
+	title: 'Group B (3-5)',
+	key: '110',
+	children: [
 		{ title: 'sensor3', key: 2 },
 		{ title: 'sensor4', key: 1 },
 		{ title: 'sensor5', key: 0 },
@@ -82,7 +87,7 @@ export default class MenuComponent extends Component {
 	}
 
 	state = {
-		expandedKeys: ['10'],
+		expandedKeys: ['10', '110'],
 		autoExpandParent: true,
 		checkedKeys: ['1', '2', '3', '4', '0'],
 		selectedKeys: [],
@@ -179,9 +184,8 @@ export default class MenuComponent extends Component {
 				<Row>
 					<Tree
 						showLine
+						showIcon={false}
 						checkable
-						expandedKeys={this.state.expandedKeys}
-						autoExpandParent={this.state.autoExpandParent}
 						onCheck={this.onCheck}
 						checkedKeys={this.state.checkedKeys}
 						onSelect={this.onSelect}

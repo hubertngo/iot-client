@@ -21,7 +21,7 @@ import { addSensorValue } from 'src/redux/actions/sensor';
 const { API_URL } = config;
 const styleSheet = (theme) => ({
 	root: {
-	},
+	}
 });
 
 function mapStateToProps(state) {
